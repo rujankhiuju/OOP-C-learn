@@ -3,962 +3,1051 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>DeutschLern — German Flashcards</title>
+<title>CPP Learn — Interactive C++ Course</title>
 <style>
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;user-select:none}
-:root{
-  --bg:#0d0d1a;--surface:#16162b;--surface2:#1e1e38;--surface3:#2a2a4a;
-  --text:#e8e8f0;--text-muted:#8888aa;--border:#2a2a4a;
-  --green:#4ade80;--blue:#60a5fa;--purple:#c084fc;--orange:#fb923c;
-  --red:#f87171;--yellow:#fbbf24;--pink:#f472b6;--cyan:#22d3ee;
-  --radius:16px;--shadow:0 8px 32px rgba(0,0,0,.5);
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 16px; scroll-behavior: smooth; }
+
+:root {
+  --bg-primary: #1a1d23;
+  --bg-secondary: #21252b;
+  --bg-tertiary: #282c34;
+  --bg-surface: #2c313a;
+  --bg-hover: #353b45;
+  --bg-active: #3a4050;
+  --border: #3a3f4b;
+  --border-light: #4a4f5b;
+  --text-primary: #e8eaed;
+  --text-secondary: #b0b5c0;
+  --text-muted: #7a7f8a;
+  --accent: #4fc3f7;
+  --accent-dim: #2b7fa0;
+  --success: #66bb6a;
+  --error: #ef5350;
+  --code-bg: #1e1e1e;
+  --sidebar-width: 260px;
+  --topbar-height: 52px;
+  --radius: 8px;
+  --radius-sm: 4px;
+  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-mono: "Cascadia Code", "Fira Code", "JetBrains Mono", "Consolas", monospace;
 }
-html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Oxygen,Ubuntu,Cantarell,sans-serif;background:var(--bg);color:var(--text);overflow:hidden}
-body{display:flex;align-items:center;justify-content:center}
-.app{display:flex;width:100vw;height:100vh;max-width:1200px;margin:0 auto;padding:16px;gap:16px}
-.sidebar{width:230px;min-width:230px;background:var(--surface);border-radius:var(--radius);padding:20px 16px;display:flex;flex-direction:column;gap:2px;border:1px solid var(--border);overflow-y:auto}
-.logo{font-size:18px;font-weight:800;letter-spacing:-.5px;margin-bottom:8px;background:linear-gradient(135deg,var(--green),var(--blue));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.logo span{-webkit-text-fill-color:var(--text-muted);font-weight:400;font-size:12px;display:block;margin-top:1px}
-.nav-group{display:flex;flex-direction:column;gap:1px}
-.nav-label{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);padding:5px 10px 1px;margin-top:1px}
-.level-row{display:flex;gap:2px;padding:0 6px 6px;border-bottom:1px solid var(--border);margin-bottom:2px}
-.lvl-btn{padding:4px 8px;border-radius:5px;border:1px solid var(--border);background:transparent;color:var(--text-muted);font-size:10px;font-weight:600;cursor:pointer;transition:all .2s;flex:1;text-align:center;line-height:1.3}
-.lvl-btn:hover{background:var(--surface2);color:var(--text)}
-.lvl-btn.active{background:var(--surface2);color:var(--text);border-color:var(--text-muted)}
-.lvl-btn[data-level="a1"].active{border-color:var(--green);color:var(--green)}
-.lvl-btn[data-level="a2"].active{border-color:var(--blue);color:var(--blue)}
-.lvl-btn[data-level="b1"].active{border-color:var(--orange);color:var(--orange)}
-.lvl-btn[data-level="b2"].active{border-color:var(--red);color:var(--red)}
-.nav-btn{display:flex;align-items:center;gap:7px;padding:6px 8px;border-radius:6px;border:none;background:transparent;color:var(--text-muted);font-size:12px;font-weight:500;cursor:pointer;transition:all .12s;width:100%;text-align:left}
-.nav-btn:hover{background:var(--surface2);color:var(--text)}
-.nav-btn.active{background:var(--surface2);color:var(--text)}
-.nav-btn .count{margin-left:auto;font-size:9px;color:var(--text-muted);background:var(--surface3);padding:1px 5px;border-radius:3px;font-weight:600}
-.nav-btn.active .count{color:var(--text)}
-.nav-btn .dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
-.dot-green{background:var(--green)}.dot-blue{background:var(--blue)}.dot-purple{background:var(--purple)}.dot-orange{background:var(--orange)}
-.dot-yellow{background:var(--yellow)}.dot-pink{background:var(--pink)}.dot-cyan{background:var(--cyan)}.dot-red{background:var(--red)}
-.sidebar-divider{height:1px;background:var(--border);margin:2px 8px}
-.sidebar-stats{padding-top:6px;border-top:1px solid var(--border);margin-top:auto}
-.stat-row{display:flex;justify-content:space-between;font-size:11px;color:var(--text-muted);padding:2px 0}
-.stat-row .num{color:var(--text);font-weight:600}
-.stat-row .num.gold{color:var(--yellow)}
-.toggle-row{display:flex;align-items:center;gap:6px;padding:4px 8px;margin-bottom:2px;cursor:pointer;border-radius:6px;transition:background .15s}
-.toggle-row:hover{background:var(--surface2)}
-.toggle-switch{width:32px;height:18px;border-radius:10px;background:var(--surface3);position:relative;transition:background .2s;flex-shrink:0}
-.toggle-switch.active{background:var(--yellow)}
-.toggle-switch::after{content:'';position:absolute;width:14px;height:14px;border-radius:50%;background:var(--text);top:2px;left:2px;transition:transform .2s}
-.toggle-switch.active::after{transform:translateX(14px);background:#0d0d1a}
-.toggle-label{font-size:11px;font-weight:600;color:var(--text-muted)}
-.toggle-label.active{color:var(--yellow)}
-.toggle-badge{font-size:8px;padding:1px 5px;border-radius:3px;background:var(--yellow);color:#0d0d1a;font-weight:700;display:none}
-.toggle-badge.show{display:inline}
-.filter-display{display:flex;gap:5px;justify-content:center;align-items:center;flex-wrap:wrap}
-.filter-badge{font-size:10px;font-weight:600;padding:3px 8px;border-radius:5px;background:var(--surface2);color:var(--text-muted);border:1px solid var(--border)}
-.filter-badge.level{color:var(--text)}
-.filter-badge.level-a1{border-color:var(--green);color:var(--green)}
-.filter-badge.level-a2{border-color:var(--blue);color:var(--blue)}
-.filter-badge.level-b1{border-color:var(--orange);color:var(--orange)}
-.filter-badge.level-b2{border-color:var(--red);color:var(--red)}
-.filter-badge.exam{border-color:var(--yellow);color:var(--yellow)}
-.card-counter{font-size:12px;color:var(--text-muted);font-weight:500}
-.card-counter .current{color:var(--text);font-size:15px;font-weight:700}
-.card-wrapper{width:100%;max-width:520px;aspect-ratio:4/3;perspective:1200px;cursor:pointer}
-.card{width:100%;height:100%;position:relative;transition:transform .5s cubic-bezier(.4,0,.2,1);transform-style:preserve-3d}
-.card.flipped{transform:rotateY(180deg)}
-.card-face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:var(--radius);background:var(--surface);border:1px solid var(--border);box-shadow:var(--shadow);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:28px;overflow:hidden}
-.card-face::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
-.card-face.noun::before{background:var(--green)}
-.card-face.verb::before{background:var(--blue)}
-.card-face.phrase::before{background:var(--purple)}
-.card-face.adverb::before{background:var(--yellow)}
-.card-face.question::before{background:var(--pink)}
-.card-face.case::before{background:var(--cyan)}
-.card-face.grammar::before{background:var(--red)}
-.card-back{transform:rotateY(180deg)}
-.card-badges{position:absolute;top:10px;left:10px;right:10px;display:flex;justify-content:space-between;pointer-events:none;gap:4px;flex-wrap:wrap}
-.card-type-badge,.card-level-badge,.card-exam-badge{font-size:8px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;padding:2px 6px;border-radius:4px;background:var(--surface3);color:var(--text-muted);white-space:nowrap}
-.card-level-badge.lvl-a1{background:rgba(74,222,128,.2);color:var(--green)}
-.card-level-badge.lvl-a2{background:rgba(96,165,250,.2);color:var(--blue)}
-.card-level-badge.lvl-b1{background:rgba(251,146,60,.2);color:var(--orange)}
-.card-level-badge.lvl-b2{background:rgba(248,113,113,.2);color:var(--red)}
-.card-exam-badge{background:rgba(251,191,36,.25);color:var(--yellow);display:none}
-.card-emoji{font-size:clamp(36px,6vw,64px);line-height:1;margin-bottom:6px}
-.card-german{font-size:clamp(24px,4vw,44px);font-weight:800;text-align:center;line-height:1.2;word-break:break-word}
-.card-article{font-size:14px;font-weight:600;margin-bottom:4px;padding:2px 8px;border-radius:5px;display:inline-block}
-.card-article.der{color:var(--blue);background:rgba(96,165,250,.15)}
-.card-article.die{color:var(--purple);background:rgba(192,132,252,.15)}
-.card-article.das{color:var(--green);background:rgba(74,222,128,.15)}
-.card-hint{position:absolute;bottom:12px;font-size:10px;color:var(--text-muted);opacity:.4;transition:opacity .2s}
-.card:hover .card-hint{opacity:.7}
-.card-english{font-size:clamp(18px,2.5vw,30px);font-weight:700;text-align:center;line-height:1.3;color:var(--text)}
-.card-extra{font-size:13px;color:var(--text-muted);text-align:center;margin-top:10px;line-height:1.5;max-width:360px}
-.card-extra strong{color:var(--text)}
-.card-extra .example{color:var(--text-muted);font-style:italic;margin-top:3px;font-size:12px}
-.controls{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}
-.ctrl-btn{padding:8px 18px;border-radius:9px;border:none;font-size:12px;font-weight:600;cursor:pointer;transition:all .12s;font-family:inherit}
-.ctrl-btn:active{transform:scale(.93)}
-.ctrl-btn-again{background:#3b1f1f;color:#f87171}
-.ctrl-btn-again:hover{background:#4f2a2a}
-.ctrl-btn-good{background:#1f3b2a;color:#4ade80}
-.ctrl-btn-good:hover{background:#2a4f38}
-.ctrl-btn-easy{background:#1f2a3b;color:#60a5fa}
-.ctrl-btn-easy:hover{background:#2a384f}
-.ctrl-btn-nav{background:var(--surface2);color:var(--text);padding:8px 14px}
-.ctrl-btn-nav:hover{background:var(--surface3)}
-.ctrl-btn-shuffle{background:var(--surface2);color:var(--text-muted);padding:8px 12px;font-size:14px}
-.ctrl-btn-shuffle:hover{background:var(--surface3);color:var(--text)}
-.progress-wrap{width:100%;max-width:520px;height:3px;background:var(--surface2);border-radius:2px;overflow:hidden}
-.progress-fill{height:100%;border-radius:2px;transition:width .4s ease,background .4s;width:0%}
-.empty-state{text-align:center;padding:28px}
-.empty-state .icon{font-size:38px;margin-bottom:10px}
-.empty-state h3{font-size:16px;font-weight:700;margin-bottom:4px}
-.empty-state p{color:var(--text-muted);font-size:12px}
-@keyframes cardOut{0%{opacity:1;transform:scale(1)}100%{opacity:0;transform:scale(.9) translateY(-20px)}}
-@keyframes cardIn{0%{opacity:0;transform:scale(1.1) translateY(20px)}100%{opacity:1;transform:scale(1) translateY(0)}}
-.card-wrapper.anim-out .card{animation:cardOut .18s ease forwards}
-.card-wrapper.anim-in .card{animation:cardIn .18s ease forwards}
-.sidebar::-webkit-scrollbar{width:3px}
-.sidebar::-webkit-scrollbar-track{background:transparent}
-.sidebar::-webkit-scrollbar-thumb{background:var(--surface3);border-radius:2px}
-.key-hint{font-size:10px;color:var(--text-muted);opacity:.3;text-align:center;margin-top:-4px}
-@media(max-width:860px){
-  .app{padding:8px;gap:8px}.sidebar{width:200px;min-width:200px;padding:14px 10px}.nav-btn{font-size:11px;padding:5px 7px}
+
+body {
+  font-family: var(--font-sans);
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
-@media(max-width:700px){
-  .app{flex-direction:column;padding:5px;gap:5px}
-  .sidebar{width:100%;min-width:auto;flex-direction:row;padding:8px 10px;gap:2px;overflow-x:auto;flex-shrink:0;border-radius:10px;align-items:center;flex-wrap:wrap}
-  .logo,.sidebar-divider,.sidebar-stats{display:none}
-  .level-row{border-bottom:none;padding:0;margin:0}
-  .lvl-btn{padding:2px 6px;font-size:9px}
-  .nav-group{flex-direction:row;gap:2px;margin:0}
-  .nav-label{display:none}
-  .nav-btn{padding:4px 6px;white-space:nowrap;font-size:10px;justify-content:center}
-  .nav-btn .count{display:none}
-  .toggle-row{display:none}
-  .main{padding:6px;gap:10px}
-  .ctrl-btn{padding:6px 12px;font-size:11px}
+
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+/* ─── focus ─── */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
 }
-@media(max-width:480px){
-  .card-face{padding:16px}.ctrl-btn{padding:5px 10px;font-size:10px}
+
+/* ─── top bar ─── */
+.topbar {
+  height: var(--topbar-height);
+  background: #15171b;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+  gap: 16px;
+  flex-shrink: 0;
+}
+.topbar-logo {
+  font-weight: 700;
+  font-size: 1.1rem;
+  letter-spacing: -0.02em;
+  color: var(--accent);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.topbar-logo svg { display: block; }
+.topbar-breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  margin-left: 8px;
+}
+.topbar-breadcrumb span { color: var(--text-secondary); }
+.topbar-spacer { flex: 1; }
+.topbar-profile {
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  background: var(--bg-hover);
+  border: 1px solid var(--border-light);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.75rem; font-weight: 600; color: var(--text-secondary);
+  cursor: default;
+}
+
+/* ─── layout ─── */
+.app-layout {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+/* ─── sidebar ─── */
+.sidebar {
+  width: var(--sidebar-width);
+  background: var(--bg-secondary);
+  border-right: 1px solid var(--border);
+  overflow-y: auto;
+  flex-shrink: 0;
+  padding: 16px 0;
+}
+.sidebar-heading {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+  padding: 8px 20px 12px;
+}
+.lesson-nav { list-style: none; }
+.lesson-nav li { margin: 0; }
+.lesson-nav button {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 10px 20px;
+  background: none;
+  border: none;
+  border-left: 3px solid transparent;
+  color: var(--text-secondary);
+  font-size: 0.88rem;
+  font-family: var(--font-sans);
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+}
+.lesson-nav button:hover { background: var(--bg-hover); color: var(--text-primary); }
+.lesson-nav button:focus-visible { outline-offset: -2px; }
+.lesson-nav button[aria-current="page"] {
+  background: var(--bg-active);
+  border-left-color: var(--accent);
+  color: var(--text-primary);
+  font-weight: 600;
+}
+.lesson-num {
+  flex-shrink: 0;
+  width: 24px; height: 24px;
+  border-radius: 50%;
+  background: var(--bg-surface);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.7rem; font-weight: 600;
+  color: var(--text-muted);
+  transition: background 0.15s, color 0.15s;
+}
+.lesson-nav button[aria-current="page"] .lesson-num {
+  background: var(--accent-dim);
+  color: #fff;
+}
+.lesson-nav button:hover .lesson-num { background: var(--bg-hover); color: var(--text-secondary); }
+
+/* ─── main content ─── */
+.main-content {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  overflow: hidden;
+  min-width: 0;
+}
+
+/* ─── lesson reader ─── */
+.reader-panel {
+  overflow-y: auto;
+  padding: 32px 36px;
+  border-right: 1px solid var(--border);
+}
+.reader-panel h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 4px;
+  color: var(--text-primary);
+}
+.reader-panel .lesson-meta {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin-bottom: 24px;
+}
+.reader-panel h3 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 24px 0 10px;
+  color: var(--text-primary);
+}
+.reader-panel p {
+  line-height: 1.65;
+  margin-bottom: 14px;
+  color: var(--text-secondary);
+}
+.reader-panel pre {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px 18px;
+  overflow-x: auto;
+  margin: 16px 0;
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  line-height: 1.55;
+  color: #d4d4d4;
+}
+.reader-panel code {
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+}
+.reader-panel p code {
+  background: var(--bg-surface);
+  padding: 2px 6px;
+  border-radius: var(--radius-sm);
+  color: #ce91d8;
+}
+.reader-panel ul {
+  margin: 10px 0 14px 22px;
+  color: var(--text-secondary);
+  line-height: 1.65;
+}
+.reader-panel li { margin-bottom: 4px; }
+.reader-panel .keyword  { color: #569cd6; }
+.reader-panel .type     { color: #4ec9b0; }
+.reader-panel .string   { color: #ce9178; }
+.reader-panel .comment  { color: #6a9955; font-style: italic; }
+.reader-panel .number   { color: #b5cea8; }
+.reader-panel .function { color: #dcdcaa; }
+.reader-panel .preproc  { color: #c586c0; }
+
+/* ─── editor panel ─── */
+.editor-panel {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.editor-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 20px;
+  background: var(--bg-secondary);
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+.editor-toolbar label {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.editor-toolbar-actions { display: flex; gap: 8px; }
+.btn {
+  font-family: var(--font-sans);
+  font-size: 0.82rem;
+  font-weight: 600;
+  padding: 7px 18px;
+  border-radius: var(--radius-sm);
+  border: none;
+  cursor: pointer;
+  transition: background 0.15s, transform 0.1s;
+}
+.btn:active { transform: scale(0.97); }
+.btn-primary {
+  background: var(--accent);
+  color: #0a0d14;
+}
+.btn-primary:hover { background: #6fd0fa; }
+.btn-primary:focus-visible { outline-color: var(--accent); }
+.btn-secondary {
+  background: var(--bg-surface);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-light);
+}
+.btn-secondary:hover { background: var(--bg-hover); color: var(--text-primary); }
+
+.editor-wrapper {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+}
+.editor-wrapper textarea {
+  width: 100%;
+  height: 100%;
+  padding: 20px;
+  background: var(--code-bg);
+  color: #d4d4d4;
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  line-height: 1.6;
+  border: none;
+  resize: none;
+  outline: none;
+  tab-size: 2;
+  white-space: pre;
+  overflow-wrap: normal;
+  overflow-x: auto;
+}
+.editor-wrapper textarea::placeholder { color: var(--text-muted); }
+
+.status-bar {
+  flex-shrink: 0;
+  padding: 10px 20px;
+  background: var(--bg-secondary);
+  border-top: 1px solid var(--border);
+  font-size: 0.82rem;
+  min-height: 42px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: color 0.2s;
+}
+.status-bar[data-status="success"] { color: var(--success); }
+.status-bar[data-status="error"] { color: var(--error); }
+.status-bar[data-status="info"] { color: var(--text-muted); }
+.status-bar svg { flex-shrink: 0; }
+
+/* ─── toggle sidebar (tablet) ─── */
+.sidebar-toggle {
+  display: none;
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  padding: 4px;
+  border-radius: var(--radius-sm);
+}
+.sidebar-toggle:hover { color: var(--text-primary); }
+
+/* ─── responsive ─── */
+@media (max-width: 1024px) {
+  .sidebar {
+    width: 220px;
+  }
+  .reader-panel { padding: 24px; }
+}
+
+@media (max-width: 768px) {
+  .sidebar-toggle { display: block; }
+  .app-layout { flex-direction: column; }
+  .sidebar {
+    width: 100%;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.25s ease;
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+  }
+  .sidebar.open { max-height: 400px; overflow-y: auto; }
+  .sidebar-heading { padding: 8px 16px 10px; }
+  .lesson-nav button { padding: 8px 16px; }
+
+  .main-content {
+    grid-template-columns: 1fr;
+    overflow: visible;
+  }
+  .reader-panel {
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+    padding: 20px;
+    max-height: 50vh;
+  }
+  .editor-panel { min-height: 40vh; }
+  .topbar { gap: 10px; padding: 0 12px; }
+  .topbar-breadcrumb { display: none; }
 }
 </style>
 </head>
 <body>
-<div class="app">
-  <aside class="sidebar" id="sidebar">
-    <div class="logo">DeutschLern<span>German Flashcards</span></div>
 
-    <div class="level-row">
-      <button class="lvl-btn active" data-level="all">All</button>
-      <button class="lvl-btn" data-level="a1">A1</button>
-      <button class="lvl-btn" data-level="a2">A2</button>
-      <button class="lvl-btn" data-level="b1">B1</button>
-      <button class="lvl-btn" data-level="b2">B2</button>
-    </div>
+<!-- ═══ top bar ═══ -->
+<header class="topbar" role="banner">
+  <button class="sidebar-toggle" aria-label="Toggle lesson list" id="sidebarToggle" type="button">
+    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="5" x2="17" y2="5"/><line x1="3" y1="10" x2="17" y2="10"/><line x1="3" y1="15" x2="17" y2="15"/></svg>
+  </button>
+  <div class="topbar-logo">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+    CPP Learn
+  </div>
+  <div class="topbar-breadcrumb">
+    <span>Courses</span>
+    <span>/</span>
+    <span>C++ Fundamentals</span>
+    <span>/</span>
+    <span id="breadcrumbLesson">Lesson 1</span>
+  </div>
+  <div class="topbar-spacer"></div>
+  <div class="topbar-profile" aria-label="User avatar" role="img">JD</div>
+</header>
 
-    <div class="toggle-row" id="exam-toggle">
-      <div class="toggle-switch" id="exam-switch"></div>
-      <span class="toggle-label" id="exam-label">Pr&uuml;fungsrelevant</span>
-      <span class="toggle-badge" id="exam-badge">EXAM</span>
-    </div>
+<!-- ═══ layout ═══ -->
+<div class="app-layout">
 
-    <div class="nav-group">
-      <div class="nav-label">Vocabulary</div>
-      <button class="nav-btn active" data-cat="all"><span class="dot" style="background:var(--text-muted)"></span>All<span class="count" id="count-all">0</span></button>
-      <button class="nav-btn" data-cat="nouns"><span class="dot dot-green"></span>Nouns<span class="count" id="count-nouns">0</span></button>
-      <button class="nav-btn" data-cat="verbs"><span class="dot dot-blue"></span>Verbs<span class="count" id="count-verbs">0</span></button>
-      <button class="nav-btn" data-cat="adverb"><span class="dot dot-yellow"></span>Adverbs<span class="count" id="count-adverb">0</span></button>
-    </div>
-
-    <div class="sidebar-divider"></div>
-
-    <div class="nav-group">
-      <div class="nav-label">Language</div>
-      <button class="nav-btn" data-cat="question"><span class="dot dot-pink"></span>Questions<span class="count" id="count-question">0</span></button>
-      <button class="nav-btn" data-cat="case"><span class="dot dot-cyan"></span>Cases<span class="count" id="count-case">0</span></button>
-      <button class="nav-btn" data-cat="grammar"><span class="dot dot-red"></span>Grammar<span class="count" id="count-grammar">0</span></button>
-      <button class="nav-btn" data-cat="phrases"><span class="dot dot-purple"></span>Phrases<span class="count" id="count-phrases">0</span></button>
-    </div>
-
-    <div class="sidebar-divider"></div>
-
-    <div class="sidebar-stats">
-      <div class="stat-row"><span>W&ouml;rter gelernt</span><span class="num gold" id="stat-learned">0</span></div>
-      <div class="stat-row"><span>Studied (session)</span><span class="num" id="stat-studied">0</span></div>
-      <div class="stat-row"><span>Remaining</span><span class="num" id="stat-remaining">0</span></div>
-      <div class="stat-row"><span>Progress</span><span class="num" id="stat-pct">0%</span></div>
-    </div>
+  <!-- ─── sidebar ─── -->
+  <aside class="sidebar" id="sidebar" aria-label="Lesson navigation">
+    <div class="sidebar-heading">Course — 10 lessons</div>
+    <nav aria-label="Lesson list">
+      <ul class="lesson-nav" id="lessonNav" role="list"></ul>
+    </nav>
   </aside>
 
-  <main class="main">
-    <div class="filter-display" id="filter-display">
-      <span class="filter-badge level" id="badge-level">ALL LEVELS</span>
-      <span class="filter-badge" id="badge-category">ALL</span>
-      <span class="filter-badge exam" id="badge-exam" style="display:none">EXAM</span>
-    </div>
-    <div class="card-counter"><span class="current" id="card-current">1</span> / <span id="card-total">1</span></div>
+  <!-- ─── main ─── -->
+  <main class="main-content" id="mainContent">
 
-    <div class="card-wrapper" id="card-wrapper">
-      <div class="card" id="card">
-        <div class="card-face noun" id="face-front">
-          <div class="card-badges">
-            <span class="card-level-badge lvl-a1" id="badge-level-front">A1</span>
-            <span class="card-exam-badge" id="badge-exam-front">EXAM</span>
-            <span class="card-type-badge" id="badge-type-front">NOUN</span>
-          </div>
-          <div class="card-emoji" id="card-emoji">&#x1FA91;</div>
-          <div class="card-article der" id="card-article"></div>
-          <div class="card-german" id="card-german">der Tisch</div>
-          <div class="card-hint">click or press Space to flip</div>
-        </div>
-        <div class="card-face card-back noun" id="face-back">
-          <div class="card-badges">
-            <span class="card-level-badge lvl-a1" id="badge-level-back">A1</span>
-            <span class="card-exam-badge" id="badge-exam-back">EXAM</span>
-            <span class="card-type-badge" id="badge-type-back">NOUN</span>
-          </div>
-          <div class="card-emoji" id="card-emoji-back">&#x1FA91;</div>
-          <div class="card-english" id="card-english">table</div>
-          <div class="card-extra" id="card-extra"><strong>Plural:</strong> die Tische</div>
+    <!-- reader -->
+    <section class="reader-panel" id="readerPanel" aria-label="Lesson content">
+      <h2 id="readerTitle">Introduction to C++</h2>
+      <div class="lesson-meta" id="readerMeta">Lesson 1 of 10</div>
+      <div id="readerBody"></div>
+    </section>
+
+    <!-- editor -->
+    <section class="editor-panel" aria-label="Code editor">
+      <div class="editor-toolbar">
+        <label for="codeEditor">main.cpp</label>
+        <div class="editor-toolbar-actions">
+          <button class="btn btn-primary" id="checkBtn" type="button">Check Answer</button>
         </div>
       </div>
-    </div>
+      <div class="editor-wrapper">
+        <textarea
+          id="codeEditor"
+          spellcheck="false"
+          autocomplete="off"
+          aria-label="C++ code editor"
+          placeholder="// Write your C++ code here"
+        ></textarea>
+      </div>
+      <div class="status-bar" id="statusBar" data-status="info" role="status" aria-live="polite">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="8" r="6"/><line x1="8" y1="5" x2="8" y2="9"/><line x1="8" y1="11" x2="8.01" y2="11"/></svg>
+        <span id="statusText">Ready</span>
+      </div>
+    </section>
 
-    <div class="controls" id="controls">
-      <button class="ctrl-btn ctrl-btn-again" id="btn-again">Again</button>
-      <button class="ctrl-btn ctrl-btn-good" id="btn-good">Good</button>
-      <button class="ctrl-btn ctrl-btn-easy" id="btn-easy">Easy</button>
-      <button class="ctrl-btn ctrl-btn-nav" id="btn-prev">&larr;</button>
-      <button class="ctrl-btn ctrl-btn-nav" id="btn-next">&rarr;</button>
-      <button class="ctrl-btn ctrl-btn-shuffle" id="btn-shuffle">&olarr;</button>
-    </div>
-
-    <div class="progress-wrap"><div class="progress-fill" id="progress-fill"></div></div>
-    <div class="key-hint">Space: flip &middot; &larr; &rarr;: nav &middot; 1:Again 2:Good 3:Easy</div>
   </main>
 </div>
 
 <script>
 (function() {
-"use strict";
+'use strict';
 
-// ── Persistence ──
-function loadProgress() {
-  try {
-    var raw = localStorage.getItem('deutschlern_data');
-    if (!raw) return { studied: [], totalLearned: 0 };
-    var data = JSON.parse(raw);
-    return {
-      studied: Array.isArray(data.studied) ? data.studied : [],
-      totalLearned: typeof data.totalLearned === 'number' ? data.totalLearned : 0
-    };
-  } catch(e) {
-    return { studied: [], totalLearned: 0 };
-  }
+// ─── lesson data ──────────────────────────────────────────────
+const lessons = [
+  {
+    id: 1,
+    title: "Introduction to C++",
+    content: `## What is C++?
+
+C++ is a powerful, general-purpose programming language created by **Bjarne Stroustrup** in 1985. It extends the C language with **object-oriented** features like classes, inheritance, and polymorphism.
+
+### Your First Program
+
+Every C++ program starts with a ` + "`main()`" + ` function. Here's the classic "Hello, World!":
+
+\`\`\`cpp
+#include <iostream>
+
+int main() {
+    std::cout << "Hello, World!" << std::endl;
+    return 0;
+}
+\`\`\`
+
+### How It Works
+
+- <code class="keyword">#include &lt;iostream&gt;</code> — pulls in the input/output library
+- <code class="keyword">int main()</code> — the entry point of every C++ program
+- <code class="keyword">std::cout</code> — prints text to the console
+- <code class="keyword">return 0;</code> — tells the OS the program finished successfully
+
+> 💡 **Try it:** Modify the string in the editor to print your own message, then click **Check Answer**.`,
+
+    starterCode: `#include <iostream>\n\nint main() {\n    std::cout << "Hello, World!" << std::endl;\n    return 0;\n}`
+  },
+  {
+    id: 2,
+    title: "Variables & Data Types",
+    content: `## Storing Data with Variables
+
+Variables let you store and manipulate data. C++ is **statically typed** — you must declare the type of every variable.
+
+### Common Data Types
+
+| Type     | Size    | Example         |
+|----------|---------|-----------------|
+| \`int\`     | 4 bytes | \`int age = 25;\`  |
+| \`double\`  | 8 bytes | \`double pi = 3.14;\` |
+| \`char\`    | 1 byte  | \`char grade = 'A';\` |
+| \`bool\`    | 1 byte  | \`bool ok = true;\` |
+| \`std::string\` | variable | \`std::string name = "Alice";\` |
+
+### Example
+
+\`\`\`cpp
+#include <iostream>
+#include <string>
+
+int main() {
+    int year = 2026;
+    double price = 19.99;
+    char currency = '$';
+    bool inStock = true;
+    std::string product = "Widget";
+
+    std::cout << product << " costs "
+              << currency << price
+              << " (" << year << ")"
+              << std::endl;
+    return 0;
+}
+\`\`\``,
+    starterCode: `#include <iostream>\n#include <string>\n\nint main() {\n    std::string name = "Learner";\n    int age = 20;\n    std::cout << "My name is " << name << " and I am " << age << " years old." << std::endl;\n    return 0;\n}`
+  },
+  {
+    id: 3,
+    title: "Input & Output",
+    content: `## Console I/O
+
+C++ uses **streams** for input and output:
+- <code class="keyword">std::cout</code> — output stream (console)
+- <code class="keyword">std::cin</code> — input stream (keyboard)
+
+### Reading Input
+
+\`\`\`cpp
+#include <iostream>
+
+int main() {
+    int number;
+    std::cout << "Enter a number: ";
+    std::cin >> number;
+    std::cout << "You entered: " << number << std::endl;
+    return 0;
+}
+\`\`\`
+
+### Chaining
+
+You can chain multiple values with \`<<\` (output) and \`>>\` (input).
+
+> **Practice:** Write a program that asks for the user's name and age, then prints a greeting.`,
+    starterCode: `#include <iostream>\n#include <string>\n\nint main() {\n    std::string name;\n    int age;\n\n    std::cout << "What is your name? ";\n    std::cin >> name;\n\n    std::cout << "Hello, " << name << "!" << std::endl;\n    return 0;\n}`
+  },
+  {
+    id: 4,
+    title: "Conditionals",
+    content: `## Making Decisions
+
+C++ uses \`if\`, \`else if\`, and \`else\` to run code conditionally.
+
+### Syntax
+
+\`\`\`cpp
+if (condition) {
+    // runs if condition is true
+} else if (otherCondition) {
+    // runs if first is false and otherCondition is true
+} else {
+    // runs if all above are false
+}
+\`\`\`
+
+### Comparison Operators
+
+\`==\`, \`!=\`, \`<\`, \`>\`, \`<=\`, \`>=\`
+
+### Logical Operators
+
+\`&&\` (and), \`||\` (or), \`!\` (not)
+
+### Example
+
+\`\`\`cpp
+#include <iostream>
+
+int main() {
+    int score = 85;
+    if (score >= 90) {
+        std::cout << "Grade: A" << std::endl;
+    } else if (score >= 80) {
+        std::cout << "Grade: B" << std::endl;
+    } else {
+        std::cout << "Grade: C or lower" << std::endl;
+    }
+    return 0;
+}
+\`\`\``,
+    starterCode: `#include <iostream>\n\nint main() {\n    int temperature = 30;\n\n    if (temperature > 25) {\n        std::cout << "It's hot outside!" << std::endl;\n    } else if (temperature > 15) {\n        std::cout << "It's warm outside." << std::endl;\n    } else {\n        std::cout << "It's cold outside." << std::endl;\n    }\n\n    return 0;\n}`
+  },
+  {
+    id: 5,
+    title: "Loops",
+    content: `## Repeating Code
+
+C++ offers three loop constructs: \`for\`, \`while\`, and \`do-while\`.
+
+### For Loop
+
+Best when you know how many iterations:
+
+\`\`\`cpp
+for (int i = 0; i < 5; i++) {
+    std::cout << i << " ";
+}
+// Output: 0 1 2 3 4
+\`\`\`
+
+### While Loop
+
+Runs while a condition is true:
+
+\`\`\`cpp
+int count = 0;
+while (count < 3) {
+    std::cout << count << " ";
+    count++;
+}
+// Output: 0 1 2
+\`\`\`
+
+### Do-While
+
+Runs the body **at least once**:
+
+\`\`\`cpp
+int x = 10;
+do {
+    std::cout << x << std::endl;
+    x--;
+} while (x > 0);
+\`\`\``,
+    starterCode: `#include <iostream>\n\nint main() {\n    for (int i = 1; i <= 5; i++) {\n        std::cout << "Count: " << i << std::endl;\n    }\n    return 0;\n}`
+  },
+  {
+    id: 6,
+    title: "Functions",
+    content: `## Reusable Code Blocks
+
+Functions let you group code into reusable units.
+
+### Defining a Function
+
+\`\`\`cpp
+returnType functionName(parameters) {
+    // body
+    return value;
+}
+\`\`\`
+
+### Example
+
+\`\`\`cpp
+#include <iostream>
+
+int add(int a, int b) {
+    return a + b;
 }
 
-function saveProgress(studiedArr, total) {
-  try {
-    localStorage.setItem('deutschlern_data', JSON.stringify({
-      studied: studiedArr,
-      totalLearned: total
-    }));
-  } catch(e) {}
+int main() {
+    int sum = add(10, 5);
+    std::cout << "Sum: " << sum << std::endl;
+    return 0;
 }
+\`\`\`
 
-var saved = loadProgress();
+### Function Overloading
 
-// ── State ──
-var state = {
-  level: 'all',
-  category: 'all',
-  index: 0,
-  flipped: false,
-  examOnly: false,
-  studied: new Set(saved.studied),
-  totalLearned: saved.totalLearned,
-  deck: []
+You can define multiple functions with the same name but different parameters.
+
+> **Try it:** Write a function \`square\` that takes an \`int\` and returns its square.`,
+    starterCode: `#include <iostream>\n\nint multiply(int a, int b) {\n    return a * b;\n}\n\nint main() {\n    int result = multiply(4, 7);\n    std::cout << "4 * 7 = " << result << std::endl;\n    return 0;\n}`
+  },
+  {
+    id: 7,
+    title: "Arrays & Strings",
+    content: `## Working with Collections
+
+### Arrays
+
+Fixed-size collection of elements of the same type:
+
+\`\`\`cpp
+int numbers[5] = {10, 20, 30, 40, 50};
+std::cout << numbers[2]; // 30
+\`\`\`
+
+### Strings
+
+\`std::string\` is a dynamic array of characters with many built-in methods:
+
+\`\`\`cpp
+#include <string>
+
+std::string greeting = "Hello";
+std::cout << greeting.length();  // 5
+std::cout << greeting[0];        // H
+\`\`\`
+
+### Common String Methods
+
+| Method        | Description                  |
+|---------------|------------------------------|
+| \`.length()\`   | Returns string length        |
+| \`.substr()\`   | Extracts substring           |
+| \`.find()\`     | Finds character/string       |
+| \`.append()\`   | Appends to end               |`,
+    starterCode: `#include <iostream>\n#include <string>\n\nint main() {\n    std::string words[3] = {"C++", "Java", "Python"};\n    \n    for (int i = 0; i < 3; i++) {\n        std::cout << words[i] << std::endl;\n    }\n    \n    return 0;\n}`
+  },
+  {
+    id: 8,
+    title: "Classes & Objects",
+    content: `## Object-Oriented Programming
+
+A **class** is a blueprint for creating objects. It bundles data (members) and behavior (methods).
+
+### Defining a Class
+
+\`\`\`cpp
+class Rectangle {
+public:
+    double width;
+    double height;
+
+    double area() {
+        return width * height;
+    }
+};
+\`\`\`
+
+### Creating Objects
+
+\`\`\`cpp
+Rectangle rect;
+rect.width = 5.0;
+rect.height = 3.0;
+std::cout << rect.area();  // 15
+\`\`\`
+
+### Constructors
+
+A constructor runs automatically when an object is created:
+
+\`\`\`cpp
+class Rectangle {
+public:
+    double w, h;
+    Rectangle(double w, double h) : w(w), h(h) {}
+    double area() { return w * h; }
+};
+\`\`\``,
+    starterCode: `#include <iostream>\n\nclass Dog {\npublic:\n    std::string name;\n    int age;\n\n    void bark() {\n        std::cout << name << " says Woof!" << std::endl;\n    }\n};\n\nint main() {\n    Dog myDog;\n    myDog.name = "Buddy";\n    myDog.age = 3;\n    myDog.bark();\n    return 0;\n}`
+  },
+  {
+    id: 9,
+    title: "Inheritance",
+    content: `## Reusing Code with Inheritance
+
+Inheritance lets a **derived class** inherit members from a **base class**.
+
+### Syntax
+
+\`\`\`cpp
+class Base {
+    // base members
 };
 
-// ── Data ──
-var CARDS = [
-  // A1 NOUNS
-  { id:'n1', level:'a1', type:'noun', german:'der Tisch', english:'table', article:'der', plural:'die Tische', emoji:'table' },
-  { id:'n2', level:'a1', type:'noun', german:'die Schule', english:'school', article:'die', plural:'die Schulen', emoji:'school' },
-  { id:'n3', level:'a1', type:'noun', german:'das Buch', english:'book', article:'das', plural:'die Bucher', emoji:'book' },
-  { id:'n4', level:'a1', type:'noun', german:'der Freund', english:'friend', article:'der', plural:'die Freunde', emoji:'friend' },
-  { id:'n5', level:'a1', type:'noun', german:'die Familie', english:'family', article:'die', plural:'die Familien', emoji:'family' },
-  { id:'n6', level:'a1', type:'noun', german:'das Haus', english:'house', article:'das', plural:'die Hauser', emoji:'house' },
-  { id:'n7', level:'a1', type:'noun', german:'der Mann', english:'man', article:'der', plural:'die Manner', emoji:'man' },
-  { id:'n8', level:'a1', type:'noun', german:'die Frau', english:'woman', article:'die', plural:'die Frauen', emoji:'woman' },
-  { id:'n9', level:'a1', type:'noun', german:'das Kind', english:'child', article:'das', plural:'die Kinder', emoji:'child' },
-  { id:'n10', level:'a1', type:'noun', german:'der Hund', english:'dog', article:'der', plural:'die Hunde', emoji:'dog' },
-  { id:'n11', level:'a1', type:'noun', german:'der Stuhl', english:'chair', article:'der', plural:'die Stuhle', emoji:'chair' },
-  { id:'n12', level:'a1', type:'noun', german:'das Bett', english:'bed', article:'das', plural:'die Betten', emoji:'bed' },
-  { id:'n13', level:'a1', type:'noun', german:'die Kuche', english:'kitchen', article:'die', plural:'die Kuchen', emoji:'kitchen' },
-  { id:'n14', level:'a1', type:'noun', german:'das Bad', english:'bathroom', article:'das', plural:'die Bader', emoji:'bath' },
-  { id:'n15', level:'a1', type:'noun', german:'das Brot', english:'bread', article:'das', plural:'die Brote', emoji:'bread' },
-  { id:'n16', level:'a1', type:'noun', german:'die Milch', english:'milk', article:'die', plural:'-', emoji:'milk' },
-  { id:'n17', level:'a1', type:'noun', german:'der Kaffee', english:'coffee', article:'der', plural:'-', emoji:'coffee' },
-  { id:'n18', level:'a1', type:'noun', german:'der Kopf', english:'head', article:'der', plural:'die Kopfe', emoji:'head' },
-  { id:'n19', level:'a1', type:'noun', german:'die Hand', english:'hand', article:'die', plural:'die Hande', emoji:'hand' },
-  { id:'n20', level:'a1', type:'noun', german:'das Auge', english:'eye', article:'das', plural:'die Augen', emoji:'eye' },
-  { id:'n21', level:'a1', type:'noun', german:'der Fuß', english:'foot', article:'der', plural:'die Fuße', emoji:'foot' },
-  { id:'n22', level:'a1', type:'noun', german:'das Hemd', english:'shirt', article:'das', plural:'die Hemden', emoji:'shirt' },
-  { id:'n23', level:'a1', type:'noun', german:'die Hose', english:'pants', article:'die', plural:'die Hosen', emoji:'pants' },
-  { id:'n24', level:'a1', type:'noun', german:'der Schuh', english:'shoe', article:'der', plural:'die Schuhe', emoji:'shoe' },
-  { id:'n25', level:'a1', type:'noun', german:'die Jacke', english:'jacket', article:'die', plural:'die Jacken', emoji:'jacket' },
-  { id:'n26', level:'a1', type:'noun', german:'die Farbe', english:'color', article:'die', plural:'die Farben', emoji:'color' },
-  { id:'n27', level:'a1', type:'noun', german:'die Stadt', english:'city', article:'die', plural:'die Stadte', emoji:'city' },
-  { id:'n28', level:'a1', type:'noun', german:'der Zug', english:'train', article:'der', plural:'die Zuge', emoji:'train' },
-  { id:'n29', level:'a1', type:'noun', german:'der Bus', english:'bus', article:'der', plural:'die Busse', emoji:'bus' },
-  { id:'n30', level:'a1', type:'noun', german:'das Fahrrad', english:'bicycle', article:'das', plural:'die Fahrrader', emoji:'bike' },
-  { id:'n31', level:'a1', type:'noun', german:'das Wetter', english:'weather', article:'das', plural:'-', emoji:'sun' },
-  { id:'n32', level:'a1', type:'noun', german:'die Sonne', english:'sun', article:'die', plural:'-', emoji:'sun' },
-  { id:'n33', level:'a1', type:'noun', german:'der Regen', english:'rain', article:'der', plural:'-', emoji:'rain' },
+class Derived : public Base {
+    // derived members
+};
+\`\`\`
 
-  // A1 VERBS
-  { id:'v1', level:'a1', type:'verb', exam:true, german:'sein', english:'to be', pattern:'ist/war/ist gewesen', emoji:'star' },
-  { id:'v2', level:'a1', type:'verb', exam:true, german:'haben', english:'to have', pattern:'hat/hatte/hat gehabt', emoji:'muscle' },
-  { id:'v3', level:'a1', type:'verb', exam:true, german:'werden', english:'to become', pattern:'wird/wurde/ist geworden', emoji:'cycle' },
-  { id:'v4', level:'a1', type:'verb', exam:true, german:'konnen', english:'can/be able to', pattern:'kann/konnte/hat gekonnt', emoji:'check' },
-  { id:'v5', level:'a1', type:'verb', exam:true, german:'mussen', english:'must/have to', pattern:'muss/musste/hat gemusst', emoji:'warning' },
-  { id:'v6', level:'a1', type:'verb', german:'sagen', english:'to say', pattern:'sagt/sagte/hat gesagt', emoji:'speech' },
-  { id:'v7', level:'a1', type:'verb', german:'machen', english:'to do/make', pattern:'macht/machte/hat gemacht', emoji:'tool' },
-  { id:'v8', level:'a1', type:'verb', german:'gehen', english:'to go', pattern:'geht/ging/ist gegangen', emoji:'walk' },
-  { id:'v9', level:'a1', type:'verb', german:'kommen', english:'to come', pattern:'kommt/kam/ist gekommen', emoji:'door' },
-  { id:'v10', level:'a1', type:'verb', german:'sehen', english:'to see', pattern:'sieht/sah/hat gesehen', emoji:'eye' },
-  { id:'v11', level:'a1', type:'verb', german:'geben', english:'to give', pattern:'gibt/gab/hat gegeben', emoji:'give' },
-  { id:'v12', level:'a1', type:'verb', german:'essen', english:'to eat', pattern:'isst/aß/hat gegessen', emoji:'eat' },
-  { id:'v13', level:'a1', type:'verb', german:'trinken', english:'to drink', pattern:'trinkt/trank/hat getrunken', emoji:'drink' },
-  { id:'v14', level:'a1', type:'verb', german:'sprechen', english:'to speak', pattern:'spricht/sprach/hat gesprochen', emoji:'speak' },
-  { id:'v15', level:'a1', type:'verb', german:'nehmen', english:'to take', pattern:'nimmt/nahm/hat genommen', emoji:'take' },
-  { id:'v16', level:'a1', type:'verb', german:'wohnen', english:'to live', pattern:'wohnt/wohnte/hat gewohnt', emoji:'house' },
-  { id:'v17', level:'a1', type:'verb', german:'kaufen', english:'to buy', pattern:'kauft/kaufte/hat gekauft', emoji:'cart' },
-  { id:'v18', level:'a1', type:'verb', german:'suchen', english:'to search', pattern:'sucht/suchte/hat gesucht', emoji:'search' },
-  { id:'v19', level:'a1', type:'verb', german:'finden', english:'to find', pattern:'findet/fand/hat gefunden', emoji:'find' },
-  { id:'v20', level:'a1', type:'verb', german:'brauchen', english:'to need', pattern:'braucht/brauchte/hat gebraucht', emoji:'need' },
-  { id:'v21', level:'a1', type:'verb', german:'spielen', english:'to play', pattern:'spielt/spielte/hat gespielt', emoji:'play' },
+### Example
 
-  // A1 ADVERBS
-  { id:'a1', level:'a1', type:'adverb', german:'heute', english:'today', emoji:'today' },
-  { id:'a2', level:'a1', type:'adverb', german:'morgen', english:'tomorrow', emoji:'tomorrow' },
-  { id:'a3', level:'a1', type:'adverb', german:'gestern', english:'yesterday', emoji:'yesterday' },
-  { id:'a4', level:'a1', type:'adverb', german:'jetzt', english:'now', emoji:'now' },
-  { id:'a5', level:'a1', type:'adverb', german:'hier', english:'here', emoji:'here' },
-  { id:'a6', level:'a1', type:'adverb', german:'da', english:'there', emoji:'there' },
-  { id:'a7', level:'a1', type:'adverb', german:'sehr', english:'very', emoji:'very' },
-  { id:'a8', level:'a1', type:'adverb', german:'auch', english:'also/too', emoji:'also' },
-  { id:'a9', level:'a1', type:'adverb', german:'nicht', english:'not', emoji:'no' },
-  { id:'a10', level:'a1', type:'adverb', german:'viel', english:'much/many', emoji:'many' },
+\`\`\`cpp
+#include <iostream>
 
-  // A1 PHRASES
-  { id:'p1', level:'a1', type:'phrase', german:'Guten Morgen', english:'Good morning', emoji:'sunrise' },
-  { id:'p2', level:'a1', type:'phrase', german:'Guten Tag', english:'Good day/Hello', emoji:'sun' },
-  { id:'p3', level:'a1', type:'phrase', german:'Guten Abend', english:'Good evening', emoji:'sunset' },
-  { id:'p4', level:'a1', type:'phrase', german:'Gute Nacht', english:'Good night', emoji:'moon' },
-  { id:'p5', level:'a1', type:'phrase', german:'Tschuss', english:'Bye!', emoji:'wave' },
-  { id:'p6', level:'a1', type:'phrase', german:'Danke', english:'Thanks', emoji:'pray' },
-  { id:'p7', level:'a1', type:'phrase', german:'Bitte', english:'Please/You are welcome', emoji:'please' },
-  { id:'p8', level:'a1', type:'phrase', german:'Prost!', english:'Cheers!', emoji:'cheers' },
-  { id:'p9', level:'a1', type:'phrase', german:'Entschuldigung', english:'Excuse me/Sorry', emoji:'sorry' },
-  { id:'p10', level:'a1', type:'phrase', german:'Wie geht es Ihnen?', english:'How are you?', emoji:'hello' },
+class Animal {
+public:
+    void breathe() {
+        std::cout << "Breathing..." << std::endl;
+    }
+};
 
-  // A2 NOUNS
-  { id:'n34', level:'a2', type:'noun', exam:true, german:'die Arbeit', english:'work/job', article:'die', plural:'die Arbeiten', emoji:'work' },
-  { id:'n35', level:'a2', type:'noun', german:'das Buro', english:'office', article:'das', plural:'die Buros', emoji:'office' },
-  { id:'n36', level:'a2', type:'noun', german:'der Beruf', english:'profession', article:'der', plural:'die Berufe', emoji:'tie' },
-  { id:'n37', level:'a2', type:'noun', german:'der Arzt', english:'doctor', article:'der', plural:'die Arzte', emoji:'doctor' },
-  { id:'n38', level:'a2', type:'noun', german:'das Krankenhaus', english:'hospital', article:'das', plural:'die Krankenhauser', emoji:'hospital' },
-  { id:'n39', level:'a2', type:'noun', german:'der Schmerz', english:'pain', article:'der', plural:'die Schmerzen', emoji:'pain' },
-  { id:'n40', level:'a2', type:'noun', german:'das Restaurant', english:'restaurant', article:'das', plural:'die Restaurants', emoji:'restaurant' },
-  { id:'n41', level:'a2', type:'noun', german:'die Rechnung', english:'bill', article:'die', plural:'die Rechnungen', emoji:'receipt' },
-  { id:'n42', level:'a2', type:'noun', german:'das Hotel', english:'hotel', article:'das', plural:'die Hotels', emoji:'hotel' },
-  { id:'n43', level:'a2', type:'noun', german:'die Reise', english:'trip', article:'die', plural:'die Reisen', emoji:'travel' },
-  { id:'n44', level:'a2', type:'noun', german:'die Fahrkarte', english:'ticket', article:'die', plural:'die Fahrkarten', emoji:'ticket' },
-  { id:'n45', level:'a2', type:'noun', german:'der Bahnhof', english:'train station', article:'der', plural:'die Bahnhofe', emoji:'station' },
-  { id:'n46', level:'a2', type:'noun', german:'der Flughafen', english:'airport', article:'der', plural:'die Flughafen', emoji:'airport' },
-  { id:'n47', level:'a2', type:'noun', german:'die Kleidung', english:'clothing', article:'die', plural:'-', emoji:'clothing' },
-  { id:'n48', level:'a2', type:'noun', german:'der Preis', english:'price', article:'der', plural:'die Preise', emoji:'price' },
-  { id:'n49', level:'a2', type:'noun', german:'das Handy', english:'mobile phone', article:'das', plural:'die Handys', emoji:'phone' },
-  { id:'n50', level:'a2', type:'noun', german:'der Geburtstag', english:'birthday', article:'der', plural:'die Geburtstage', emoji:'birthday' },
-  { id:'n51', level:'a2', type:'noun', german:'das Geschenk', english:'gift', article:'das', plural:'die Geschenke', emoji:'gift' },
-  { id:'n52', level:'a2', type:'noun', german:'die Katze', english:'cat', article:'die', plural:'die Katzen', emoji:'cat' },
-  { id:'n53', level:'a2', type:'noun', german:'das Auto', english:'car', article:'das', plural:'die Autos', emoji:'car' },
-  { id:'n54', level:'a2', type:'noun', german:'das Wasser', english:'water', article:'das', plural:'-', emoji:'water' },
-  { id:'n55', level:'a2', type:'noun', german:'die Blume', english:'flower', article:'die', plural:'die Blumen', emoji:'flower' },
-  { id:'n56', level:'a2', type:'noun', german:'der Baum', english:'tree', article:'der', plural:'die Baume', emoji:'tree' },
-  { id:'n57', level:'a2', type:'noun', german:'der Schnee', english:'snow', article:'der', plural:'-', emoji:'snow' },
+class Cat : public Animal {
+public:
+    void meow() {
+        std::cout << "Meow!" << std::endl;
+    }
+};
 
-  // A2 VERBS
-  { id:'v22', level:'a2', type:'verb', exam:true, german:'arbeiten', english:'to work', pattern:'arbeitet/arbeitete/hat gearbeitet', emoji:'work' },
-  { id:'v23', level:'a2', type:'verb', exam:true, german:'lernen', english:'to learn', pattern:'lernt/lernte/hat gelernt', emoji:'learn' },
-  { id:'v24', level:'a2', type:'verb', exam:true, german:'verstehen', english:'to understand', pattern:'versteht/verstand/hat verstanden', emoji:'understand' },
-  { id:'v25', level:'a2', type:'verb', exam:true, german:'schreiben', english:'to write', pattern:'schreibt/schrieb/hat geschrieben', emoji:'write' },
-  { id:'v26', level:'a2', type:'verb', exam:true, german:'lesen', english:'to read', pattern:'liest/las/hat gelesen', emoji:'read' },
-  { id:'v27', level:'a2', type:'verb', german:'fahren', english:'to drive/go', pattern:'fahrt/fuhr/ist gefahren', emoji:'drive' },
-  { id:'v28', level:'a2', type:'verb', german:'helfen', english:'to help', pattern:'hilft/half/hat geholfen', emoji:'help' },
-  { id:'v29', level:'a2', type:'verb', german:'bringen', english:'to bring', pattern:'bringt/brachte/hat gebracht', emoji:'bring' },
-  { id:'v30', level:'a2', type:'verb', exam:true, german:'denken', english:'to think', pattern:'denkt/dachte/hat gedacht', emoji:'think' },
-  { id:'v31', level:'a2', type:'verb', german:'antworten', english:'to answer', pattern:'antwortet/antwortete/hat geantwortet', emoji:'answer' },
-  { id:'v32', level:'a2', type:'verb', german:'fragen', english:'to ask', pattern:'fragt/fragte/hat gefragt', emoji:'ask' },
-  { id:'v33', level:'a2', type:'verb', german:'bestellen', english:'to order', pattern:'bestellt/bestellte/hat bestellt', emoji:'order' },
-  { id:'v34', level:'a2', type:'verb', german:'bezahlen', english:'to pay', pattern:'bezahlt/bezahlte/hat bezahlt', emoji:'pay' },
-  { id:'v35', level:'a2', type:'verb', german:'kochen', english:'to cook', pattern:'kocht/kochte/hat gekocht', emoji:'cook' },
-  { id:'v36', level:'a2', type:'verb', german:'wissen', english:'to know', pattern:'weiß/wusste/hat gewusst', emoji:'know' },
-  { id:'v37', level:'a2', type:'verb', german:'glauben', english:'to believe', pattern:'glaubt/glaubte/hat geglaubt', emoji:'believe' },
-  { id:'v38', level:'a2', type:'verb', german:'offnen', english:'to open', pattern:'offnet/offnete/hat geoffnet', emoji:'open' },
-  { id:'v39', level:'a2', type:'verb', german:'schließen', english:'to close', pattern:'schließt/schloss/hat geschlossen', emoji:'close' },
+int main() {
+    Cat cat;
+    cat.breathe();  // inherited
+    cat.meow();     // own method
+    return 0;
+}
+\`\`\`
 
-  // A2 ADVERBS
-  { id:'a11', level:'a2', type:'adverb', german:'immer', english:'always', emoji:'always' },
-  { id:'a12', level:'a2', type:'adverb', german:'oft', english:'often', emoji:'often' },
-  { id:'a13', level:'a2', type:'adverb', german:'manchmal', english:'sometimes', emoji:'sometimes' },
-  { id:'a14', level:'a2', type:'adverb', german:'dort', english:'over there', emoji:'there' },
-  { id:'a15', level:'a2', type:'adverb', german:'links', english:'left', emoji:'left' },
-  { id:'a16', level:'a2', type:'adverb', german:'rechts', english:'right', emoji:'right' },
-  { id:'a17', level:'a2', type:'adverb', german:'geradeaus', english:'straight ahead', emoji:'straight' },
-  { id:'a18', level:'a2', type:'adverb', german:'vielleicht', english:'maybe', emoji:'maybe' },
-  { id:'a19', level:'a2', type:'adverb', german:'deshalb', english:'therefore', emoji:'therefore' },
-  { id:'a20', level:'a2', type:'adverb', german:'zusammen', english:'together', emoji:'together' },
+> 🔑 Inheritance models an **is-a** relationship.`,
+    starterCode: `#include <iostream>\n\nclass Vehicle {\npublic:\n    void start() {\n        std::cout << "Vehicle started." << std::endl;\n    }\n};\n\nclass Car : public Vehicle {\npublic:\n    void honk() {\n        std::cout << "Beep beep!" << std::endl;\n    }\n};\n\nint main() {\n    Car myCar;\n    myCar.start();\n    myCar.honk();\n    return 0;\n}`
+  },
+  {
+    id: 10,
+    title: "Polymorphism",
+    content: `## Many Forms, One Interface
 
-  // A2 PHRASES
-  { id:'p11', level:'a2', type:'phrase', german:'Bitte schon', english:'You are welcome', emoji:'smile' },
-  { id:'p12', level:'a2', type:'phrase', german:'Danke schon', english:'Thank you very much', emoji:'thanks' },
-  { id:'p13', level:'a2', type:'phrase', german:'Wo ist das?', english:'Where is it?', emoji:'where' },
-  { id:'p14', level:'a2', type:'phrase', german:'Wie viel kostet das?', english:'How much is that?', emoji:'money' },
-  { id:'p15', level:'a2', type:'phrase', german:'Ich mochte ...', english:'I would like...', emoji:'want' },
-  { id:'p16', level:'a2', type:'phrase', german:'Konnen Sie mir helfen?', english:'Can you help me?', emoji:'help' },
-  { id:'p17', level:'a2', type:'phrase', german:'Es tut mir leid', english:'I am sorry', emoji:'sorry' },
-  { id:'p18', level:'a2', type:'phrase', german:'Gute Reise!', english:'Have a good trip!', emoji:'travel' },
-  { id:'p19', level:'a2', type:'phrase', german:'Alles Gute!', english:'All the best!', emoji:'celebration' },
-  { id:'p20', level:'a2', type:'phrase', german:'Nichts zu danken', english:'Do not mention it', emoji:'smile' },
+Polymorphism lets you call the same method on different objects and get different behavior.
 
-  // B1 NOUNS
-  { id:'n58', level:'b1', type:'noun', exam:true, german:'die Ausbildung', english:'education/training', article:'die', plural:'die Ausbildungen', emoji:'education' },
-  { id:'n59', level:'b1', type:'noun', exam:true, german:'das Studium', english:'university studies', article:'das', plural:'die Studien', emoji:'study' },
-  { id:'n60', level:'b1', type:'noun', exam:true, german:'die Prufung', english:'exam/test', article:'die', plural:'die Prufungen', emoji:'exam' },
-  { id:'n61', level:'b1', type:'noun', german:'der Kurs', english:'course', article:'der', plural:'die Kurse', emoji:'course' },
-  { id:'n62', level:'b1', type:'noun', exam:true, german:'die Note', english:'grade', article:'die', plural:'die Noten', emoji:'grade' },
-  { id:'n63', level:'b1', type:'noun', german:'die Firma', english:'company', article:'die', plural:'die Firmen', emoji:'company' },
-  { id:'n64', level:'b1', type:'noun', exam:true, german:'die Erfahrung', english:'experience', article:'die', plural:'die Erfahrungen', emoji:'experience' },
-  { id:'n65', level:'b1', type:'noun', german:'die Bewerbung', english:'application', article:'die', plural:'die Bewerbungen', emoji:'application' },
-  { id:'n66', level:'b1', type:'noun', german:'die Beziehung', english:'relationship', article:'die', plural:'die Beziehungen', emoji:'relationship' },
-  { id:'n67', level:'b1', type:'noun', german:'die Umwelt', english:'environment', article:'die', plural:'-', emoji:'earth' },
-  { id:'n68', level:'b1', type:'noun', german:'die Energie', english:'energy', article:'die', plural:'die Energien', emoji:'energy' },
-  { id:'n69', level:'b1', type:'noun', german:'die Gesellschaft', english:'society', article:'die', plural:'die Gesellschaften', emoji:'society' },
-  { id:'n70', level:'b1', type:'noun', german:'die Politik', english:'politics', article:'die', plural:'-', emoji:'politics' },
-  { id:'n71', level:'b1', type:'noun', german:'die Kultur', english:'culture', article:'die', plural:'die Kulturen', emoji:'culture' },
-  { id:'n72', level:'b1', type:'noun', german:'die Geschichte', english:'history/story', article:'die', plural:'die Geschichten', emoji:'history' },
-  { id:'n73', level:'b1', type:'noun', german:'die Bildung', english:'education', article:'die', plural:'-', emoji:'education' },
-  { id:'n74', level:'b1', type:'noun', german:'der Computer', english:'computer', article:'der', plural:'die Computer', emoji:'computer' },
+### Virtual Functions
 
-  // B1 VERBS
-  { id:'v40', level:'b1', type:'verb', exam:true, german:'beginnen', english:'to begin', pattern:'beginnt/begann/hat begonnen', emoji:'begin' },
-  { id:'v41', level:'b1', type:'verb', exam:true, german:'beschreiben', english:'to describe', pattern:'beschreibt/beschrieb/hat beschrieben', emoji:'describe' },
-  { id:'v42', level:'b1', type:'verb', exam:true, german:'erklaren', english:'to explain', pattern:'erklart/erklarte/hat erklart', emoji:'explain' },
-  { id:'v43', level:'b1', type:'verb', german:'erwarten', english:'to expect', pattern:'erwartet/erwartete/hat erwartet', emoji:'expect' },
-  { id:'v44', level:'b1', type:'verb', german:'sich freuen', english:'to be happy about', pattern:'freut/freute/hat gefreut', emoji:'happy' },
-  { id:'v45', level:'b1', type:'verb', german:'sich interessieren', english:'to be interested', pattern:'interessiert/interessierte/hat interessiert', emoji:'interested' },
-  { id:'v46', level:'b1', type:'verb', german:'leben', english:'to live', pattern:'lebt/lebte/hat gelebt', emoji:'live' },
-  { id:'v47', level:'b1', type:'verb', german:'passieren', english:'to happen', pattern:'passiert/passierte/ist passiert', emoji:'happen' },
-  { id:'v48', level:'b1', type:'verb', german:'reisen', english:'to travel', pattern:'reist/reiste/ist gereist', emoji:'travel' },
-  { id:'v49', level:'b1', type:'verb', german:'studieren', english:'to study', pattern:'studiert/studierte/hat studiert', emoji:'study' },
-  { id:'v50', level:'b1', type:'verb', exam:true, german:'teilnehmen', english:'to participate', pattern:'nimmt teil/nahm teil/hat teilgenommen', emoji:'participate' },
-  { id:'v51', level:'b1', type:'verb', german:'verbringen', english:'to spend time', pattern:'verbringt/verbrachte/hat verbracht', emoji:'time' },
-  { id:'v52', level:'b1', type:'verb', german:'vorschlagen', english:'to suggest', pattern:'schlagt vor/schlug vor/hat vorgeschlagen', emoji:'suggest' },
-  { id:'v53', level:'b1', type:'verb', german:'sich vorstellen', english:'to introduce', pattern:'stellt vor/stellte vor/hat vorgestellt', emoji:'introduce' },
-  { id:'v54', level:'b1', type:'verb', german:'gewinnen', english:'to win', pattern:'gewinnt/gewann/hat gewonnen', emoji:'win' },
-  { id:'v55', level:'b1', type:'verb', german:'wahlen', english:'to choose/elect', pattern:'wahlt/wahlte/hat gewahlt', emoji:'choose' },
-  { id:'v56', level:'b1', type:'verb', german:'genießen', english:'to enjoy', pattern:'genießt/genoss/hat genossen', emoji:'enjoy' },
+Mark base class methods as \`virtual\` to allow overriding:
 
-  // B1 ADVERBS
-  { id:'a21', level:'b1', type:'adverb', german:'sofort', english:'immediately', emoji:'immediately' },
-  { id:'a22', level:'b1', type:'adverb', german:'selten', english:'rarely', emoji:'rarely' },
-  { id:'a23', level:'b1', type:'adverb', german:'nie', english:'never', emoji:'never' },
-  { id:'a24', level:'b1', type:'adverb', german:'ziemlich', english:'quite', emoji:'quite' },
-  { id:'a25', level:'b1', type:'adverb', german:'wirklich', english:'really', emoji:'really' },
-  { id:'a26', level:'b1', type:'adverb', german:'außerdem', english:'besides/moreover', emoji:'plus' },
-  { id:'a27', level:'b1', type:'adverb', german:'trotzdem', english:'nevertheless', emoji:'still' },
-  { id:'a28', level:'b1', type:'adverb', german:'deswegen', english:'therefore', emoji:'therefore' },
-  { id:'a29', level:'b1', type:'adverb', german:'besonders', english:'especially', emoji:'star' },
-  { id:'a30', level:'b1', type:'adverb', german:'allerdings', english:'however', emoji:'but' },
+\`\`\`cpp
+class Shape {
+public:
+    virtual double area() = 0;  // pure virtual
+};
 
-  // B1 PHRASES
-  { id:'p21', level:'b1', type:'phrase', german:'Ich verstehe nicht', english:'I do not understand', emoji:'confused' },
-  { id:'p22', level:'b1', type:'phrase', german:'Ich bin mude', english:'I am tired', emoji:'tired' },
-  { id:'p23', level:'b1', type:'phrase', german:'Das gefallt mir', english:'I like that', emoji:'heart' },
-  { id:'p24', level:'b1', type:'phrase', german:'Meiner Meinung nach', english:'In my opinion', emoji:'think' },
-  { id:'p25', level:'b1', type:'phrase', german:'Ich glaube, dass ...', english:'I believe that...', emoji:'believe' },
-  { id:'p26', level:'b1', type:'phrase', german:'Es kommt darauf an', english:'It depends', emoji:'depends' },
-  { id:'p27', level:'b1', type:'phrase', german:'Ich habe Lust auf ...', english:'I feel like...', emoji:'want' },
-  { id:'p28', level:'b1', type:'phrase', german:'Das macht nichts', english:'That does not matter', emoji:'ok' },
-  { id:'p29', level:'b1', type:'phrase', german:'Ich bin einverstanden', english:'I agree', emoji:'agree' },
-  { id:'p30', level:'b1', type:'phrase', german:'Keine Ahnung', english:'No idea', emoji:'shrug' },
+class Circle : public Shape {
+    double r;
+public:
+    Circle(double r) : r(r) {}
+    double area() override { return 3.14159 * r * r; }
+};
 
-  // B2 NOUNS
-  { id:'n75', level:'b2', type:'noun', german:'die Wirtschaft', english:'economy', article:'die', plural:'-', emoji:'economy' },
-  { id:'n76', level:'b2', type:'noun', german:'das Unternehmen', english:'company', article:'das', plural:'die Unternehmen', emoji:'company' },
-  { id:'n77', level:'b2', type:'noun', german:'die Entwicklung', english:'development', article:'die', plural:'die Entwicklungen', emoji:'growth' },
-  { id:'n78', level:'b2', type:'noun', german:'die Forschung', english:'research', article:'die', plural:'die Forschungen', emoji:'research' },
-  { id:'n79', level:'b2', type:'noun', german:'die Wissenschaft', english:'science', article:'die', plural:'die Wissenschaften', emoji:'science' },
-  { id:'n80', level:'b2', type:'noun', german:'das Recht', english:'right/law', article:'das', plural:'die Rechte', emoji:'law' },
-  { id:'n81', level:'b2', type:'noun', german:'das Gesetz', english:'law', article:'das', plural:'die Gesetze', emoji:'law' },
-  { id:'n82', level:'b2', type:'noun', german:'die Freiheit', english:'freedom', article:'die', plural:'-', emoji:'freedom' },
-  { id:'n83', level:'b2', type:'noun', german:'die Zukunft', english:'future', article:'die', plural:'-', emoji:'future' },
-  { id:'n84', level:'b2', type:'noun', exam:true, german:'die Entscheidung', english:'decision', article:'die', plural:'die Entscheidungen', emoji:'decision' },
-  { id:'n85', level:'b2', type:'noun', german:'die Veranderung', english:'change', article:'die', plural:'die Veranderungen', emoji:'change' },
-  { id:'n86', level:'b2', type:'noun', exam:true, german:'die Moglichkeit', english:'possibility', article:'die', plural:'die Moglichkeiten', emoji:'possibility' },
-  { id:'n87', level:'b2', type:'noun', german:'der Vertrag', english:'contract', article:'der', plural:'die Vertrage', emoji:'contract' },
-  { id:'n88', level:'b2', type:'noun', german:'die Steuer', english:'tax', article:'die', plural:'die Steuern', emoji:'tax' },
-  { id:'n89', level:'b2', type:'noun', german:'der Markt', english:'market', article:'der', plural:'die Markte', emoji:'market' },
-  { id:'n90', level:'b2', type:'noun', german:'die Krise', english:'crisis', article:'die', plural:'die Krisen', emoji:'crisis' },
-  { id:'n91', level:'b2', type:'noun', german:'die Gerechtigkeit', english:'justice', article:'die', plural:'-', emoji:'justice' },
-  { id:'n92', level:'b2', type:'noun', exam:true, german:'die Verantwortung', english:'responsibility', article:'die', plural:'-', emoji:'responsibility' },
-  { id:'n93', level:'b2', type:'noun', german:'die Wahrheit', english:'truth', article:'die', plural:'-', emoji:'truth' },
+class Square : public Shape {
+    double side;
+public:
+    Square(double s) : side(s) {}
+    double area() override { return side * side; }
+};
+\`\`\`
 
-  // B2 VERBS
-  { id:'v57', level:'b2', type:'verb', german:'beeinflussen', english:'to influence', pattern:'beeinflusst/beeinflusste/hat beeinflusst', emoji:'influence' },
-  { id:'v58', level:'b2', type:'verb', german:'vermeiden', english:'to avoid', pattern:'vermeidet/vermied/hat vermieden', emoji:'avoid' },
-  { id:'v59', level:'b2', type:'verb', german:'entwickeln', english:'to develop', pattern:'entwickelt/entwickelte/hat entwickelt', emoji:'develop' },
-  { id:'v60', level:'b2', type:'verb', german:'unterstutzen', english:'to support', pattern:'unterstutzt/unterstutzte/hat unterstutzt', emoji:'support' },
-  { id:'v61', level:'b2', type:'verb', german:'analysieren', english:'to analyze', pattern:'analysiert/analysierte/hat analysiert', emoji:'analyze' },
-  { id:'v62', level:'b2', type:'verb', german:'beweisen', english:'to prove', pattern:'beweist/bewies/hat bewiesen', emoji:'prove' },
-  { id:'v63', level:'b2', type:'verb', exam:true, german:'diskutieren', english:'to discuss', pattern:'diskutiert/diskutierte/hat diskutiert', emoji:'discuss' },
-  { id:'v64', level:'b2', type:'verb', exam:true, german:'sich entscheiden', english:'to decide', pattern:'entscheidet/entschied/hat entschieden', emoji:'decide' },
-  { id:'v65', level:'b2', type:'verb', german:'ermoglichen', english:'to enable', pattern:'ermoglicht/ermoglichte/hat ermoglicht', emoji:'enable' },
-  { id:'v66', level:'b2', type:'verb', german:'grunden', english:'to found', pattern:'grundet/grundete/hat gegrundet', emoji:'found' },
-  { id:'v67', level:'b2', type:'verb', exam:true, german:'vergleichen', english:'to compare', pattern:'vergleicht/verglich/hat verglichen', emoji:'compare' },
-  { id:'v68', level:'b2', type:'verb', german:'verursachen', english:'to cause', pattern:'verursacht/verursachte/hat verursacht', emoji:'cause' },
-  { id:'v69', level:'b2', type:'verb', german:'erhohen', english:'to increase', pattern:'erhoht/erhohste/hat erhoht', emoji:'increase' },
-  { id:'v70', level:'b2', type:'verb', german:'leisten', english:'to achieve', pattern:'leistet/leistete/hat geleistet', emoji:'achieve' },
+### Using Polymorphism
 
-  // B2 ADVERBS
-  { id:'a31', level:'b2', type:'adverb', german:'fast', english:'almost', emoji:'almost' },
-  { id:'a32', level:'b2', type:'adverb', german:'uberall', english:'everywhere', emoji:'everywhere' },
-  { id:'a33', level:'b2', type:'adverb', german:'moglicherweise', english:'possibly', emoji:'maybe' },
-  { id:'a34', level:'b2', type:'adverb', german:'durchaus', english:'absolutely', emoji:'check' },
-  { id:'a35', level:'b2', type:'adverb', german:'inzwischen', english:'meanwhile', emoji:'meanwhile' },
-  { id:'a36', level:'b2', type:'adverb', german:'dennoch', english:'nevertheless', emoji:'still' },
-  { id:'a37', level:'b2', type:'adverb', german:'folglich', english:'consequently', emoji:'consequence' },
-  { id:'a38', level:'b2', type:'adverb', german:'keinesfalls', english:'by no means', emoji:'no' },
-  { id:'a39', level:'b2', type:'adverb', german:'beinahe', english:'nearly', emoji:'almost' },
-  { id:'a40', level:'b2', type:'adverb', german:'nirgends', english:'nowhere', emoji:'nowhere' },
+\`\`\`cpp
+Shape* shapes[2] = {new Circle(5), new Square(4)};
+for (int i = 0; i < 2; i++) {
+    std::cout << shapes[i]->area() << std::endl;
+}
+\`\`\`
 
-  // B2 PHRASES
-  { id:'p31', level:'b2', type:'phrase', german:'Es handelt sich um ...', english:'It is about...', emoji:'about' },
-  { id:'p32', level:'b2', type:'phrase', german:'Ich freue mich darauf', english:'I look forward to it', emoji:'excited' },
-  { id:'p33', level:'b2', type:'phrase', german:'Das ist mir egal', english:'I do not care', emoji:'careless' },
-  { id:'p34', level:'b2', type:'phrase', german:'Aus meiner Sicht', english:'From my perspective', emoji:'view' },
-  { id:'p35', level:'b2', type:'phrase', german:'Ich bin der Meinung, dass', english:'I am of the opinion that', emoji:'opinion' },
-  { id:'p36', level:'b2', type:'phrase', german:'Es besteht die Moglichkeit', english:'There is the possibility', emoji:'possible' },
-  { id:'p37', level:'b2', type:'phrase', german:'Es kommt darauf an, ob', english:'It depends whether', emoji:'depends' },
-  { id:'p38', level:'b2', type:'phrase', german:'Im Großen und Ganzen', english:'By and large', emoji:'overall' },
-
-  // QUESTIONS
-  { id:'q1', level:'a1', type:'question', exam:true, german:'Wer?', english:'Who?', emoji:'who' },
-  { id:'q2', level:'a1', type:'question', exam:true, german:'Was?', english:'What?', emoji:'what' },
-  { id:'q3', level:'a1', type:'question', exam:true, german:'Wo?', english:'Where?', emoji:'where' },
-  { id:'q4', level:'a1', type:'question', exam:true, german:'Wohin?', english:'Where to?', emoji:'whereto' },
-  { id:'q5', level:'a1', type:'question', exam:true, german:'Woher?', english:'Where from?', emoji:'wherefrom' },
-  { id:'q6', level:'a1', type:'question', exam:true, german:'Wie?', english:'How?', emoji:'how' },
-  { id:'q7', level:'a2', type:'question', exam:true, german:'Wann?', english:'When?', emoji:'when' },
-  { id:'q8', level:'a2', type:'question', exam:true, german:'Warum?', english:'Why?', emoji:'why' },
-  { id:'q9', level:'b1', type:'question', exam:true, german:'Welcher / Welche / Welches?', english:'Which?', emoji:'which' },
-  { id:'q10', level:'a1', type:'question', exam:true, german:'Ja/Nein Frage', english:'Yes/No question (verb first)', emoji:'yesno' },
-
-  // CASES
-  { id:'c1', level:'a1', type:'case', exam:true, german:'Nominativ', english:'Subject case (who/what)', emoji:'subject' },
-  { id:'c2', level:'a1', type:'case', exam:true, german:'Akkusativ', english:'Direct object (whom/what)', emoji:'target' },
-  { id:'c3', level:'a2', type:'case', exam:true, german:'Dativ', english:'Indirect object (to whom)', emoji:'gift' },
-  { id:'c4', level:'b1', type:'case', exam:true, german:'Genitiv', english:'Possession (whose)', emoji:'possession' },
-
-  // GRAMMAR
-  { id:'g1', level:'a1', type:'grammar', exam:true, german:'Satzbau', english:'Verb is 2nd position in main clause', emoji:'structure' },
-  { id:'g2', level:'a2', type:'grammar', exam:true, german:'Nebensatz', english:'Sub clause: verb goes to the end', emoji:'chain' },
-  { id:'g3', level:'a1', type:'grammar', exam:true, german:'Prasens', english:'Present tense', emoji:'present' },
-  { id:'g4', level:'a2', type:'grammar', exam:true, german:'Perfekt', english:'Perfect tense: haben/sein + Partizip II', emoji:'past' },
-  { id:'g5', level:'b1', type:'grammar', exam:true, german:'Trennbare Verben', english:'Separable prefix verbs', emoji:'split' },
-  { id:'g6', level:'a1', type:'grammar', exam:true, german:'Modalverben', english:'Modal verbs + infinitive at end', emoji:'modal' },
-  { id:'g7', level:'b1', type:'grammar', exam:true, german:'Adjektivendungen', english:'Adjective endings after article', emoji:'paint' },
-  { id:'g8', level:'b1', type:'grammar', exam:true, german:'Komparativ', english:'Comparative: schneller, besser', emoji:'graph' },
-  { id:'g9', level:'a2', type:'grammar', exam:true, german:'Praspositionen', english:'Two-way prepositions: in, auf, unter...', emoji:'compass' },
-  { id:'g10', level:'b2', type:'grammar', exam:true, german:'Passiv', english:'Passive: werden + Partizip II', emoji:'passive' },
-  { id:'g11', level:'b2', type:'grammar', exam:true, german:'Konjunktiv II', english:'Would/could: wurde + Infinitiv', emoji:'subjunctive' },
-  { id:'g12', level:'a2', type:'grammar', exam:true, german:'Reflexive Verben', english:'Verb + sich: ich wasche mich', emoji:'reflexive' }
+> 💡 Polymorphism is a cornerstone of OOP — it makes code **extensible** and **maintainable**.`,
+    starterCode: `#include <iostream>\n\nclass Bird {\npublic:\n    virtual void speak() {\n        std::cout << "Bird sound" << std::endl;\n    }\n    virtual ~Bird() {}\n};\n\nclass Parrot : public Bird {\npublic:\n    void speak() override {\n        std::cout << "Squawk!" << std::endl;\n    }\n};\n\nint main() {\n    Bird* b = new Parrot();\n    b->speak();\n    delete b;\n    return 0;\n}`
+  }
 ];
 
-// ── Helpers ──
-var $ = function(id) { return document.getElementById(id); };
+// ─── helpers ──────────────────────────────────────────────────
 
-var cardEl = $('card');
-var wrapperEl = $('card-wrapper');
-var frontEl = $('face-front');
-var backEl = $('face-back');
-
-var EMOJI_MAP = {
-  table:'🪑', school:'🏫', book:'📖', friend:'👤', family:'👪', house:'🏠',
-  man:'👨', woman:'👩', child:'👶', dog:'🐕', chair:'🪑', bed:'🛏️',
-  kitchen:'🍳', bath:'🛁', bread:'🍞', milk:'🥛', coffee:'☕', head:'🗣️',
-  hand:'✋', eye:'👁️', foot:'🦶', shirt:'👔', pants:'👖', shoe:'👟',
-  jacket:'🧥', color:'🎨', city:'🏙️', train:'🚂', bus:'🚌', bike:'🚲',
-  sun:'☀️', rain:'🌧️', snow:'❄️',
-  star:'✨', muscle:'💪', cycle:'🔄', check:'✅', warning:'⚠️',
-  speech:'💬', tool:'🔧', walk:'🚶', door:'🚪', give:'🤲',
-  eat:'🍴', drink:'🥤', speak:'🗣️', take:'✋', cart:'🛒',
-  search:'🔍', find:'🔎', need:'🆘', play:'🎮',
-  today:'📅', tomorrow:'🌄', yesterday:'🌃', now:'⏰', here:'📍',
-  there:'📍', very:'💯', also:'➕', no:'🚫', many:'📈',
-  sunrise:'🌅', sunset:'🌇', moon:'🌙', wave:'👋', pray:'🙏',
-  please:'🤲', cheers:'🥂', sorry:'🙏', hello:'🙋',
-  work:'💼', office:'🏢', tie:'👔', doctor:'👨‍⚕️', hospital:'🏥',
-  pain:'🤕', restaurant:'🍽️', receipt:'🧾', hotel:'🏨', travel:'🧳',
-  ticket:'🎫', station:'🚉', airport:'✈️', clothing:'👗', price:'💰',
-  phone:'📱', birthday:'🎂', gift:'🎁', cat:'🐱', car:'🚗', water:'💧',
-  flower:'🌸', tree:'🌳',
-  learn:'📚', understand:'🧩', write:'✏️', read:'📖', drive:'🚗',
-  help:'🤝', bring:'📦', think:'🤔', answer:'💬', ask:'❓',
-  order:'📋', pay:'💳', cook:'🍳', know:'🧠', believe:'🙏',
-  open:'🔓', close:'🔒', always:'♾️', often:'🔄', sometimes:'🤷',
-  left:'⬅️', right:'➡️', straight:'⬆️', maybe:'🤔', therefore:'➡️',
-  together:'👫', smile:'😊', thanks:'🙇', where:'📍', money:'💰',
-  want:'🙋', celebration:'🎉',
-  education:'🎓', study:'📚', exam:'📝', course:'📖', grade:'📊',
-  company:'🏢', experience:'💡', application:'📄', relationship:'💞',
-  earth:'🌍', energy:'⚡', society:'👥', politics:'🗳️', culture:'🎭',
-  history:'📜', computer:'💻', begin:'🚀', describe:'📝', explain:'📋',
-  expect:'🤞', happy:'😊', interested:'🤩', live:'🌱', happen:'⚡',
-  participate:'🤝', time:'⏰', suggest:'💡', introduce:'🤝', win:'🏆',
-  choose:'🗳️', enjoy:'😎', immediately:'⚡', rarely:'🕰️', never:'🚫',
-  quite:'📏', really:'💪', plus:'➕', still:'💪', but:'🤨',
-  confused:'🤷', tired:'😴', heart:'❤️', depends:'🤷', ok:'😊',
-  agree:'👍', shrug:'🤷',
-  economy:'📊', growth:'📈', research:'🔬', science:'🧪', law:'⚖️',
-  freedom:'🕊️', future:'🔮', decision:'🤔', change:'🔄', possibility:'✨',
-  contract:'📄', tax:'💰', market:'🏪', crisis:'⚠️', justice:'⚖️',
-  responsibility:'🎯', truth:'💡', influence:'🌊', avoid:'⛔', develop:'🔬',
-  support:'🤗', analyze:'🔎', prove:'🔬', discuss:'💬', decide:'🤔',
-  enable:'🔓', found:'🏗️', compare:'⚖️', cause:'⚡', increase:'📈',
-  achieve:'💪', almost:'🎯', everywhere:'🌐', meanwhile:'⏳', consequence:'➡️',
-  nowhere:'🚫', about:'📋', excited:'🎊', careless:'😐', view:'👀',
-  opinion:'💭', possible:'✨', overall:'📊',
-  who:'❓', what:'❓', whereto:'➡️', wherefrom:'⬅️', how:'🔧',
-  when:'🕐', why:'🤔', which:'🤷', yesno:'✅❌',
-  subject:'👤', target:'🎯', possession:'📖',
-  structure:'📐', chain:'🔗', present:'⏳', past:'🕑', split:'🔀',
-  modal:'⚡', paint:'🎨', graph:'📈', compass:'🧭', passive:'🔄',
-  subjunctive:'💭', reflexive:'🔄'
-};
-
-// ── Core Functions ──
-function getDeck() {
-  var cards = CARDS.slice();
-  if (state.level !== 'all') cards = cards.filter(function(c) { return c.level === state.level; });
-  if (state.category !== 'all') cards = cards.filter(function(c) { return c.type === state.category; });
-  if (state.examOnly) cards = cards.filter(function(c) { return c.exam === true; });
-  return cards;
+function highlightCode(code) {
+  const escapes = {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'};
+  let s = code.replace(/[&<>"]/g, c => escapes[c]);
+  const rules = [
+    [/\/\/.*$/gm, '<span class="comment">$&</span>'],
+    [/#\w+\b/g, '<span class="preproc">$&</span>'],
+    [/\b(auto|break|case|catch|class|const|continue|default|delete|do|else|enum|explicit|export|extern|false|final|for|friend|goto|if|include|inline|mutable|namespace|new|nullptr|operator|override|private|protected|public|register|return|sizeof|static|struct|switch|template|this|throw|true|try|typedef|typeid|typename|union|using|virtual|void|volatile|while)\b/g, '<span class="keyword">$&</span>'],
+    [/\b(int|bool|char|double|float|long|short|signed|unsigned|string|size_t|void)\b/g, '<span class="type">$&</span>'],
+    [/"([^"\\]|\\.)*"/g, '<span class="string">$&</span>'],
+    [/'([^'\\]|\\.)'/g, '<span class="string">$&</span>'],
+    [/\b(\d+\.?\d*)\b/g, '<span class="number">$&</span>'],
+    [/\b([a-zA-Z_]\w*)\s*\(/g, '<span class="function">$1</span>(']
+  ];
+  for (const [re, repl] of rules) { s = s.replace(re, repl); }
+  return s;
 }
 
-function shuffleArray(arr) {
-  for (var i = arr.length - 1; i > 0; i--) {
-    var j = Math.floor(Math.random() * (i + 1));
-    var tmp = arr[i]; arr[i] = arr[j]; arr[j] = tmp;
-  }
-  return arr;
-}
+function renderMarkdown(text) {
+  // headings
+  let html = text
+    .replace(/^### (.+)$/gm, '<h3>$1</h3>')
+    .replace(/^## (.+)$/gm, '<h2>$1</h2>');
 
-function rebuildDeck() {
-  state.index = 0;
-  state.flipped = false;
-  cardEl.classList.remove('flipped');
-  state.deck = getDeck();
-  shuffleArray(state.deck);
-}
-
-function getEmoji(name) { return EMOJI_MAP[name] || '✨'; }
-
-function renderCard(animate) {
-  if (animate === undefined) animate = true;
-  var deck = state.deck;
-  if (!deck.length) {
-    wrapperEl.innerHTML = '<div class="empty-state"><div class="icon">🎯</div><h3>Keine Karten</h3><p>Try a different filter.</p></div>';
-    $('controls').style.display = 'none';
-    $('progress-fill').style.width = '100%';
-    $('card-current').textContent = '0';
-    $('card-total').textContent = '0';
-    updateSidebar();
-    return;
-  }
-  $('controls').style.display = 'flex';
-  var c = deck[state.index];
-  if (!c) { state.index = 0; renderCard(false); return; }
-
-  if (animate) {
-    wrapperEl.classList.add('anim-out');
-    setTimeout(function() {
-      renderCardContent(c);
-      wrapperEl.classList.remove('anim-out');
-      wrapperEl.classList.add('anim-in');
-      setTimeout(function() { wrapperEl.classList.remove('anim-in'); }, 220);
-    }, 160);
-  } else {
-    renderCardContent(c);
-  }
-
-  state.flipped = false;
-  cardEl.classList.remove('flipped');
-  $('card-current').textContent = state.index + 1;
-  $('card-total').textContent = deck.length;
-  updateFilters();
-  updateSidebar();
-  updateProgress();
-}
-
-function renderCardContent(c) {
-  var t = c.type;
-  frontEl.className = 'card-face ' + t;
-  backEl.className = 'card-face card-back ' + t;
-
-  var badgeNames = { noun:'NOUN', verb:'VERB', adverb:'ADVERB', question:'QUESTION', case:'CASE', grammar:'GRAMMAR', phrase:'PHRASE' };
-  var label = badgeNames[t] || t.toUpperCase();
-  $('badge-type-front').textContent = label;
-  $('badge-type-back').textContent = label;
-
-  var lvlUpper = c.level.toUpperCase();
-  $('badge-level-front').textContent = lvlUpper;
-  $('badge-level-front').className = 'card-level-badge lvl-' + c.level;
-  $('badge-level-back').textContent = lvlUpper;
-  $('badge-level-back').className = 'card-level-badge lvl-' + c.level;
-
-  var emoji = getEmoji(c.emoji);
-  $('card-emoji').textContent = emoji;
-  $('card-emoji-back').textContent = emoji;
-
-  var examFront = $('badge-exam-front');
-  var examBack = $('badge-exam-back');
-  if (c.exam) {
-    examFront.style.display = 'inline';
-    examBack.style.display = 'inline';
-  } else {
-    examFront.style.display = 'none';
-    examBack.style.display = 'none';
-  }
-
-  $('card-german').textContent = c.german;
-
-  var ae = $('card-article');
-  if (t === 'noun') {
-    ae.textContent = c.article;
-    ae.className = 'card-article ' + c.article;
-    ae.style.display = 'inline-block';
-  } else {
-    ae.style.display = 'none';
-  }
-
-  $('card-english').textContent = c.english;
-
-  var extra = $('card-extra');
-  if (t === 'noun') {
-    extra.innerHTML = '<strong>Plural:</strong> ' + c.plural;
-    extra.style.display = 'block';
-  } else if (t === 'verb') {
-    extra.innerHTML = '<strong>Conjugation:</strong> ' + c.pattern;
-    extra.style.display = 'block';
-  } else {
-    extra.style.display = 'none';
-  }
-}
-
-function flipCard() {
-  if (!state.deck.length) return;
-  state.flipped = !state.flipped;
-  cardEl.classList.toggle('flipped');
-}
-
-function goNext() {
-  if (state.deck.length && state.index < state.deck.length - 1) {
-    state.index++;
-    renderCard(true);
-  }
-}
-
-function goPrev() {
-  if (state.deck.length && state.index > 0) {
-    state.index--;
-    renderCard(true);
-  }
-}
-
-function rateCard(rating) {
-  if (!state.deck.length) return;
-  if (!state.flipped) { flipCard(); return; }
-  var c = state.deck[state.index];
-  if (!state.studied.has(c.id)) {
-    state.studied.add(c.id);
-    state.totalLearned = Math.max(state.totalLearned, state.studied.size);
-    saveProgress(Array.from(state.studied), state.totalLearned);
-  }
-  if (rating === 'again') {
-    flipCard();
-    setTimeout(function() { flipCard(); }, 600);
-    return;
-  }
-  if (state.index < state.deck.length - 1) {
-    state.index++;
-    renderCard(true);
-  } else {
-    renderCard(true);
-  }
-}
-
-// ── UI Functions ──
-function switchLevel(level) {
-  state.level = level;
-  var btns = document.querySelectorAll('.lvl-btn');
-  for (var i = 0; i < btns.length; i++) {
-    btns[i].classList.toggle('active', btns[i].getAttribute('data-level') === level);
-  }
-  rebuildDeck();
-  renderCard(false);
-}
-
-function switchCategory(cat) {
-  state.category = cat;
-  var btns = document.querySelectorAll('.nav-btn');
-  for (var i = 0; i < btns.length; i++) {
-    btns[i].classList.toggle('active', btns[i].getAttribute('data-cat') === cat);
-  }
-  rebuildDeck();
-  renderCard(false);
-}
-
-function toggleExam() {
-  state.examOnly = !state.examOnly;
-  rebuildDeck();
-  renderCard(false);
-  updateExamUI();
-}
-
-function updateExamUI() {
-  var sw = $('exam-switch');
-  var lb = $('exam-label');
-  var bg = $('exam-badge');
-  sw.className = 'toggle-switch' + (state.examOnly ? ' active' : '');
-  lb.className = 'toggle-label' + (state.examOnly ? ' active' : '');
-  bg.className = 'toggle-badge' + (state.examOnly ? ' show' : '');
-}
-
-function shuffleDeck() {
-  shuffleArray(state.deck);
-  state.index = 0;
-  state.flipped = false;
-  cardEl.classList.remove('flipped');
-  renderCard(true);
-}
-
-function updateFilters() {
-  var levelText = state.level === 'all' ? 'ALL LEVELS' : state.level.toUpperCase();
-  var b = $('badge-level');
-  b.textContent = levelText;
-  b.className = 'filter-badge level';
-  if (state.level !== 'all') b.classList.add('level-' + state.level);
-  $('badge-category').textContent = state.category === 'all' ? 'ALL' : state.category.toUpperCase();
-  var examB = $('badge-exam');
-  examB.style.display = state.examOnly ? 'inline' : 'none';
-}
-
-function updateProgress() {
-  var total = state.deck.length;
-  var studiedCount = 0;
-  var studiedArr = Array.from(state.studied);
-  for (var i = 0; i < studiedArr.length; i++) {
-    if (state.deck.some(function(c) { return c.id === studiedArr[i]; })) studiedCount++;
-  }
-  var pct = total > 0 ? (studiedCount / total) * 100 : 0;
-  var p = $('progress-fill');
-  p.style.width = pct + '%';
-  p.style.background = pct < 33 ? '#f87171' : pct < 66 ? '#fb923c' : '#4ade80';
-}
-
-function getFilteredCount(cat) {
-  var c = CARDS.slice();
-  if (state.level !== 'all') c = c.filter(function(x) { return x.level === state.level; });
-  if (cat) c = c.filter(function(x) { return x.type === cat; });
-  if (state.examOnly) c = c.filter(function(x) { return x.exam === true; });
-  return c.length;
-}
-
-function updateSidebar() {
-  var deck = state.deck;
-  var total = deck.length;
-  var studiedCount = 0;
-  var studiedArr = Array.from(state.studied);
-  for (var i = 0; i < studiedArr.length; i++) {
-    if (deck.some(function(c) { return c.id === studiedArr[i]; })) studiedCount++;
-  }
-  var pct = total > 0 ? Math.round((studiedCount / total) * 100) : 0;
-  $('stat-learned').textContent = state.totalLearned;
-  $('stat-studied').textContent = studiedCount;
-  $('stat-remaining').textContent = total - studiedCount;
-  $('stat-pct').textContent = pct + '%';
-
-  $('count-all').textContent = getFilteredCount();
-  $('count-nouns').textContent = getFilteredCount('nouns');
-  $('count-verbs').textContent = getFilteredCount('verbs');
-  $('count-adverb').textContent = getFilteredCount('adverb');
-  $('count-question').textContent = getFilteredCount('question');
-  $('count-case').textContent = getFilteredCount('case');
-  $('count-grammar').textContent = getFilteredCount('grammar');
-  $('count-phrases').textContent = getFilteredCount('phrases');
-}
-
-// ── Event Setup ──
-function setupEvents() {
-  var lvlBtns = document.querySelectorAll('.lvl-btn');
-  for (var i = 0; i < lvlBtns.length; i++) {
-    (function(btn) {
-      btn.addEventListener('click', function() { switchLevel(btn.getAttribute('data-level')); });
-    })(lvlBtns[i]);
-  }
-
-  var navBtns = document.querySelectorAll('.nav-btn');
-  for (var j = 0; j < navBtns.length; j++) {
-    (function(btn) {
-      btn.addEventListener('click', function() { switchCategory(btn.getAttribute('data-cat')); });
-    })(navBtns[j]);
-  }
-
-  $('exam-toggle').addEventListener('click', toggleExam);
-
-  wrapperEl.addEventListener('click', function(e) {
-    if (!e.target.closest('.ctrl-btn')) flipCard();
+  // code blocks
+  html = html.replace(/```(\w+)?\n([\s\S]*?)```/g, (_, lang, code) => {
+    return '<pre>' + highlightCode(code.trimEnd()) + '</pre>';
   });
 
-  $('btn-again').addEventListener('click', function() { rateCard('again'); });
-  $('btn-good').addEventListener('click', function() { rateCard('good'); });
-  $('btn-easy').addEventListener('click', function() { rateCard('easy'); });
-  $('btn-prev').addEventListener('click', goPrev);
-  $('btn-next').addEventListener('click', goNext);
-  $('btn-shuffle').addEventListener('click', shuffleDeck);
+  // inline code
+  html = html.replace(/`([^`]+)`/g, '<code>$1</code>');
 
-  document.addEventListener('keydown', function(e) {
-    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
-    switch (e.key) {
-      case ' ': e.preventDefault(); flipCard(); break;
-      case 'ArrowLeft': e.preventDefault(); goPrev(); break;
-      case 'ArrowRight': e.preventDefault(); goNext(); break;
-      case '1': rateCard('again'); break;
-      case '2': rateCard('good'); break;
-      case '3': rateCard('easy'); break;
+  // bold / italic
+  html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+  html = html.replace(/\*(.+?)\*/g, '<em>$1</em>');
+
+  // blockquote
+  html = html.replace(/^> (.+)$/gm, '<blockquote><p>$1</p></blockquote>');
+
+  // unordered list
+  html = html.replace(/^- (.+)$/gm, '<li>$1</li>');
+  html = html.replace(/(<li>.*<\/li>\n?)+/g, '<ul>$&</ul>');
+
+  // tables (basic)
+  html = html.replace(/\|(.+)\|[\s\S]*?\|(.+)\|/g, (match) => {
+    const rows = match.trim().split('\n');
+    const header = rows[0].split('|').filter(c => c.trim()).map(c => `<th>${c.trim()}</th>`).join('');
+    let body = '';
+    for (let i = 2; i < rows.length; i++) {
+      const cells = rows[i].split('|').filter(c => c.trim()).map(c => `<td>${c.trim()}</td>`).join('');
+      if (cells) body += `<tr>${cells}</tr>`;
     }
+    return `<table><thead><tr>${header}</tr></thead><tbody>${body}</tbody></table>`;
+  });
+
+  // paragraphs
+  html = html.replace(/\n\n/g, '</p><p>');
+  html = '<p>' + html + '</p>';
+  html = html.replace(/<\/p><p><h([23])>/g, '<h$1>');
+  html = html.replace(/<\/h([23])><p>/g, '</h$1>');
+  html = html.replace(/<p><ul>/g, '<ul>');
+  html = html.replace(/<\/ul><p>/g, '</ul>');
+  html = html.replace(/<p><blockquote>/g, '<blockquote>');
+  html = html.replace(/<\/blockquote><p>/g, '</blockquote>');
+  html = html.replace(/<p><table>/g, '<table>');
+  html = html.replace(/<\/table><p>/g, '</table>');
+
+  // clean <p> around block elements
+  html = html.replace(/<p>\s*<\/p>/g, '');
+
+  return html;
+}
+
+// ─── state ────────────────────────────────────────────────────
+let currentLesson = 0;
+
+const lessonNav  = document.getElementById('lessonNav');
+const readerTitle = document.getElementById('readerTitle');
+const readerMeta  = document.getElementById('readerMeta');
+const readerBody  = document.getElementById('readerBody');
+const codeEditor  = document.getElementById('codeEditor');
+const statusBar   = document.getElementById('statusBar');
+const statusText  = document.getElementById('statusText');
+const checkBtn    = document.getElementById('checkBtn');
+const breadcrumbLesson = document.getElementById('breadcrumbLesson');
+
+function buildSidebar() {
+  lessons.forEach((l, i) => {
+    const li = document.createElement('li');
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.setAttribute('data-index', i);
+    btn.innerHTML = `<span class="lesson-num">${l.id}</span> ${l.title}`;
+    btn.addEventListener('click', () => loadLesson(i));
+    li.appendChild(btn);
+    lessonNav.appendChild(li);
   });
 }
 
-// ── Init ──
-setupEvents();
-rebuildDeck();
-renderCard(false);
-updateExamUI();
+function loadLesson(index) {
+  currentLesson = index;
+  const lesson = lessons[index];
+
+  // reader
+  readerTitle.textContent = lesson.title;
+  readerMeta.textContent = `Lesson ${lesson.id} of ${lessons.length}`;
+  readerBody.innerHTML = renderMarkdown(lesson.content);
+
+  // editor
+  codeEditor.value = lesson.starterCode;
+
+  // breadcrumb
+  breadcrumbLesson.textContent = `Lesson ${lesson.id}`;
+
+  // sidebar active state
+  const buttons = lessonNav.querySelectorAll('button');
+  buttons.forEach((btn, i) => {
+    btn.removeAttribute('aria-current');
+    if (i === index) btn.setAttribute('aria-current', 'page');
+  });
+
+  // reset status
+  setStatus('info', 'Ready');
+
+  // scroll reader to top
+  document.getElementById('readerPanel').scrollTop = 0;
+
+  // close sidebar on mobile
+  const sidebar = document.getElementById('sidebar');
+  sidebar.classList.remove('open');
+}
+
+function setStatus(type, msg) {
+  statusBar.dataset.status = type;
+  statusText.textContent = msg;
+}
+
+// ─── check answer ─────────────────────────────────────────────
+function checkAnswer() {
+  const lesson = lessons[currentLesson];
+  const code = codeEditor.value.trim();
+  if (!code) {
+    setStatus('error', 'Write some code before checking.');
+    return;
+  }
+
+  // fake answer evaluation — just check for key patterns
+  const hasMain  = /\bint\s+main\s*\(/.test(code);
+  const hasIO  = /#\s*include\s*<iostream>/i.test(code) || /\bcout\b/.test(code) || /\bcin\b/.test(code);
+  const hasReturn = /\breturn\s+0\b/.test(code);
+
+  // Lesson-specific checks
+  const checks = [];
+  checks.push(hasMain);
+
+  if (lesson.id === 1) {
+    checks.push(hasIO);
+    checks.push(hasReturn);
+  } else if (lesson.id === 2) {
+    checks.push(hasIO);
+  } else if (lesson.id === 3) {
+    checks.push(hasIO && /\bcin\b/.test(code));
+  } else if (lesson.id === 4) {
+    checks.push(/\bif\b/.test(code));
+  } else if (lesson.id === 5) {
+    checks.push(/\b(for|while)\b/.test(code));
+  } else if (lesson.id === 6) {
+    checks.push(/\bint\s+\w+\s*\(/.test(code));
+  } else if (lesson.id === 7) {
+    checks.push(/\b(string|\[\])\b/.test(code));
+  } else if (lesson.id === 8 || lesson.id === 9 || lesson.id === 10) {
+    checks.push(/\bclass\b/.test(code));
+  }
+
+  const passed = checks.every(Boolean);
+  const total = checks.length;
+  const ok = checks.filter(Boolean).length;
+
+  if (passed) {
+    setStatus('success', `Great work! All ${total} checks passed.`);
+  } else {
+    const hints = [];
+    if (!hasMain) hints.push('Missing int main() function');
+    if (!hasIO) hints.push('Need #include <iostream> or cout');
+    if (!hasReturn) hints.push('Don\'t forget return 0;');
+    setStatus('error', `${ok}/${total} checks passed. ${hints.join('; ')}`);
+  }
+}
+
+// ─── sidebar toggle (mobile) ──────────────────────────────────
+document.getElementById('sidebarToggle').addEventListener('click', () => {
+  document.getElementById('sidebar').classList.toggle('open');
+});
+
+// ─── init ─────────────────────────────────────────────────────
+buildSidebar();
+loadLesson(0);
+checkBtn.addEventListener('click', checkAnswer);
 
 })();
 </script>
