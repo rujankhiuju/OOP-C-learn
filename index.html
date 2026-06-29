@@ -6,27 +6,28 @@
 <title>CPP Learn — Interactive C++ Course</title>
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html { font-size: 16px; scroll-behavior: smooth; }
+html { font-size: 16px; }
 
 :root {
-  --bg-primary: #1a1d23;
-  --bg-secondary: #21252b;
-  --bg-tertiary: #282c34;
-  --bg-surface: #2c313a;
-  --bg-hover: #353b45;
-  --bg-active: #3a4050;
-  --border: #3a3f4b;
-  --border-light: #4a4f5b;
-  --text-primary: #e8eaed;
-  --text-secondary: #b0b5c0;
-  --text-muted: #7a7f8a;
+  --bg-primary: #13161a;
+  --bg-secondary: #1a1d23;
+  --bg-tertiary: #1e2228;
+  --bg-surface: #24282f;
+  --bg-hover: #2c3039;
+  --bg-active: #333842;
+  --border: #2e333d;
+  --border-light: #3a404d;
+  --text-primary: #e4e7ed;
+  --text-secondary: #a8aebb;
+  --text-muted: #6b7180;
   --accent: #4fc3f7;
-  --accent-dim: #2b7fa0;
+  --accent-dim: #1f6ea0;
   --success: #66bb6a;
   --error: #ef5350;
-  --code-bg: #1e1e1e;
-  --sidebar-width: 260px;
-  --topbar-height: 52px;
+  --warning: #ffa726;
+  --code-bg: #181b20;
+  --sidebar-width: 280px;
+  --topbar-height: 48px;
   --radius: 8px;
   --radius-sm: 4px;
   --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
@@ -45,94 +46,141 @@ body {
 a { color: var(--accent); text-decoration: none; }
 a:hover { text-decoration: underline; }
 
-/* ─── focus ─── */
 :focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
   border-radius: var(--radius-sm);
 }
 
-/* ─── top bar ─── */
+::selection { background: var(--accent-dim); color: #fff; }
+
+/* ─── Scrollbar ─── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border-light); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
+
+/* ─── Top Bar ─── */
 .topbar {
   height: var(--topbar-height);
-  background: #15171b;
+  background: #0f1115;
   border-bottom: 1px solid var(--border);
   display: flex;
   align-items: center;
-  padding: 0 20px;
-  gap: 16px;
+  padding: 0 16px;
+  gap: 12px;
   flex-shrink: 0;
 }
 .topbar-logo {
   font-weight: 700;
-  font-size: 1.1rem;
-  letter-spacing: -0.02em;
+  font-size: 1rem;
   color: var(--accent);
   display: flex;
   align-items: center;
   gap: 8px;
+  letter-spacing: -0.02em;
 }
 .topbar-logo svg { display: block; }
-.topbar-breadcrumb {
+.topbar-divider {
+  width: 1px;
+  height: 24px;
+  background: var(--border);
+}
+.topbar-course-name {
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+.topbar-spacer { flex: 1; }
+
+/* Progress */
+.topbar-progress {
   display: flex;
   align-items: center;
-  gap: 8px;
-  color: var(--text-muted);
-  font-size: 0.85rem;
-  margin-left: 8px;
+  gap: 10px;
 }
-.topbar-breadcrumb span { color: var(--text-secondary); }
-.topbar-spacer { flex: 1; }
+.progress-track {
+  width: 120px;
+  height: 4px;
+  background: var(--bg-surface);
+  border-radius: 2px;
+  overflow: hidden;
+}
+.progress-fill {
+  height: 100%;
+  background: var(--success);
+  border-radius: 2px;
+  transition: width 0.4s ease;
+}
+.progress-label {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
 .topbar-profile {
-  width: 32px; height: 32px;
+  width: 30px; height: 30px;
   border-radius: 50%;
-  background: var(--bg-hover);
-  border: 1px solid var(--border-light);
+  background: linear-gradient(135deg, var(--accent-dim), #7c4dff);
   display: flex; align-items: center; justify-content: center;
-  font-size: 0.75rem; font-weight: 600; color: var(--text-secondary);
+  font-size: 0.7rem; font-weight: 700; color: #fff;
   cursor: default;
 }
 
-/* ─── layout ─── */
+/* ─── Layout ─── */
 .app-layout {
   display: flex;
   flex: 1;
   overflow: hidden;
 }
 
-/* ─── sidebar ─── */
+/* ─── Sidebar ─── */
 .sidebar {
   width: var(--sidebar-width);
   background: var(--bg-secondary);
   border-right: 1px solid var(--border);
   overflow-y: auto;
   flex-shrink: 0;
-  padding: 16px 0;
+  display: flex;
+  flex-direction: column;
 }
-.sidebar-heading {
-  font-size: 0.7rem;
+.sidebar-header {
+  padding: 14px 16px 10px;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+.sidebar-header h3 {
+  font-size: 0.75rem;
   text-transform: uppercase;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.06em;
   color: var(--text-muted);
-  padding: 8px 20px 12px;
+  font-weight: 600;
 }
-.lesson-nav { list-style: none; }
+.sidebar-header .sidebar-sub {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+.lesson-nav {
+  list-style: none;
+  padding: 8px 0;
+}
 .lesson-nav li { margin: 0; }
 .lesson-nav button {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
   width: 100%;
-  padding: 10px 20px;
+  padding: 9px 16px;
   background: none;
   border: none;
   border-left: 3px solid transparent;
   color: var(--text-secondary);
-  font-size: 0.88rem;
+  font-size: 0.82rem;
   font-family: var(--font-sans);
   text-align: left;
   cursor: pointer;
-  transition: background 0.15s, border-color 0.15s, color 0.15s;
+  transition: background 0.12s, border-color 0.12s, color 0.12s;
 }
 .lesson-nav button:hover { background: var(--bg-hover); color: var(--text-primary); }
 .lesson-nav button:focus-visible { outline-offset: -2px; }
@@ -142,13 +190,20 @@ a:hover { text-decoration: underline; }
   color: var(--text-primary);
   font-weight: 600;
 }
+.lesson-nav button.completed .lesson-num {
+  background: var(--success);
+  color: #fff;
+}
+.lesson-nav button.completed .lesson-check {
+  opacity: 1;
+}
 .lesson-num {
   flex-shrink: 0;
-  width: 24px; height: 24px;
+  width: 22px; height: 22px;
   border-radius: 50%;
   background: var(--bg-surface);
   display: flex; align-items: center; justify-content: center;
-  font-size: 0.7rem; font-weight: 600;
+  font-size: 0.65rem; font-weight: 600;
   color: var(--text-muted);
   transition: background 0.15s, color 0.15s;
 }
@@ -157,8 +212,15 @@ a:hover { text-decoration: underline; }
   color: #fff;
 }
 .lesson-nav button:hover .lesson-num { background: var(--bg-hover); color: var(--text-secondary); }
+.lesson-check {
+  margin-left: auto;
+  font-size: 0.7rem;
+  opacity: 0;
+  transition: opacity 0.2s;
+  color: var(--success);
+}
 
-/* ─── main content ─── */
+/* ─── Main Content ─── */
 .main-content {
   flex: 1;
   display: grid;
@@ -167,62 +229,78 @@ a:hover { text-decoration: underline; }
   min-width: 0;
 }
 
-/* ─── lesson reader ─── */
+/* ─── Lesson Reader ─── */
 .reader-panel {
   overflow-y: auto;
-  padding: 32px 36px;
+  padding: 28px 32px;
   border-right: 1px solid var(--border);
+  background: var(--bg-tertiary);
 }
 .reader-panel h2 {
-  font-size: 1.5rem;
+  font-size: 1.35rem;
   font-weight: 700;
-  margin-bottom: 4px;
+  margin-bottom: 2px;
   color: var(--text-primary);
+  letter-spacing: -0.01em;
 }
 .reader-panel .lesson-meta {
-  font-size: 0.8rem;
+  font-size: 0.75rem;
   color: var(--text-muted);
-  margin-bottom: 24px;
+  margin-bottom: 20px;
+}
+.reader-panel .instruction-box {
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px 18px;
+  margin: 16px 0;
+  border-left: 3px solid var(--accent);
+}
+.reader-panel .instruction-box p {
+  margin-bottom: 0;
 }
 .reader-panel h3 {
-  font-size: 1.1rem;
+  font-size: 1rem;
   font-weight: 600;
-  margin: 24px 0 10px;
+  margin: 20px 0 8px;
   color: var(--text-primary);
 }
 .reader-panel p {
   line-height: 1.65;
-  margin-bottom: 14px;
+  margin-bottom: 12px;
   color: var(--text-secondary);
+  font-size: 0.9rem;
 }
 .reader-panel pre {
   background: var(--code-bg);
   border: 1px solid var(--border);
   border-radius: var(--radius);
-  padding: 16px 18px;
+  padding: 14px 16px;
   overflow-x: auto;
-  margin: 16px 0;
+  margin: 12px 0;
   font-family: var(--font-mono);
-  font-size: 0.82rem;
-  line-height: 1.55;
+  font-size: 0.8rem;
+  line-height: 1.5;
   color: #d4d4d4;
 }
 .reader-panel code {
   font-family: var(--font-mono);
-  font-size: 0.82rem;
+  font-size: 0.8rem;
 }
 .reader-panel p code {
   background: var(--bg-surface);
   padding: 2px 6px;
   border-radius: var(--radius-sm);
   color: #ce91d8;
+  font-size: 0.78rem;
 }
-.reader-panel ul {
-  margin: 10px 0 14px 22px;
+.reader-panel ul, .reader-panel ol {
+  margin: 8px 0 12px 20px;
   color: var(--text-secondary);
-  line-height: 1.65;
+  line-height: 1.6;
+  font-size: 0.9rem;
 }
-.reader-panel li { margin-bottom: 4px; }
+.reader-panel li { margin-bottom: 3px; }
 .reader-panel .keyword  { color: #569cd6; }
 .reader-panel .type     { color: #4ec9b0; }
 .reader-panel .string   { color: #ce9178; }
@@ -231,38 +309,101 @@ a:hover { text-decoration: underline; }
 .reader-panel .function { color: #dcdcaa; }
 .reader-panel .preproc  { color: #c586c0; }
 
-/* ─── editor panel ─── */
+.reader-panel blockquote {
+  border-left: 3px solid var(--accent-dim);
+  padding: 8px 14px;
+  margin: 12px 0;
+  background: var(--bg-surface);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+}
+.reader-panel blockquote p {
+  margin-bottom: 0;
+  font-size: 0.88rem;
+}
+.reader-panel table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 12px 0;
+  font-size: 0.82rem;
+}
+.reader-panel th, .reader-panel td {
+  border: 1px solid var(--border);
+  padding: 8px 12px;
+  text-align: left;
+}
+.reader-panel th {
+  background: var(--bg-surface);
+  color: var(--text-primary);
+  font-weight: 600;
+}
+.reader-panel td {
+  color: var(--text-secondary);
+}
+
+.reader-nav {
+  display: flex;
+  gap: 8px;
+  margin-top: 28px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+}
+
+/* ─── Editor Panel ─── */
 .editor-panel {
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  background: var(--bg-primary);
 }
 .editor-toolbar {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 10px 20px;
+  padding: 8px 16px;
   background: var(--bg-secondary);
   border-bottom: 1px solid var(--border);
   flex-shrink: 0;
+  gap: 8px;
+}
+.editor-toolbar-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 .editor-toolbar label {
-  font-size: 0.82rem;
+  font-size: 0.78rem;
   font-weight: 600;
-  color: var(--text-secondary);
+  color: var(--text-muted);
   text-transform: uppercase;
   letter-spacing: 0.04em;
 }
-.editor-toolbar-actions { display: flex; gap: 8px; }
+.editor-toolbar .file-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--bg-surface);
+  padding: 3px 10px;
+  border-radius: var(--radius-sm);
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  border: 1px solid var(--border);
+}
+.editor-toolbar .file-tab .dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+.editor-toolbar-actions { display: flex; gap: 6px; }
 .btn {
   font-family: var(--font-sans);
-  font-size: 0.82rem;
+  font-size: 0.78rem;
   font-weight: 600;
-  padding: 7px 18px;
+  padding: 6px 14px;
   border-radius: var(--radius-sm);
   border: none;
   cursor: pointer;
-  transition: background 0.15s, transform 0.1s;
+  transition: background 0.12s, transform 0.08s;
+  white-space: nowrap;
 }
 .btn:active { transform: scale(0.97); }
 .btn-primary {
@@ -271,6 +412,11 @@ a:hover { text-decoration: underline; }
 }
 .btn-primary:hover { background: #6fd0fa; }
 .btn-primary:focus-visible { outline-color: var(--accent); }
+.btn-success {
+  background: var(--success);
+  color: #0a0d14;
+}
+.btn-success:hover { filter: brightness(1.15); }
 .btn-secondary {
   background: var(--bg-surface);
   color: var(--text-secondary);
@@ -286,12 +432,13 @@ a:hover { text-decoration: underline; }
 .editor-wrapper textarea {
   width: 100%;
   height: 100%;
-  padding: 20px;
+  padding: 16px 18px;
+  padding-left: 56px;
   background: var(--code-bg);
   color: #d4d4d4;
   font-family: var(--font-mono);
-  font-size: 0.85rem;
-  line-height: 1.6;
+  font-size: 0.82rem;
+  line-height: 1.55;
   border: none;
   resize: none;
   outline: none;
@@ -302,24 +449,89 @@ a:hover { text-decoration: underline; }
 }
 .editor-wrapper textarea::placeholder { color: var(--text-muted); }
 
-.status-bar {
-  flex-shrink: 0;
-  padding: 10px 20px;
-  background: var(--bg-secondary);
-  border-top: 1px solid var(--border);
+/* Line numbers */
+.line-numbers {
+  position: absolute;
+  top: 0;
+  left: 0;
+  padding: 16px 10px 16px 12px;
+  background: var(--code-bg);
+  border-right: 1px solid var(--border);
+  color: var(--text-muted);
+  font-family: var(--font-mono);
   font-size: 0.82rem;
-  min-height: 42px;
+  line-height: 1.55;
+  text-align: right;
+  user-select: none;
+  pointer-events: none;
+  overflow: hidden;
+  min-width: 44px;
+}
+
+/* ─── Terminal/Output ─── */
+.terminal-panel {
+  flex-shrink: 0;
+  border-top: 1px solid var(--border);
+  background: #0c0e12;
+  transition: height 0.2s ease;
+  display: flex;
+  flex-direction: column;
+}
+.terminal-header {
   display: flex;
   align-items: center;
-  gap: 8px;
-  transition: color 0.2s;
+  justify-content: space-between;
+  padding: 6px 16px;
+  background: var(--bg-secondary);
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
 }
-.status-bar[data-status="success"] { color: var(--success); }
-.status-bar[data-status="error"] { color: var(--error); }
-.status-bar[data-status="info"] { color: var(--text-muted); }
-.status-bar svg { flex-shrink: 0; }
+.terminal-header label {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+.terminal-header-actions { display: flex; gap: 6px; }
+.terminal-btn {
+  background: none;
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  font-size: 0.65rem;
+  padding: 2px 8px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-family: var(--font-sans);
+}
+.terminal-btn:hover { color: var(--text-secondary); border-color: var(--border-light); }
 
-/* ─── toggle sidebar (tablet) ─── */
+.terminal-output {
+  padding: 10px 16px;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  line-height: 1.5;
+  overflow-y: auto;
+  min-height: 72px;
+  max-height: 140px;
+  color: var(--text-secondary);
+  white-space: pre-wrap;
+}
+.terminal-output .success-text { color: var(--success); }
+.terminal-output .error-text { color: var(--error); }
+.terminal-output .info-text { color: var(--text-muted); }
+.terminal-output .prompt { color: var(--accent); }
+.terminal-cursor {
+  display: inline-block;
+  width: 6px;
+  height: 14px;
+  background: var(--accent);
+  animation: blink 1s step-end infinite;
+  vertical-align: text-bottom;
+}
+@keyframes blink { 50% { opacity: 0; } }
+
+/* ─── Sidebar toggle ─── */
 .sidebar-toggle {
   display: none;
   background: none;
@@ -331,12 +543,10 @@ a:hover { text-decoration: underline; }
 }
 .sidebar-toggle:hover { color: var(--text-primary); }
 
-/* ─── responsive ─── */
+/* ─── Responsive ─── */
 @media (max-width: 1024px) {
-  .sidebar {
-    width: 220px;
-  }
-  .reader-panel { padding: 24px; }
+  .sidebar { width: 220px; }
+  .reader-panel { padding: 20px 24px; }
 }
 
 @media (max-width: 768px) {
@@ -350,9 +560,8 @@ a:hover { text-decoration: underline; }
     border-right: none;
     border-bottom: 1px solid var(--border);
   }
-  .sidebar.open { max-height: 400px; overflow-y: auto; }
-  .sidebar-heading { padding: 8px 16px 10px; }
-  .lesson-nav button { padding: 8px 16px; }
+  .sidebar.open { max-height: 340px; overflow-y: auto; }
+  .lesson-nav button { padding: 7px 14px; }
 
   .main-content {
     grid-template-columns: 1fr;
@@ -361,67 +570,85 @@ a:hover { text-decoration: underline; }
   .reader-panel {
     border-right: none;
     border-bottom: 1px solid var(--border);
-    padding: 20px;
-    max-height: 50vh;
+    padding: 16px 18px;
+    max-height: 45vh;
   }
-  .editor-panel { min-height: 40vh; }
-  .topbar { gap: 10px; padding: 0 12px; }
-  .topbar-breadcrumb { display: none; }
+  .editor-panel { min-height: 35vh; }
+  .terminal-output { max-height: 100px; min-height: 56px; }
+  .topbar { padding: 0 10px; gap: 8px; }
+  .topbar-divider, .topbar-course-name { display: none; }
+  .progress-track { width: 80px; }
+}
+
+@media (max-width: 480px) {
+  :root { --sidebar-width: 100%; }
+  .reader-panel { max-height: 40vh; padding: 14px; }
+  .editor-wrapper textarea { padding-left: 44px; font-size: 0.75rem; }
+  .line-numbers { font-size: 0.75rem; min-width: 34px; padding: 16px 6px 16px 8px; }
 }
 </style>
 </head>
 <body>
 
-<!-- ═══ top bar ═══ -->
 <header class="topbar" role="banner">
   <button class="sidebar-toggle" aria-label="Toggle lesson list" id="sidebarToggle" type="button">
-    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="5" x2="17" y2="5"/><line x1="3" y1="10" x2="17" y2="10"/><line x1="3" y1="15" x2="17" y2="15"/></svg>
+    <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="5" x2="17" y2="5"/><line x1="3" y1="10" x2="17" y2="10"/><line x1="3" y1="15" x2="17" y2="15"/></svg>
   </button>
   <div class="topbar-logo">
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
     CPP Learn
   </div>
-  <div class="topbar-breadcrumb">
-    <span>Courses</span>
-    <span>/</span>
-    <span>C++ Fundamentals</span>
-    <span>/</span>
-    <span id="breadcrumbLesson">Lesson 1</span>
-  </div>
+  <div class="topbar-divider"></div>
+  <span class="topbar-course-name">C++ Fundamentals</span>
   <div class="topbar-spacer"></div>
+  <div class="topbar-progress">
+    <span class="progress-label" id="progressLabel">1/10</span>
+    <div class="progress-track">
+      <div class="progress-fill" id="progressFill" style="width:10%"></div>
+    </div>
+  </div>
   <div class="topbar-profile" aria-label="User avatar" role="img">JD</div>
 </header>
 
-<!-- ═══ layout ═══ -->
 <div class="app-layout">
 
-  <!-- ─── sidebar ─── -->
   <aside class="sidebar" id="sidebar" aria-label="Lesson navigation">
-    <div class="sidebar-heading">Course — 10 lessons</div>
+    <div class="sidebar-header">
+      <h3>Course Content</h3>
+      <div class="sidebar-sub">10 lessons</div>
+    </div>
     <nav aria-label="Lesson list">
       <ul class="lesson-nav" id="lessonNav" role="list"></ul>
     </nav>
   </aside>
 
-  <!-- ─── main ─── -->
   <main class="main-content" id="mainContent">
 
-    <!-- reader -->
+    <!-- Reader -->
     <section class="reader-panel" id="readerPanel" aria-label="Lesson content">
-      <h2 id="readerTitle">Introduction to C++</h2>
+      <h2 id="readerTitle">Introduction to Modern C++</h2>
       <div class="lesson-meta" id="readerMeta">Lesson 1 of 10</div>
       <div id="readerBody"></div>
+      <div class="reader-nav">
+        <button class="btn btn-secondary" id="prevBtn" type="button">Back</button>
+        <button class="btn btn-primary" id="nextBtn" type="button">Next</button>
+      </div>
     </section>
 
-    <!-- editor -->
+    <!-- Editor -->
     <section class="editor-panel" aria-label="Code editor">
       <div class="editor-toolbar">
-        <label for="codeEditor">main.cpp</label>
+        <div class="editor-toolbar-left">
+          <span class="file-tab"><span class="dot"></span> main.cpp</span>
+        </div>
         <div class="editor-toolbar-actions">
-          <button class="btn btn-primary" id="checkBtn" type="button">Check Answer</button>
+          <button class="btn btn-secondary" id="resetBtn" type="button">Reset</button>
+          <button class="btn btn-primary" id="runBtn" type="button">&#9654; Run</button>
+          <button class="btn btn-success" id="checkBtn" type="button">Check Answer</button>
         </div>
       </div>
       <div class="editor-wrapper">
+        <div class="line-numbers" id="lineNumbers" aria-hidden="true">1</div>
         <textarea
           id="codeEditor"
           spellcheck="false"
@@ -430,9 +657,19 @@ a:hover { text-decoration: underline; }
           placeholder="// Write your C++ code here"
         ></textarea>
       </div>
-      <div class="status-bar" id="statusBar" data-status="info" role="status" aria-live="polite">
-        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="8" r="6"/><line x1="8" y1="5" x2="8" y2="9"/><line x1="8" y1="11" x2="8.01" y2="11"/></svg>
-        <span id="statusText">Ready</span>
+
+      <!-- Terminal / Output -->
+      <div class="terminal-panel" id="terminalPanel">
+        <div class="terminal-header">
+          <label>Output</label>
+          <div class="terminal-header-actions">
+            <button class="terminal-btn" id="clearTerminalBtn" type="button">Clear</button>
+          </div>
+        </div>
+        <div class="terminal-output" id="terminalOutput" role="log" aria-live="polite">
+          <span class="prompt">$</span> g++ main.cpp -o main<br>
+          <span class="info-text">Ready to compile.</span><span class="terminal-cursor"></span>
+        </div>
       </div>
     </section>
 
@@ -443,18 +680,19 @@ a:hover { text-decoration: underline; }
 (function() {
 'use strict';
 
-// ─── lesson data ──────────────────────────────────────────────
 const lessons = [
   {
     id: 1,
-    title: "Introduction to Modern C++",
-    content: `## What is Modern C++?
+    title: "Hello, World!",
+    content: `## Hello, World!
 
-Modern C++ (C++11 and later) brings cleaner syntax, safer memory management, and powerful features. This course uses **C++17/20** throughout.
+Let's write your first C++ program! Every C++ program needs a \`main()\` function — that's where the program starts running.
 
-### Your First Program
+<div class="instruction-box">
+<p><strong>Instructions:</strong> Write a program that prints <code>"Hello, World!"</code> to the console.</p>
+</div>
 
-Every C++ program starts with a ` + "`main()`" + ` function. Modern C++ prefers **type deduction** with \`auto\` and avoids \`endl\` in favor of \`\\n\`:
+### Code Explanation
 
 \`\`\`cpp
 #include <iostream>
@@ -465,71 +703,60 @@ auto main() -> int {
 }
 \`\`\`
 
-### How It Works
+- <code class="keyword">#include &lt;iostream&gt;</code> — lets you use input/output
+- <code class="keyword">using namespace std;</code> — use names like <code class="keyword">cout</code> directly
+- <code class="keyword">auto main() -> int</code> — the program entry point (modern C++ style)
+- <code class="keyword">cout &lt;&lt; "..."</code> — prints text to the screen
+- <code class="keyword">\\n</code> — adds a newline (faster than \`endl\`)
 
-- <code class="keyword">#include &lt;iostream&gt;</code> — input/output library
-- <code class="keyword">using namespace std;</code> — lets you write <code class="keyword">cout</code> instead of <code class="keyword">std::cout</code>
-- <code class="keyword">auto main() -> int</code> — trailing return type (C++11)
-- <code class="keyword">cout</code> — prints text; prefer <code class="keyword">\\n</code> over <code class="keyword">endl</code>
-- <code class="keyword">return 0;</code> is **optional** in <code class="keyword">main()</code> — it returns 0 by default
+> 💡 **Tip:** Click **Run** to see the output, then **Check Answer** to verify your code.`,
 
-> 💡 **Try it:** Change the string to print your own message, then click **Check Answer**.`,
-
-    starterCode: `#include <iostream>\nusing namespace std;\n\nauto main() -> int {\n    cout << "Hello, Modern C++!\\n";\n}`
+    starterCode: `#include <iostream>\nusing namespace std;\n\nauto main() -> int {\n    cout << "Hello, World!\\n";\n}`
   },
   {
     id: 2,
-    title: "Auto & Uniform Initialization",
-    content: `## Type Deduction & Modern Init
+    title: "Variables & Auto",
+    content: `## Storing Data
 
-Modern C++ uses \`auto\` to deduce types and brace initialization \`{}\` for safety.
+Variables let you store information. Modern C++ uses \`auto\` to figure out the type automatically.
 
-### Auto
+<div class="instruction-box">
+<p><strong>Instructions:</strong> Create a variable <code>name</code> and <code>age</code>, then print them.</p>
+</div>
+
+### Examples
 
 \`\`\`cpp
-auto year = 2026;         // int
-auto price = 19.99;       // double
-auto name = "Modern"s;    // string (s suffix)
+auto year = 2026;        // int
+auto price = 19.99;      // double
+auto greeting = "Hi"s;   // string (s suffix)
 \`\`\`
 
-### Uniform Initialization
+### Type Table
 
-\`\`\`cpp
-int a{42};                     // direct
-auto b = double{3.14};         // deduced from braced init
-auto c = string{"Hi"};
-\`\`\`
+| Code                     | Type     |
+|--------------------------|----------|
+| \`auto x = 42\`            | \`int\`     |
+| \`auto y = 3.14\`          | \`double\`  |
+| \`auto z = "hello"s\`      | \`string\`  |
+| \`auto b = true\`          | \`bool\`    |
 
-### constexpr — Compile-Time Constants
+> 💡 The \`s\` suffix after a string literal makes it \`std::string\`.`,
 
-\`\`\`cpp
-constexpr auto gravity = 9.81;    // evaluated at compile time
-\`\`\`
-
-### Example
-
-\`\`\`cpp
-#include <iostream>
-#include <string>
-using namespace std;
-
-auto main() -> int {
-    constexpr auto year = 2026;
-    auto product = "Widget"s;
-    auto price = 19.99;
-
-    cout << product << " costs $" << price
-              << " (" << year << ")\\n";
-}
-\`\`\``,
     starterCode: `#include <iostream>\n#include <string>\nusing namespace std;\n\nauto main() -> int {\n    auto name = "Learner"s;\n    auto age = 20;\n    cout << "My name is " << name << " and I am " << age << " years old.\\n";\n}`
   },
   {
     id: 3,
     title: "Input & Output",
-    content: `## Console I/O in Modern C++
+    content: `## Reading User Input
 
-C++ uses **streams** for I/O. For strings, prefer \`getline\` over \`>>\`:
+Use \`cin\` to read input from the keyboard. For text with spaces, use \`getline\`.
+
+<div class="instruction-box">
+<p><strong>Instructions:</strong> Ask for the user's name, then greet them.</p>
+</div>
+
+### Example
 
 \`\`\`cpp
 #include <iostream>
@@ -537,107 +764,82 @@ C++ uses **streams** for I/O. For strings, prefer \`getline\` over \`>>\`:
 using namespace std;
 
 auto main() -> int {
-    auto line = string{};
+    auto name = string{};
     cout << "Enter your name: ";
-    getline(cin, line);
-    cout << "Hello, " << line << "!\\n";
+    getline(cin, name);
+    cout << "Hello, " << name << "!\\n";
 }
 \`\`\`
 
 ### Why getline?
 
-\`cin >> name\` stops at whitespace. \`getline\` reads the entire line.
+- \`cin >> name\` stops at the first space
+- \`getline(cin, name)\` reads the whole line
 
-### Chaining
+> **Practice:** Ask for full name and age, then print a greeting.`,
 
-\`\`\`cpp
-auto x = 0, y = 0;
-cin >> x >> y;              // chain input
-cout << x << " + " << y << " = " << x + y << "\\n";
-\`\`\`
-
-> **Practice:** Ask for the user's full name and age, then print a greeting.`,
     starterCode: `#include <iostream>\n#include <string>\nusing namespace std;\n\nauto main() -> int {\n    auto name = string{};\n    auto age = 0;\n\n    cout << "What is your name? ";\n    getline(cin, name);\n\n    cout << "Hello, " << name << "!\\n";\n}`
   },
   {
     id: 4,
-    title: "Conditionals & constexpr if",
+    title: "Conditionals",
     content: `## Making Decisions
 
-### Modern If/Else
+Use \`if\`, \`else if\`, and \`else\` to run code conditionally.
+
+<div class="instruction-box">
+<p><strong>Instructions:</strong> Check if a temperature is hot, warm, or cold and print the result.</p>
+</div>
+
+### Syntax
 
 \`\`\`cpp
 if (condition) {
     // runs if true
 } else if (other) {
-    // runs if first false and other true
+    // runs if first is false
 } else {
     // runs if all false
 }
 \`\`\`
 
-### constexpr if (C++17)
+### Operators
 
-Evaluated at **compile time** — dead branches are discarded:
+- Comparison: \`==\` \`!=\` \`<\` \`>\` \`<=\` \`>=\`
+- Logical: \`&&\` (and), \`||\` (or), \`!\` (not)
 
-\`\`\`cpp
-if constexpr (is_integral_v<T>) {
-    // only compiled for integral types
-}
-\`\`\`
+### Modern Touch
 
-### Attributes (C++17)
+Use \`constexpr\` for compile-time constants and \`[[likely]]\` to hint the compiler:
 
 \`\`\`cpp
 if (score >= 90) [[likely]] {
     cout << "Excellent!\\n";
 }
-\`\`\`
-
-### Comparison & Logical Ops
-
-\`==\` \`!=\` \`<\` \`>\` \`<=\` \`>=\` \`&&\` \`||\` \`!\`
-
-### Example
-
-\`\`\`cpp
-#include <iostream>
-using namespace std;
-
-auto main() -> int {
-    constexpr auto score = 85;
-
-    if (score >= 90) [[likely]] {
-        cout << "Grade: A\\n";
-    } else if (score >= 80) {
-        cout << "Grade: B\\n";
-    } else {
-        cout << "Grade: C or lower\\n";
-    }
-}
 \`\`\``,
+
     starterCode: `#include <iostream>\nusing namespace std;\n\nauto main() -> int {\n    constexpr auto temperature = 30;\n\n    if (temperature > 25) {\n        cout << "It's hot outside!\\n";\n    } else if (temperature > 15) {\n        cout << "It's warm outside.\\n";\n    } else {\n        cout << "It's cold outside.\\n";\n    }\n}`
   },
   {
     id: 5,
-    title: "Loops & Range-For",
-    content: `## Modern Loops
+    title: "Loops",
+    content: `## Repeating Code
+
+C++ has three loop types: \`for\`, \`while\`, and range-based \`for\`.
+
+<div class="instruction-box">
+<p><strong>Instructions:</strong> Use a loop to print numbers 1 through 5.</p>
+</div>
 
 ### Range-Based For (C++11)
-
-Iterate over containers cleanly:
 
 \`\`\`cpp
 #include <vector>
 using namespace std;
 
-auto main() -> int {
-    auto nums = vector{10, 20, 30, 40, 50};
-
-    for (const auto& n : nums) {
-        cout << n << " ";
-    }
-    // Output: 10 20 30 40 50
+auto nums = vector{10, 20, 30};
+for (const auto& n : nums) {
+    cout << n << " ";
 }
 \`\`\`
 
@@ -657,33 +859,29 @@ while (count < 3) {
     cout << count << " ";
     ++count;
 }
-\`\`\`
-
-### Do-While
-
-Runs **at least once**:
-
-\`\`\`cpp
-auto x = 10;
-do {
-    cout << x << "\\n";
-} while (--x > 0);
 \`\`\``,
+
     starterCode: `#include <iostream>\nusing namespace std;\n\nauto main() -> int {\n    for (auto i = 1; i <= 5; ++i) {\n        cout << "Count: " << i << "\\n";\n    }\n}`
   },
   {
     id: 6,
-    title: "Functions & auto Return",
-    content: `## Modern Functions
+    title: "Functions",
+    content: `## Writing Functions
 
-### Trailing Return & Auto
+Functions group reusable code. Modern C++ uses \`auto\` return types.
+
+<div class="instruction-box">
+<p><strong>Instructions:</strong> Write a function <code>multiply</code> that returns the product of two numbers.</p>
+</div>
+
+### Syntax
 
 \`\`\`cpp
-auto add(int a, int b) -> int {   // C++11 trailing return
+auto add(int a, int b) -> int {  // trailing return
     return a + b;
 }
 
-auto multiply(int a, int b) {      // C++14 deduced return
+auto multiply(int a, int b) {     // deduced return (C++14)
     return a * b;
 }
 \`\`\`
@@ -691,101 +889,75 @@ auto multiply(int a, int b) {      // C++14 deduced return
 ### constexpr Functions
 
 \`\`\`cpp
-constexpr auto square(int x) -> int { return x * x; }
-// evaluated at compile time if inputs are constexpr
+constexpr auto square(int x) -> int {
+    return x * x;
+}
 \`\`\`
 
 ### [[nodiscard]] (C++17)
 
-Warns if the return value is ignored:
+Warns if you ignore the return value:
 
 \`\`\`cpp
 [[nodiscard]] auto important() -> bool;
-\`\`\`
-
-### Overloading
-
-Multiple functions with the same name, different parameters.
-
-### Example
-
-\`\`\`cpp
-#include <iostream>
-using namespace std;
-
-[[nodiscard]] auto add(int a, int b) -> int {
-    return a + b;
-}
-
-auto main() -> int {
-    constexpr auto x = 10, y = 5;
-    auto sum = add(x, y);
-    cout << "Sum: " << sum << "\\n";
-}
 \`\`\``,
+
     starterCode: `#include <iostream>\nusing namespace std;\n\nauto multiply(int a, int b) -> int {\n    return a * b;\n}\n\nauto main() -> int {\n    constexpr auto a = 4, b = 7;\n    auto result = multiply(a, b);\n    cout << "4 * 7 = " << result << "\\n";\n}`
   },
   {
     id: 7,
-    title: "Containers & Strings",
-    content: `## Modern Collections
+    title: "Arrays & Vectors",
+    content: `## Collections
+
+Modern C++ uses \`array\` (fixed size) and \`vector\` (dynamic) instead of raw arrays.
+
+<div class="instruction-box">
+<p><strong>Instructions:</strong> Create an array of strings and print each one.</p>
+</div>
 
 ### array (C++11)
-
-Fixed-size, stack-allocated, knows its size:
 
 \`\`\`cpp
 #include <array>
 using namespace std;
 
-auto main() -> int {
-    auto nums = array{10, 20, 30, 40, 50};
-    cout << nums[2];                 // 30
-    cout << nums.size();             // 5
-    for (const auto& n : nums) { /* ... */ }
-}
+auto nums = array{10, 20, 30, 40, 50};
+cout << nums.size();  // 5
 \`\`\`
 
 ### vector
 
-Dynamic, heap-allocated:
-
 \`\`\`cpp
+#include <vector>
+
 auto vec = vector{1, 2, 3};
 vec.push_back(4);
 \`\`\`
 
 ### string_view (C++17)
 
-Non-owning string reference:
+Non-owning string reference — great for function parameters:
 
 \`\`\`cpp
-#include <string_view>
-using namespace std;
-
 auto greet(string_view name) -> void {
     cout << "Hello " << name << "\\n";
 }
-\`\`\`
+\`\`\``,
 
-### Common String Methods
-
-| Method          | Description                  |
-|-----------------|------------------------------|
-| \`.length()\`     | Returns length               |
-| \`.substr(pos)\`  | Extracts substring           |
-| \`.find(str)\`    | Finds substring              |
-| \`.starts_with()\`| C++20 prefix check           |`,
     starterCode: `#include <iostream>\n#include <array>\nusing namespace std;\n\nauto main() -> int {\n    auto words = array{"C++", "Java", "Python"};\n\n    for (const auto& w : words) {\n        cout << w << "\\n";\n    }\n}`
   },
   {
     id: 8,
-    title: "Classes & Default Members",
-    content: `## Modern Classes
+    title: "Classes",
+    content: `## Object-Oriented Programming
+
+A **class** bundles data and behavior together.
+
+<div class="instruction-box">
+<p><strong>Instructions:</strong> Create a <code>Dog</code> class with a <code>bark()</code> method and call it.</p>
+</div>
 
 ### Default Member Initializers (C++11)
-
-No need for constructor boilerplate:
 
 \`\`\`cpp
 class Rectangle {
@@ -813,26 +985,26 @@ public:
 };
 \`\`\`
 
-### auto in Methods
+> 🧠 Use \`= default\` for trivial constructors. Mark methods \`const\` when they don't modify the object.`,
 
-Use \`auto\` return types and \`const\` for const-correctness.
-
-> 🧠 Modern C++ favors **value semantics**, **const correctness**, and **default member initializers**.`,
     starterCode: `#include <iostream>\n#include <string>\nusing namespace std;\n\nclass Dog {\npublic:\n    string name = "Buddy";\n    int age = 0;\n\n    auto bark() const -> void {\n        cout << name << " says Woof!\\n";\n    }\n};\n\nauto main() -> int {\n    auto myDog = Dog{};\n    myDog.bark();\n}`
   },
   {
     id: 9,
-    title: "Inheritance & override",
-    content: `## Modern Inheritance
+    title: "Inheritance",
+    content: `## Reusing Code
+
+Inheritance lets a derived class reuse members from a base class.
+
+<div class="instruction-box">
+<p><strong>Instructions:</strong> Create a <code>Vehicle</code> base class and a <code>Car</code> that inherits from it.</p>
+</div>
 
 ### override (C++11)
 
-Always mark overridden methods with \`override\`:
+Always mark overridden methods:
 
 \`\`\`cpp
-#include <iostream>
-using namespace std;
-
 class Animal {
 public:
     virtual auto speak() const -> void {
@@ -849,38 +1021,30 @@ public:
 };
 \`\`\`
 
-### final (C++11)
-
-Prevent further overriding:
+### final
 
 \`\`\`cpp
 class Persian final : public Cat { };
 \`\`\`
 
-### using Declarations
+> 🔑 Prefer **composition** over inheritance where possible.`,
 
-Bring base class constructors into scope:
-
-\`\`\`cpp
-class Derived : public Base {
-    using Base::Base;   // inherits constructors
-};
-\`\`\`
-
-> 🔑 Inheritance models an **is-a** relationship. Prefer composition over inheritance where possible.`,
     starterCode: `#include <iostream>\nusing namespace std;\n\nclass Vehicle {\npublic:\n    auto start() const -> void {\n        cout << "Vehicle started.\\n";\n    }\n    virtual ~Vehicle() = default;\n};\n\nclass Car : public Vehicle {\npublic:\n    auto honk() const -> void {\n        cout << "Beep beep!\\n";\n    }\n};\n\nauto main() -> int {\n    auto myCar = Car{};\n    myCar.start();\n    myCar.honk();\n}`
   },
   {
     id: 10,
-    title: "Polymorphism & Smart Pointers",
-    content: `## Modern Polymorphism
+    title: "Polymorphism",
+    content: `## Many Forms, One Interface
+
+Polymorphism lets different classes respond to the same method call.
+
+<div class="instruction-box">
+<p><strong>Instructions:</strong> Use a <code>unique_ptr</code> to store a <code>Parrot</code> in a vector of <code>Bird</code> pointers and call <code>speak()</code>.</p>
+</div>
 
 ### Pure Virtual + override
 
 \`\`\`cpp
-#include <iostream>
-using namespace std;
-
 class Shape {
 public:
     virtual auto area() const -> double = 0;
@@ -897,28 +1061,24 @@ public:
 };
 \`\`\`
 
-### unique_ptr — No Raw delete
+### Smart Pointers
 
 \`\`\`cpp
-#include <memory>
-#include <vector>
-using namespace std;
-
 auto shapes = vector<unique_ptr<Shape>>{};
 shapes.push_back(make_unique<Circle>(5.0));
 
 for (const auto& s : shapes) {
     cout << s->area() << "\\n";
 }
-// No delete needed — unique_ptr handles it
 \`\`\`
 
-> 💡 Modern C++ avoids \`new\`/\`delete\`. Use \`make_unique\` (C++14) and smart pointers instead.`,
+> 💡 Use \`make_unique\` (C++14) — no \`new\` or \`delete\` needed.`,
+
     starterCode: `#include <iostream>\n#include <memory>\n#include <vector>\nusing namespace std;\n\nclass Bird {\npublic:\n    virtual auto speak() const -> void {\n        cout << "Bird sound\\n";\n    }\n    virtual ~Bird() = default;\n};\n\nclass Parrot : public Bird {\npublic:\n    auto speak() const -> void override {\n        cout << "Squawk!\\n";\n    }\n};\n\nauto main() -> int {\n    auto birds = vector<unique_ptr<Bird>>{};\n    birds.push_back(make_unique<Parrot>());\n\n    for (const auto& b : birds) {\n        b->speak();\n    }\n}`
   }
 ];
 
-// ─── helpers ──────────────────────────────────────────────────
+// ─── Helpers ──────────────────────────────────────────────────
 
 function highlightCode(code) {
   const escapes = {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'};
@@ -926,43 +1086,32 @@ function highlightCode(code) {
   const rules = [
     [/\/\/.*$/gm, '<span class="comment">$&</span>'],
     [/#\w+\b/g, '<span class="preproc">$&</span>'],
-    [/\b(auto|break|case|catch|class|const|continue|default|delete|do|else|enum|explicit|export|extern|false|final|for|friend|goto|if|include|inline|mutable|namespace|new|nullptr|operator|override|private|protected|public|register|return|sizeof|static|struct|switch|template|this|throw|true|try|typedef|typeid|typename|union|using|virtual|void|volatile|while)\b/g, '<span class="keyword">$&</span>'],
-    [/\b(int|bool|char|double|float|long|short|signed|unsigned|string|size_t|void)\b/g, '<span class="type">$&</span>'],
+    [/\b(auto|break|case|catch|class|const|constexpr|continue|default|delete|do|else|enum|explicit|export|extern|false|final|for|friend|goto|if|include|inline|mutable|namespace|new|nullptr|operator|override|private|protected|public|register|return|sizeof|static|struct|switch|template|this|throw|true|try|typedef|typeid|typename|union|using|virtual|void|volatile|while)\b/g, '<span class="keyword">$&</span>'],
+    [/\b(int|bool|char|double|float|long|short|signed|unsigned|string|string_view|size_t|void)\b/g, '<span class="type">$&</span>'],
     [/"([^"\\]|\\.)*"/g, '<span class="string">$&</span>'],
     [/'([^'\\]|\\.)'/g, '<span class="string">$&</span>'],
     [/\b(\d+\.?\d*)\b/g, '<span class="number">$&</span>'],
     [/\b([a-zA-Z_]\w*)\s*\(/g, '<span class="function">$1</span>(']
   ];
-  for (const [re, repl] of rules) { s = s.replace(re, repl); }
+  for (const [re, repl] of rules) s = s.replace(re, repl);
   return s;
 }
 
 function renderMarkdown(text) {
-  // headings
   let html = text
     .replace(/^### (.+)$/gm, '<h3>$1</h3>')
     .replace(/^## (.+)$/gm, '<h2>$1</h2>');
 
-  // code blocks
   html = html.replace(/```(\w+)?\n([\s\S]*?)```/g, (_, lang, code) => {
     return '<pre>' + highlightCode(code.trimEnd()) + '</pre>';
   });
 
-  // inline code
   html = html.replace(/`([^`]+)`/g, '<code>$1</code>');
-
-  // bold / italic
   html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
   html = html.replace(/\*(.+?)\*/g, '<em>$1</em>');
-
-  // blockquote
-  html = html.replace(/^> (.+)$/gm, '<blockquote><p>$1</p></blockquote>');
-
-  // unordered list
   html = html.replace(/^- (.+)$/gm, '<li>$1</li>');
   html = html.replace(/(<li>.*<\/li>\n?)+/g, '<ul>$&</ul>');
 
-  // tables (basic)
   html = html.replace(/\|(.+)\|[\s\S]*?\|(.+)\|/g, (match) => {
     const rows = match.trim().split('\n');
     const header = rows[0].split('|').filter(c => c.trim()).map(c => `<th>${c.trim()}</th>`).join('');
@@ -974,7 +1123,6 @@ function renderMarkdown(text) {
     return `<table><thead><tr>${header}</tr></thead><tbody>${body}</tbody></table>`;
   });
 
-  // paragraphs
   html = html.replace(/\n\n/g, '</p><p>');
   html = '<p>' + html + '</p>';
   html = html.replace(/<\/p><p><h([23])>/g, '<h$1>');
@@ -985,89 +1133,168 @@ function renderMarkdown(text) {
   html = html.replace(/<\/blockquote><p>/g, '</blockquote>');
   html = html.replace(/<p><table>/g, '<table>');
   html = html.replace(/<\/table><p>/g, '</table>');
-
-  // clean <p> around block elements
+  html = html.replace(/<div class="instruction-box"><p><\/p>/g, '<div class="instruction-box">');
   html = html.replace(/<p>\s*<\/p>/g, '');
+
+  // Keep instruction-box divs intact
+  html = html.replace(/<p><div class="instruction-box">/g, '<div class="instruction-box">');
+  html = html.replace(/<\/div><\/p>/g, '</div>');
 
   return html;
 }
 
-// ─── state ────────────────────────────────────────────────────
+// ─── State ────────────────────────────────────────────────────
 let currentLesson = 0;
+let completedLessons = new Set();
 
-const lessonNav  = document.getElementById('lessonNav');
-const readerTitle = document.getElementById('readerTitle');
-const readerMeta  = document.getElementById('readerMeta');
-const readerBody  = document.getElementById('readerBody');
-const codeEditor  = document.getElementById('codeEditor');
-const statusBar   = document.getElementById('statusBar');
-const statusText  = document.getElementById('statusText');
-const checkBtn    = document.getElementById('checkBtn');
-const breadcrumbLesson = document.getElementById('breadcrumbLesson');
+const lessonNav    = document.getElementById('lessonNav');
+const readerTitle  = document.getElementById('readerTitle');
+const readerMeta   = document.getElementById('readerMeta');
+const readerBody   = document.getElementById('readerBody');
+const codeEditor   = document.getElementById('codeEditor');
+const lineNumbers  = document.getElementById('lineNumbers');
+const terminalOut  = document.getElementById('terminalOutput');
+const checkBtn     = document.getElementById('checkBtn');
+const runBtn       = document.getElementById('runBtn');
+const resetBtn     = document.getElementById('resetBtn');
+const prevBtn      = document.getElementById('prevBtn');
+const nextBtn      = document.getElementById('nextBtn');
+const progressFill = document.getElementById('progressFill');
+const progressLabel= document.getElementById('progressLabel');
 
+// ─── Line numbers ─────────────────────────────────────────────
+function updateLineNumbers() {
+  const lines = codeEditor.value.split('\n');
+  const nums = lines.map((_, i) => i + 1).join('\n');
+  lineNumbers.textContent = nums;
+}
+
+codeEditor.addEventListener('input', updateLineNumbers);
+codeEditor.addEventListener('scroll', () => {
+  lineNumbers.scrollTop = codeEditor.scrollTop;
+});
+
+// ─── Terminal ─────────────────────────────────────────────────
+function writeTerminal(lines) {
+  let html = '';
+  for (const line of lines) {
+    if (typeof line === 'object') {
+      html += `<span class="${line.class}">${line.text}</span>`;
+    } else {
+      html += line;
+    }
+    html += '<br>';
+  }
+  terminalOut.innerHTML = html + '<span class="terminal-cursor"></span>';
+  terminalOut.scrollTop = terminalOut.scrollHeight;
+}
+
+function clearTerminal() {
+  writeTerminal([
+    '<span class="prompt">$</span> g++ main.cpp -o main',
+    '<span class="info-text">Ready to compile.</span>'
+  ]);
+}
+
+document.getElementById('clearTerminalBtn').addEventListener('click', clearTerminal);
+
+// ─── Sidebar ──────────────────────────────────────────────────
 function buildSidebar() {
   lessons.forEach((l, i) => {
     const li = document.createElement('li');
     const btn = document.createElement('button');
     btn.type = 'button';
     btn.setAttribute('data-index', i);
-    btn.innerHTML = `<span class="lesson-num">${l.id}</span> ${l.title}`;
+    btn.innerHTML = `<span class="lesson-num">${l.id}</span> ${l.title}<span class="lesson-check">&#10003;</span>`;
     btn.addEventListener('click', () => loadLesson(i));
     li.appendChild(btn);
     lessonNav.appendChild(li);
   });
 }
 
+function updateSidebar() {
+  const buttons = lessonNav.querySelectorAll('button');
+  buttons.forEach((btn, i) => {
+    btn.removeAttribute('aria-current');
+    if (i === currentLesson) btn.setAttribute('aria-current', 'page');
+    btn.classList.toggle('completed', completedLessons.has(i));
+  });
+}
+
+// ─── Load lesson ──────────────────────────────────────────────
 function loadLesson(index) {
   currentLesson = index;
   const lesson = lessons[index];
 
-  // reader
   readerTitle.textContent = lesson.title;
   readerMeta.textContent = `Lesson ${lesson.id} of ${lessons.length}`;
   readerBody.innerHTML = renderMarkdown(lesson.content);
 
-  // editor
   codeEditor.value = lesson.starterCode;
+  updateLineNumbers();
 
-  // breadcrumb
-  breadcrumbLesson.textContent = `Lesson ${lesson.id}`;
+  // Update progress
+  const pct = Math.round(((index + 1) / lessons.length) * 100);
+  progressFill.style.width = pct + '%';
+  progressLabel.textContent = `${index + 1}/${lessons.length}`;
 
-  // sidebar active state
-  const buttons = lessonNav.querySelectorAll('button');
-  buttons.forEach((btn, i) => {
-    btn.removeAttribute('aria-current');
-    if (i === index) btn.setAttribute('aria-current', 'page');
-  });
+  updateSidebar();
+  clearTerminal();
 
-  // reset status
-  setStatus('info', 'Ready');
-
-  // scroll reader to top
   document.getElementById('readerPanel').scrollTop = 0;
 
-  // close sidebar on mobile
   const sidebar = document.getElementById('sidebar');
   sidebar.classList.remove('open');
+
+  // Enable/disable nav buttons
+  prevBtn.disabled = index === 0;
+  nextBtn.disabled = index === lessons.length - 1;
 }
 
-function setStatus(type, msg) {
-  statusBar.dataset.status = type;
-  statusText.textContent = msg;
+// ─── Run ──────────────────────────────────────────────────────
+function runCode() {
+  const code = codeEditor.value.trim();
+  if (!code) {
+    writeTerminal([
+      '<span class="prompt">$</span> g++ main.cpp -o main',
+      '<span class="error-text">error: empty source file</span>'
+    ]);
+    return;
+  }
+
+  const hasMain = /\b(auto|int)\s+main\s*\(/.test(code);
+  if (!hasMain) {
+    writeTerminal([
+      '<span class="prompt">$</span> g++ main.cpp -o main',
+      '<span class="error-text">error: no main() function found</span>'
+    ]);
+    return;
+  }
+
+  writeTerminal([
+    '<span class="prompt">$</span> g++ main.cpp -o main',
+    '<span class="success-text">Compilation successful.</span>',
+    '<span class="prompt">$</span> ./main',
+    'Hello, World!',
+    ''
+  ]);
 }
 
-// ─── check answer ─────────────────────────────────────────────
+// ─── Check answer ─────────────────────────────────────────────
 function checkAnswer() {
   const lesson = lessons[currentLesson];
   const code = codeEditor.value.trim();
   if (!code) {
-    setStatus('error', 'Write some code before checking.');
+    writeTerminal([
+      '<span class="prompt">$</span> check answer',
+      '<span class="error-text">Write some code before checking.</span>'
+    ]);
     return;
   }
 
-  const hasMain  = /\b(auto|int)\s+main\s*\(/.test(code);
-  const hasNS    = /using\s+namespace\s+std/.test(code);
-  const hasIO    = /#\s*include\s*<iostream>/i.test(code) || /\bcout\b/.test(code) || /\bcin\b/.test(code);
+  const hasMain = /\b(auto|int)\s+main\s*\(/.test(code);
+  const hasNS   = /using\s+namespace\s+std/.test(code);
+  const hasIO   = /#\s*include\s*<iostream>/i.test(code) || /\bcout\b/.test(code) || /\bcin\b/.test(code);
 
   const checks = [hasMain, hasNS];
 
@@ -1094,25 +1321,52 @@ function checkAnswer() {
   const ok = checks.filter(Boolean).length;
 
   if (passed) {
-    setStatus('success', `All ${total} checks passed — modern C++ style!`);
+    writeTerminal([
+      '<span class="prompt">$</span> check answer',
+      '<span class="success-text">✓ All ' + total + ' checks passed! Great work!</span>'
+    ]);
+    completedLessons.add(currentLesson);
+    updateSidebar();
   } else {
     const hints = [];
     if (!hasMain) hints.push('Missing main() function');
     if (!hasNS) hints.push('Add using namespace std;');
     if (!hasIO) hints.push('Need #include <iostream> or cout');
-    setStatus('error', `${ok}/${total} checks passed. ${hints.join('; ')}`);
+    writeTerminal([
+      '<span class="prompt">$</span> check answer',
+      '<span class="error-text">✗ ' + ok + '/' + total + ' checks passed.</span>',
+      '<span class="error-text">' + hints.join('; ') + '</span>'
+    ]);
   }
 }
 
-// ─── sidebar toggle (mobile) ──────────────────────────────────
+// ─── Reset ────────────────────────────────────────────────────
+function resetCode() {
+  const lesson = lessons[currentLesson];
+  codeEditor.value = lesson.starterCode;
+  updateLineNumbers();
+  clearTerminal();
+}
+
+// ─── Keyboard shortcuts ───────────────────────────────────────
+document.addEventListener('keydown', (e) => {
+  if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+    e.preventDefault();
+    runCode();
+  }
+});
+
+// ─── Init ─────────────────────────────────────────────────────
+buildSidebar();
+loadLesson(0);
+prevBtn.addEventListener('click', () => loadLesson(Math.max(0, currentLesson - 1)));
+nextBtn.addEventListener('click', () => loadLesson(Math.min(lessons.length - 1, currentLesson + 1)));
+runBtn.addEventListener('click', runCode);
+checkBtn.addEventListener('click', checkAnswer);
+resetBtn.addEventListener('click', resetCode);
 document.getElementById('sidebarToggle').addEventListener('click', () => {
   document.getElementById('sidebar').classList.toggle('open');
 });
-
-// ─── init ─────────────────────────────────────────────────────
-buildSidebar();
-loadLesson(0);
-checkBtn.addEventListener('click', checkAnswer);
 
 })();
 </script>
