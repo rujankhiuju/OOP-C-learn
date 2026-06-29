@@ -1,0 +1,4 @@
+openai-whisper
+yt-dlp
+gradio>=4.0,<5.0
+googletrans==4.0.0rc1

@@ -73,6 +73,16 @@ html{font-size:16px;scroll-behavior:smooth}
   --shadow-sm:0 1px 2px rgba(0,0,0,0.06);--shadow-md:0 4px 16px rgba(0,0,0,0.07);
   --shadow-lg:0 12px 40px rgba(0,0,0,0.09)
 }
+.theme-light-vibrant{
+  --bg-base:#f0f2f8;--bg-raised:#ffffff;--bg-surface:#e4e8f2;--bg-elevated:#ffffff;
+  --bg-hover:#dce0ec;--bg-active:#d0d6e6;--bg-overlay:rgba(0,0,0,0.12);
+  --border:#d0d6e6;--border-light:#bcc4da;--text-primary:#1a1c2e;--text-secondary:#4a4e62;
+  --text-muted:#7a7e96;--accent:#e63946;--accent-dim:#b02834;--accent-glow:rgba(230,57,70,0.12);
+  --code-bg:#e4e8f2;--code-border:#d0d6e6;--terminal-bg:#dce0ec;
+  --success:#2a9d66;--error:#e63946;--warning:#e09a2a;
+  --shadow-sm:0 1px 3px rgba(0,0,0,0.06);--shadow-md:0 4px 16px rgba(0,0,0,0.08);
+  --shadow-lg:0 12px 40px rgba(0,0,0,0.10)
+}
 body{font-family:var(--font-sans);background:var(--bg-base);color:var(--text-primary);min-height:100vh;display:flex;flex-direction:column;transition:background var(--transition),color var(--transition)}
 a{color:var(--accent);text-decoration:none}a:hover{text-decoration:underline}
 :focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:var(--radius-xs)}
@@ -119,6 +129,7 @@ a{color:var(--accent);text-decoration:none}a:hover{text-decoration:underline}
 .theme-opt-sepia{background:#231e19}
 .theme-opt-light{background:#f5f5f7;border-color:#ccc}
 .theme-opt-light-sepia{background:#f7f2ea;border-color:#d6ccc0}
+.theme-opt-light-vibrant{background:#fff;border-color:#e63946;box-shadow:inset 0 0 0 3px #f0f2f8,0 0 0 1px #e63946}
 .theme-panel-label{font-size:.72rem;color:var(--text-muted);margin-right:4px}
 
 /* ═══ Shortcuts Modal ═══ */
@@ -253,12 +264,12 @@ pre:hover .copy-btn{opacity:1}.copy-btn:hover{background:var(--bg-hover);color:v
 .reader-panel ul,.reader-panel ol{margin:8px 0 12px 20px;color:var(--text-secondary);line-height:1.6;font-size:.88rem}
 .reader-panel li{margin-bottom:3px}
 .reader-panel .keyword{color:#569cd6}.reader-panel .type{color:#4ec9b0}.reader-panel .string{color:#ce9178}
-.theme-light .reader-panel .keyword,.theme-light-sepia .reader-panel .keyword{color:#2a7ab5}
-.theme-light .reader-panel .type,.theme-light-sepia .reader-panel .type{color:#2a8a6a}
-.theme-light .reader-panel .string,.theme-light-sepia .reader-panel .string{color:#b85a3a}
-.theme-light .reader-panel .comment,.theme-light-sepia .reader-panel .comment{color:#5a8a5a}
-.theme-light .reader-panel .number,.theme-light-sepia .reader-panel .number{color:#6a9a3a}
-.theme-light .reader-panel .function,.theme-light-sepia .reader-panel .function{color:#7a5ab8}
+.theme-light .reader-panel .keyword,.theme-light-sepia .reader-panel .keyword,.theme-light-vibrant .reader-panel .keyword{color:#2a7ab5}
+.theme-light .reader-panel .type,.theme-light-sepia .reader-panel .type,.theme-light-vibrant .reader-panel .type{color:#2a8a6a}
+.theme-light .reader-panel .string,.theme-light-sepia .reader-panel .string,.theme-light-vibrant .reader-panel .string{color:#b85a3a}
+.theme-light .reader-panel .comment,.theme-light-sepia .reader-panel .comment,.theme-light-vibrant .reader-panel .comment{color:#5a8a5a}
+.theme-light .reader-panel .number,.theme-light-sepia .reader-panel .number,.theme-light-vibrant .reader-panel .number{color:#6a9a3a}
+.theme-light .reader-panel .function,.theme-light-sepia .reader-panel .function,.theme-light-vibrant .reader-panel .function{color:#7a5ab8}
 .reader-panel .comment{color:#6a9955;font-style:italic}.reader-panel .number{color:#b5cea8}.reader-panel .function{color:#dcdcaa}.reader-panel .preproc{color:#c586c0}
 .reader-panel blockquote{border-left:3px solid var(--accent-dim);padding:8px 14px;margin:12px 0;background:var(--bg-surface);border-radius:0 var(--radius-xs) var(--radius-xs) 0}
 .reader-panel blockquote p{margin-bottom:0;font-size:.85rem}
@@ -286,7 +297,7 @@ pre:hover .copy-btn{opacity:1}.copy-btn:hover{background:var(--bg-hover);color:v
 .btn:disabled{opacity:.4;cursor:not-allowed}
 .editor-wrapper{flex:1;position:relative;overflow:hidden}
 .editor-wrapper textarea{width:100%;height:100%;padding:14px 16px;padding-left:52px;background:var(--code-bg);color:#d4d4d4;font-family:var(--font-mono);font-size:.8rem;line-height:1.55;border:none;resize:none;outline:none;tab-size:2;white-space:pre;overflow-wrap:normal;overflow-x:auto}
-.theme-light .editor-wrapper textarea,.theme-light-sepia .editor-wrapper textarea{color:#1d1d1f}
+.theme-light .editor-wrapper textarea,.theme-light-sepia .editor-wrapper textarea,.theme-light-vibrant .editor-wrapper textarea{color:#1d1d1f}
 .editor-wrapper textarea::placeholder{color:var(--text-muted)}
 .line-numbers{position:absolute;top:0;left:0;padding:14px 8px 14px 12px;background:var(--code-bg);border-right:1px solid var(--code-border);color:var(--text-muted);font-family:var(--font-mono);font-size:.8rem;line-height:1.55;text-align:right;user-select:none;pointer-events:none;overflow:hidden;min-width:40px}
 
@@ -363,6 +374,7 @@ pre:hover .copy-btn{opacity:1}.copy-btn:hover{background:var(--bg-hover);color:v
   <span class="theme-panel-label" style="margin-left:4px">Light</span>
   <button class="theme-opt theme-opt-light" data-theme="theme-light" title="Light" aria-label="Light theme"></button>
   <button class="theme-opt theme-opt-light-sepia" data-theme="theme-light-sepia" title="Light Sepia" aria-label="Warm light theme"></button>
+  <button class="theme-opt theme-opt-light-vibrant" data-theme="theme-light-vibrant" title="Light Vibrant" aria-label="Bright colorful light theme"></button>
 </div>
 
 <!-- Shortcuts Modal -->
@@ -625,7 +637,7 @@ function recordAttempt(id) { if (!loginAttempts[id]) loginAttempts[id] = []; log
    Theme System
    ═══════════════════════════════════════════════════════════════ */
 const THEME_KEY = 'cppro_theme';
-const themes = ['theme-dark','theme-midnight','theme-oled','theme-neutral','theme-sepia','theme-light','theme-light-sepia'];
+const themes = ['theme-dark','theme-midnight','theme-oled','theme-neutral','theme-sepia','theme-light','theme-light-sepia','theme-light-vibrant'];
 let currentTheme = localStorage.getItem(THEME_KEY) || 'theme-dark';
 
 function applyTheme(t) {
@@ -977,7 +989,20 @@ const lessons = [
 <h3>STL Algorithms</h3><pre><span class="preproc">#include</span> &lt;algorithm&gt;<br><span class="preproc">#include</span> &lt;vector&gt;<br><br><span class="keyword">auto</span> nums = <span class="type">vector</span>{<span class="number">4</span>, <span class="number">2</span>, <span class="number">5</span>, <span class="number">1</span>, <span class="number">3</span>};<br><span class="function">sort</span>(nums.<span class="function">begin</span>(), nums.<span class="function">end</span>());  <span class="comment">// 1 2 3 4 5</span></pre>
 <h3>Lambda Expressions (C++11)</h3><pre><span class="function">sort</span>(nums.<span class="function">begin</span>(), nums.<span class="function">end</span>(),<br>     [](<span class="type">int</span> a, <span class="type">int</span> b) { <span class="keyword">return</span> a &gt; b; });</pre>
 <blockquote><p>💡 Templates are the foundation of modern C++ — the STL, smart pointers, and more are all built on them.</p></blockquote>`,
-    starterCode: '#include <iostream>\n#include <vector>\n#include <algorithm>\nusing namespace std;\n\ntemplate <typename T>\nauto printAll(const vector<T>& v) -> void {\n    for (const auto& item : v) {\n        cout << item << " ";\n    }\n    cout << "\\n";\n}\n\nauto main() -> int {\n    auto nums = vector{42, 17, 8, 99, 33};\n    sort(nums.begin(), nums.end());\n    printAll(nums);\n}' }
+    starterCode: '#include <iostream>\n#include <vector>\n#include <algorithm>\nusing namespace std;\n\ntemplate <typename T>\nauto printAll(const vector<T>& v) -> void {\n    for (const auto& item : v) {\n        cout << item << " ";\n    }\n    cout << "\\n";\n}\n\nauto main() -> int {\n    auto nums = vector{42, 17, 8, 99, 33};\n    sort(nums.begin(), nums.end());\n    printAll(nums);\n}' },
+  { id:11, title:"Project: Bank Account System", ref:"OOP Project · Inheritance & Polymorphism",
+    content: `<h2>Project: Bank Account System</h2><p>Now you'll build a <strong>real</strong> C++ program using everything you've learned — classes, inheritance, virtual functions, and dynamic memory.</p>
+<div class="instruction-box"><p><strong>Your Task:</strong> Create a base class <code>Account</code> and two derived classes <code>SavingsAccount</code> (adds interest) and <code>CheckingAccount</code> (charges a fee per withdrawal). Use virtual functions and store accounts in a <code>vector</code> of <code>unique_ptr</code>.</p></div>
+<h3>Requirements</h3>
+<table><thead><tr><th>Class</th><th>Members / Methods</th><th>Behavior</th></tr></thead><tbody>
+<tr><td><code>Account</code></td><td><code>deposit(double)</code>, <code>withdraw(double)</code>, <code>getBalance()</code> — all virtual</td><td>Base class with shared interface</td></tr>
+<tr><td><code>SavingsAccount</code></td><td>inherits Account, <code>applyInterest()</code></td><td>Interest rate of 5% applied to balance</td></tr>
+<tr><td><code>CheckingAccount</code></td><td>inherits Account</td><td>$1.50 fee per withdrawal</td></tr>
+</tbody></table>
+<h3>Starter Skeleton</h3><pre><span class="keyword">class</span> <span class="type">Account</span> {<br><span class="keyword">public</span>:<br>    <span class="keyword">virtual</span> <span class="keyword">auto</span> <span class="function">deposit</span>(<span class="type">double</span> amount) -> <span class="type">void</span> = <span class="number">0</span>;<br>    <span class="keyword">virtual</span> <span class="keyword">auto</span> <span class="function">withdraw</span>(<span class="type">double</span> amount) -> <span class="type">void</span> = <span class="number">0</span>;<br>    <span class="keyword">virtual</span> <span class="keyword">auto</span> <span class="function">getBalance</span>() <span class="keyword">const</span> -> <span class="type">double</span> = <span class="number">0</span>;<br>    <span class="keyword">virtual</span> ~<span class="function">Account</span>() = <span class="keyword">default</span>;<br>};</pre>
+<h3>Polymorphic Usage</h3><pre><span class="keyword">auto</span> accounts = <span class="type">vector</span>&lt;<span class="type">unique_ptr</span>&lt;<span class="type">Account</span>&gt;&gt;{};<br>accounts.<span class="function">push_back</span>(<span class="function">make_unique</span>&lt;<span class="type">SavingsAccount</span>&gt;(<span class="number">1000</span>));<br>accounts.<span class="function">push_back</span>(<span class="function">make_unique</span>&lt;<span class="type">CheckingAccount</span>&gt;(<span class="number">500</span>));<br><br><span class="keyword">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; acc : accounts) {<br>    acc-><span class="function">deposit</span>(<span class="number">200</span>);<br>    cout &lt;&lt; <span class="string">"Balance: $"</span> &lt;&lt; acc-><span class="function">getBalance</span>() &lt;&lt; <span class="string">"\\n"</span>;<br>}</pre>
+<blockquote><p>✅ This project ties together classes, inheritance, virtual functions (polymorphism), <code>unique_ptr</code>, and <code>vector</code> — the core of modern C++ OOP.</p></blockquote>`,
+    starterCode: '#include <iostream>\n#include <vector>\n#include <memory>\nusing namespace std;\n\nclass Account {\npublic:\n    virtual auto deposit(double amount) -> void = 0;\n    virtual auto withdraw(double amount) -> void = 0;\n    virtual auto getBalance() const -> double = 0;\n    virtual ~Account() = default;\n};\n\nclass SavingsAccount : public Account {\n    double balance;\npublic:\n    explicit SavingsAccount(double initial) : balance{initial} {}\n    auto deposit(double amount) -> void override { balance += amount; }\n    auto withdraw(double amount) -> void override {\n        if (amount <= balance) balance -= amount;\n    }\n    auto getBalance() const -> double override { return balance; }\n    auto applyInterest() -> void { balance += balance * 0.05; }\n};\n\nclass CheckingAccount : public Account {\n    double balance;\npublic:\n    explicit CheckingAccount(double initial) : balance{initial} {}\n    auto deposit(double amount) -> void override { balance += amount; }\n    auto withdraw(double amount) -> void override {\n        double total = amount + 1.50;\n        if (total <= balance) balance -= total;\n    }\n    auto getBalance() const -> double override { return balance; }\n};\n\nauto main() -> int {\n    auto accounts = vector<unique_ptr<Account>>{};\n    accounts.push_back(make_unique<SavingsAccount>(1000.0));\n    accounts.push_back(make_unique<CheckingAccount>(500.0));\n\n    accounts[0]->deposit(200.0);\n    accounts[1]->withdraw(50.0);\n\n    for (const auto& acc : accounts) {\n        cout << "Balance: $" << acc->getBalance() << "\\n";\n    }\n}' }
 ];
 
 /* ═══════════════════════════════════════════════════════════════
@@ -1104,7 +1129,15 @@ function runCode() {
     writeTerminal(['<span class="prompt">$</span> g++ main.cpp -o main','<span class="error-text">error: no main() function found</span>']);
     return;
   }
-  writeTerminal(['<span class="prompt">$</span> g++ main.cpp -o main','<span class="success-text">Compilation successful.</span>','<span class="prompt">$</span> ./main','Hello, World!','']);
+  writeTerminal(['<span class="prompt">$</span> g++ main.cpp -o main','<span class="success-text">Compilation successful.</span>','<span class="prompt">$</span> ./main']);
+  const lessonId = lessons[currentLesson].id;
+  if (lessonId === 11) {
+    writeTerminal(['<span class="prompt">$</span> g++ main.cpp -o main','<span class="success-text">Compilation successful.</span>','<span class="prompt">$</span> ./main','Balance: $1200','Balance: $448.5','']);
+  } else if (lessonId === 10) {
+    writeTerminal(['<span class="prompt">$</span> g++ main.cpp -o main','<span class="success-text">Compilation successful.</span>','<span class="prompt">$</span> ./main','8 17 33 42 99','']);
+  } else {
+    writeTerminal(['<span class="prompt">$</span> g++ main.cpp -o main','<span class="success-text">Compilation successful.</span>','<span class="prompt">$</span> ./main','Hello, World!','']);
+  }
 }
 
 // Check answer
@@ -1128,7 +1161,8 @@ function checkAnswer() {
     7: () => /\bclass\b/.test(code),
     8: () => (/\bcin\b/.test(code) || /\bgetline\b/.test(code) || /\bifstream|ofstream\b/.test(code)),
     9: () => /\b(make_unique|unique_ptr|make_shared|shared_ptr)\b/.test(code),
-    10: () => /\btemplate\b/.test(code)
+     10: () => /\btemplate\b/.test(code),
+     11: () => /\bclass\b.*:\s*public\s+Account\b/.test(code) && /\boverride\b/.test(code) && /\bunique_ptr\b/.test(code)
   };
   const fn = checkMap[lesson.id]; if (fn) checks.push(fn());
   const passed = checks.every(Boolean);
