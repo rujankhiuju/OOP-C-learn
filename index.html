@@ -4,580 +4,306 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'unsafe-inline' 'self'; script-src 'self' 'unsafe-inline';">
-<title>CPP Learn — Interactive C++ Course</title>
+<title>cppro — Interactive C++ Course</title>
 <style>
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html { font-size: 16px; }
+/* ═══ Reset & Base ═══ */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:16px;scroll-behavior:smooth}
 
-:root {
-  --bg-primary: #13161a;
-  --bg-secondary: #1a1d23;
-  --bg-tertiary: #1e2228;
-  --bg-surface: #24282f;
-  --bg-hover: #2c3039;
-  --bg-active: #333842;
-  --border: #2e333d;
-  --border-light: #3a404d;
-  --text-primary: #e4e7ed;
-  --text-secondary: #a8aebb;
-  --text-muted: #6b7180;
-  --accent: #4fc3f7;
-  --accent-dim: #1f6ea0;
-  --success: #66bb6a;
-  --error: #ef5350;
-  --warning: #ffa726;
-  --code-bg: #181b20;
-  --sidebar-width: 280px;
-  --topbar-height: 48px;
-  --radius: 8px;
-  --radius-sm: 4px;
-  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-  --font-mono: "Cascadia Code", "Fira Code", "JetBrains Mono", "Consolas", monospace;
-  --transition: 0.2s ease;
+/* ═══ Theme Variables ═══ */
+.theme-dark,:root{
+  --bg-base:#0e1014;--bg-raised:#15171d;--bg-surface:#1c1f26;--bg-elevated:#23272f;
+  --bg-hover:#2a2e38;--bg-active:#323742;--bg-overlay:rgba(0,0,0,0.55);
+  --border:#2a2e38;--border-light:#363b47;--text-primary:#e2e5eb;--text-secondary:#a8aebb;
+  --text-muted:#6b7180;--accent:#5fc3e4;--accent-dim:#1f6ea0;--accent-glow:rgba(95,195,228,0.15);
+  --success:#5cb87a;--success-glow:rgba(92,184,122,0.12);--error:#e85d5d;--warning:#e8a84c;
+  --code-bg:#0d0f13;--code-border:#20232a;--terminal-bg:#090b0f;
+  --font-sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  --font-mono:"Cascadia Code","Fira Code","JetBrains Mono",Consolas,monospace;
+  --radius:10px;--radius-sm:6px;--radius-xs:4px;
+  --shadow-sm:0 1px 2px rgba(0,0,0,0.3);--shadow-md:0 4px 16px rgba(0,0,0,0.35);
+  --shadow-lg:0 12px 40px rgba(0,0,0,0.45);--transition:.18s cubic-bezier(.4,0,.2,1)
 }
+.theme-midnight{
+  --bg-base:#0c0f1e;--bg-raised:#13172a;--bg-surface:#191e36;--bg-elevated:#202642;
+  --bg-hover:#272d4e;--bg-active:#2f3660;--bg-overlay:rgba(0,0,0,0.5);
+  --border:#262b48;--border-light:#32385a;--text-primary:#dce0f0;--text-secondary:#a8aec8;
+  --text-muted:#656b8a;--accent:#7c8cf0;--accent-dim:#4a5abf;--accent-glow:rgba(124,140,240,0.15);
+  --success:#6bcf97;--error:#e86a6a;--warning:#e8b84c
+}
+.theme-oled{
+  --bg-base:#000000;--bg-raised:#0a0a0a;--bg-surface:#111111;--bg-elevated:#181818;
+  --bg-hover:#1f1f1f;--bg-active:#262626;--bg-overlay:rgba(0,0,0,0.6);
+  --border:#1a1a1a;--border-light:#262626;--text-primary:#e0e0e0;--text-secondary:#9e9e9e;
+  --text-muted:#5a5a5a;--accent:#5fc3e4;--accent-dim:#1a6ea0;--accent-glow:rgba(95,195,228,0.12);
+  --success:#4caf60;--error:#e05050;--warning:#e09840
+}
+.theme-sepia{
+  --bg-base:#1a1612;--bg-raised:#231e19;--bg-surface:#2c2620;--bg-elevated:#352e27;
+  --bg-hover:#3e362f;--bg-active:#473f37;--bg-overlay:rgba(0,0,0,0.45);
+  --border:#3a322b;--border-light:#4a4139;--text-primary:#d9cdbf;--text-secondary:#b0a394;
+  --text-muted:#7a6e61;--accent:#d4a76a;--accent-dim:#a87d4a;--accent-glow:rgba(212,167,106,0.15);
+  --success:#8bb86a;--error:#c96a5a;--warning:#c99a4a
+}
+body{font-family:var(--font-sans);background:var(--bg-base);color:var(--text-primary);min-height:100vh;display:flex;flex-direction:column;transition:background var(--transition),color var(--transition)}
+a{color:var(--accent);text-decoration:none}a:hover{text-decoration:underline}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:var(--radius-xs)}
+::selection{background:var(--accent-dim);color:#fff}
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--border-light);border-radius:3px}
+::-webkit-scrollbar-thumb:hover{background:var(--text-muted)}
+.spinner{display:inline-block;width:18px;height:18px;border:2px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .6s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
 
-body {
-  font-family: var(--font-sans);
-  background: var(--bg-primary);
-  color: var(--text-primary);
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-}
-a { color: var(--accent); text-decoration: none; }
-a:hover { text-decoration: underline; }
-:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: var(--radius-sm); }
-::selection { background: var(--accent-dim); color: #fff; }
-::-webkit-scrollbar { width: 6px; height: 6px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: var(--border-light); border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
+/* ═══ Toast ═══ */
+.toast-container{position:fixed;top:16px;right:16px;z-index:10000;display:flex;flex-direction:column;gap:8px;max-width:380px;pointer-events:none}
+.toast{pointer-events:auto;display:flex;align-items:center;gap:10px;padding:12px 16px;border-radius:var(--radius);font-size:.82rem;background:var(--bg-elevated);border:1px solid var(--border);box-shadow:var(--shadow-lg);animation:toastIn .25s ease;cursor:default}
+.toast.removing{animation:toastOut .2s ease forwards}
+@keyframes toastIn{from{opacity:0;transform:translateX(40px)}to{opacity:1;transform:translateX(0)}}
+@keyframes toastOut{from{opacity:1;transform:translateX(0)}to{opacity:0;transform:translateX(40px)}}
+.toast-success{border-left:3px solid var(--success)}
+.toast-error{border-left:3px solid var(--error)}
+.toast-info{border-left:3px solid var(--accent)}
+.toast-icon{font-size:1rem;flex-shrink:0;font-weight:700}
+.toast-msg{flex:1;color:var(--text-secondary);font-size:.82rem}
+.toast-close{background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:1rem;padding:0 2px;line-height:1;border-radius:var(--radius-xs)}
+.toast-close:hover{color:var(--text-secondary)}
 
-/* ─── Spinner ─── */
-.spinner {
-  display: inline-block;
-  width: 20px; height: 20px;
-  border: 2px solid var(--border);
-  border-top-color: var(--accent);
-  border-radius: 50%;
-  animation: spin 0.6s linear infinite;
-}
-@keyframes spin { to { transform: rotate(360deg); } }
+/* ═══ Confirm ═══ */
+.confirm-overlay{position:fixed;inset:0;z-index:11000;background:var(--bg-overlay);display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .2s ease;backdrop-filter:blur(4px)}
+.confirm-overlay.open{opacity:1;pointer-events:auto}
+.confirm-box{background:var(--bg-elevated);border:1px solid var(--border);border-radius:14px;padding:28px 32px;max-width:380px;width:90%;box-shadow:var(--shadow-lg)}
+.confirm-title{font-size:1rem;font-weight:700;margin-bottom:8px}
+.confirm-msg{font-size:.85rem;color:var(--text-secondary);margin-bottom:20px;line-height:1.5}
+.confirm-actions{display:flex;gap:8px;justify-content:flex-end}
 
-/* ─── Toast ─── */
-.toast-container {
-  position: fixed;
-  top: 16px;
-  right: 16px;
-  z-index: 10000;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  max-width: 360px;
-}
-.toast {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 12px 16px;
-  border-radius: var(--radius);
-  font-size: 0.82rem;
-  background: var(--bg-surface);
-  border: 1px solid var(--border);
-  box-shadow: 0 8px 24px rgba(0,0,0,0.4);
-  animation: toastIn 0.25s ease;
-  cursor: default;
-}
-.toast.removing { animation: toastOut 0.2s ease forwards; }
-@keyframes toastIn { from { opacity: 0; transform: translateX(40px); } to { opacity: 1; transform: translateX(0); } }
-@keyframes toastOut { from { opacity: 1; transform: translateX(0); } to { opacity: 0; transform: translateX(40px); } }
-.toast-success { border-left: 3px solid var(--success); }
-.toast-error { border-left: 3px solid var(--error); }
-.toast-info { border-left: 3px solid var(--accent); }
-.toast-icon { font-size: 1rem; flex-shrink: 0; }
-.toast-msg { flex: 1; color: var(--text-secondary); }
-.toast-close {
-  background: none; border: none; color: var(--text-muted); cursor: pointer;
-  font-size: 1rem; padding: 0 2px; line-height: 1;
-}
+/* ═══ Theme Panel ═══ */
+.theme-panel{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(100px);z-index:9999;background:var(--bg-elevated);border:1px solid var(--border);border-radius:14px;padding:16px 20px;box-shadow:var(--shadow-lg);display:flex;gap:12px;align-items:center;opacity:0;pointer-events:none;transition:transform .3s ease,opacity .3s ease}
+.theme-panel.open{transform:translateX(-50%) translateY(0);opacity:1;pointer-events:auto}
+.theme-opt{width:32px;height:32px;border-radius:50%;border:2px solid var(--border);cursor:pointer;transition:border-color var(--transition),transform .15s;position:relative}
+.theme-opt:hover{transform:scale(1.15)}
+.theme-opt.active{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-glow)}
+.theme-opt-dark{background:#15171d}
+.theme-opt-midnight{background:#13172a}
+.theme-opt-oled{background:#000}
+.theme-opt-sepia{background:#231e19}
+.theme-panel-label{font-size:.72rem;color:var(--text-muted);margin-right:4px}
 
-/* ─── Auth Screen ─── */
-#authScreen {
-  position: fixed;
-  inset: 0;
-  z-index: 9000;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: var(--bg-primary);
-  transition: opacity 0.3s ease;
-}
-#authScreen.hidden { opacity: 0; pointer-events: none; }
-.auth-card {
-  width: 100%;
-  max-width: 400px;
-  padding: 40px 36px;
-  background: var(--bg-secondary);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  box-shadow: 0 16px 48px rgba(0,0,0,0.5);
-}
-.auth-logo {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  font-size: 1.3rem;
-  font-weight: 700;
-  color: var(--accent);
-  margin-bottom: 6px;
-}
-.auth-logo svg { display: block; }
-.auth-subtitle {
-  text-align: center;
-  color: var(--text-muted);
-  font-size: 0.82rem;
-  margin-bottom: 28px;
-}
-.auth-tabs {
-  display: flex;
-  gap: 0;
-  margin-bottom: 24px;
-  background: var(--bg-surface);
-  border-radius: var(--radius);
-  padding: 3px;
-}
-.auth-tab {
-  flex: 1;
-  padding: 8px 0;
-  text-align: center;
-  font-size: 0.82rem;
-  font-weight: 600;
-  font-family: var(--font-sans);
-  border: none;
-  background: none;
-  color: var(--text-muted);
-  cursor: pointer;
-  border-radius: var(--radius-sm);
-  transition: background var(--transition), color var(--transition);
-}
-.auth-tab.active {
-  background: var(--accent);
-  color: #0a0d14;
-}
-.auth-tab:focus-visible { outline-offset: -2px; }
-.auth-form { display: flex; flex-direction: column; gap: 16px; }
-.auth-form.hidden { display: none; }
-.form-group {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-.form-group label {
-  font-size: 0.72rem;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: var(--text-muted);
-  font-weight: 600;
-}
-.form-input {
-  padding: 10px 14px;
-  background: var(--bg-tertiary);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  color: var(--text-primary);
-  font-size: 0.88rem;
-  font-family: var(--font-sans);
-  transition: border-color var(--transition);
-}
-.form-input:focus { border-color: var(--accent); outline: none; }
-.form-input::placeholder { color: var(--text-muted); }
-.form-input.error { border-color: var(--error); }
-.form-error {
-  font-size: 0.72rem;
-  color: var(--error);
-  min-height: 1em;
-}
-.password-strength {
-  display: flex;
-  gap: 4px;
-  margin-top: 2px;
-}
-.pw-bar {
-  flex: 1;
-  height: 3px;
-  background: var(--border);
-  border-radius: 2px;
-  transition: background var(--transition);
-}
-.pw-bar.active.weak { background: var(--error); }
-.pw-bar.active.medium { background: var(--warning); }
-.pw-bar.active.strong { background: var(--success); }
-.pw-label {
-  font-size: 0.65rem;
-  color: var(--text-muted);
-  margin-top: 2px;
-}
-.auth-btn {
-  padding: 11px 0;
-  background: var(--accent);
-  color: #0a0d14;
-  font-weight: 700;
-  font-size: 0.88rem;
-  border: none;
-  border-radius: var(--radius-sm);
-  cursor: pointer;
-  font-family: var(--font-sans);
-  transition: background var(--transition), transform 0.1s;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-}
-.auth-btn:hover { background: #6fd0fa; }
-.auth-btn:active { transform: scale(0.98); }
-.auth-btn:disabled { opacity: 0.5; cursor: not-allowed; }
-.auth-divider {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  color: var(--text-muted);
-  font-size: 0.75rem;
-}
-.auth-divider::before, .auth-divider::after {
-  content: '';
-  flex: 1;
-  height: 1px;
-  background: var(--border);
-}
-.demo-btn {
-  padding: 10px 0;
-  background: var(--bg-surface);
-  color: var(--text-secondary);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  cursor: pointer;
-  font-size: 0.82rem;
-  font-family: var(--font-sans);
-  transition: background var(--transition);
-}
-.demo-btn:hover { background: var(--bg-hover); color: var(--text-primary); }
+/* ═══ Shortcuts Modal ═══ */
+.shortcuts-overlay{position:fixed;inset:0;z-index:12000;background:var(--bg-overlay);display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .2s ease;backdrop-filter:blur(4px)}
+.shortcuts-overlay.open{opacity:1;pointer-events:auto}
+.shortcuts-box{background:var(--bg-elevated);border:1px solid var(--border);border-radius:14px;padding:28px 32px;max-width:420px;width:90%;box-shadow:var(--shadow-lg)}
+.shortcuts-box h3{font-size:1rem;font-weight:700;margin-bottom:16px}
+.shortcut-row{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border)}
+.shortcut-row:last-child{border-bottom:none}
+.shortcut-key{display:inline-flex;align-items:center;gap:4px;background:var(--bg-surface);padding:3px 10px;border-radius:var(--radius-xs);font-family:var(--font-mono);font-size:.75rem;color:var(--text-secondary);border:1px solid var(--border)}
+.shortcut-desc{font-size:.82rem;color:var(--text-secondary)}
 
-/* ─── Top Bar ─── */
-#mainApp { display: flex; flex-direction: column; min-height: 100vh; }
-#mainApp.hidden { display: none; }
-.topbar {
-  height: var(--topbar-height);
-  background: #0f1115;
-  border-bottom: 1px solid var(--border);
-  display: flex;
-  align-items: center;
-  padding: 0 16px;
-  gap: 12px;
-  flex-shrink: 0;
-}
-.topbar-logo {
-  font-weight: 700;
-  font-size: 1rem;
-  color: var(--accent);
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  letter-spacing: -0.02em;
-}
-.topbar-logo svg { display: block; }
-.topbar-divider { width: 1px; height: 24px; background: var(--border); }
-.topbar-course-name { font-size: 0.82rem; color: var(--text-secondary); font-weight: 500; }
-.topbar-spacer { flex: 1; }
-.topbar-progress { display: flex; align-items: center; gap: 10px; }
-.progress-track { width: 120px; height: 4px; background: var(--bg-surface); border-radius: 2px; overflow: hidden; }
-.progress-fill { height: 100%; background: var(--success); border-radius: 2px; transition: width 0.4s ease; }
-.progress-label { font-size: 0.72rem; color: var(--text-muted); white-space: nowrap; }
+/* ═══ Onboarding ═══ */
+.onboard-overlay{position:fixed;inset:0;z-index:13000;background:var(--bg-overlay);display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .3s ease;backdrop-filter:blur(6px)}
+.onboard-overlay.open{opacity:1;pointer-events:auto}
+.onboard-card{background:var(--bg-elevated);border:1px solid var(--border);border-radius:16px;padding:36px 40px;max-width:480px;width:90%;box-shadow:var(--shadow-lg);text-align:center}
+.onboard-card h2{font-size:1.3rem;font-weight:700;margin-bottom:8px}
+.onboard-card p{color:var(--text-secondary);font-size:.9rem;line-height:1.6;margin-bottom:24px}
+.onboard-steps{display:flex;gap:6px;justify-content:center;margin-bottom:24px}
+.onboard-dot{width:8px;height:8px;border-radius:50%;background:var(--border);transition:background var(--transition)}
+.onboard-dot.active{background:var(--accent)}
+.onboard-features{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:24px;text-align:left}
+.onboard-feat{background:var(--bg-surface);border:1px solid var(--border);border-radius:var(--radius);padding:12px 14px;font-size:.8rem;color:var(--text-secondary)}
+.onboard-feat strong{color:var(--text-primary);display:block;margin-bottom:2px}
 
-/* ─── User Menu ─── */
-.user-menu-wrap { position: relative; }
-.user-avatar {
-  width: 30px; height: 30px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, var(--accent-dim), #7c4dff);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 0.7rem; font-weight: 700; color: #fff;
-  cursor: pointer;
-  border: none;
-  font-family: var(--font-sans);
-  transition: filter var(--transition);
-}
-.user-avatar:hover { filter: brightness(1.2); }
-.user-dropdown {
-  position: absolute;
-  top: calc(100% + 8px);
-  right: 0;
-  background: var(--bg-secondary);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  box-shadow: 0 12px 32px rgba(0,0,0,0.5);
-  min-width: 200px;
-  padding: 6px 0;
-  display: none;
-  z-index: 100;
-}
-.user-dropdown.open { display: block; }
-.dropdown-header {
-  padding: 10px 14px 8px;
-  border-bottom: 1px solid var(--border);
-}
-.dropdown-name { font-size: 0.85rem; font-weight: 600; color: var(--text-primary); }
-.dropdown-email { font-size: 0.72rem; color: var(--text-muted); }
-.dropdown-item {
-  display: block;
-  width: 100%;
-  padding: 8px 14px;
-  background: none;
-  border: none;
-  color: var(--text-secondary);
-  font-size: 0.82rem;
-  font-family: var(--font-sans);
-  text-align: left;
-  cursor: pointer;
-  transition: background var(--transition);
-}
-.dropdown-item:hover { background: var(--bg-hover); color: var(--text-primary); }
-.dropdown-item.danger { color: var(--error); }
-.dropdown-item.danger:hover { background: rgba(239,83,80,0.1); }
-.dropdown-divider { height: 1px; background: var(--border); margin: 4px 0; }
+/* ═══ Auth ═══ */
+#authScreen{position:fixed;inset:0;z-index:9000;display:flex;align-items:center;justify-content:center;background:var(--bg-base);transition:opacity .35s ease}
+#authScreen.hidden{opacity:0;pointer-events:none}
+.auth-card{width:100%;max-width:400px;padding:40px 36px;background:var(--bg-raised);border:1px solid var(--border);border-radius:16px;box-shadow:var(--shadow-lg)}
+.auth-logo{display:flex;align-items:center;justify-content:center;gap:10px;font-size:1.25rem;font-weight:800;color:var(--accent);margin-bottom:4px;letter-spacing:-.02em}
+.auth-logo svg{display:block}
+.auth-subtitle{text-align:center;color:var(--text-muted);font-size:.8rem;margin-bottom:24px}
+.auth-tabs{display:flex;gap:0;margin-bottom:24px;background:var(--bg-surface);border-radius:var(--radius);padding:3px}
+.auth-tab{flex:1;padding:8px 0;text-align:center;font-size:.8rem;font-weight:600;font-family:var(--font-sans);border:none;background:none;color:var(--text-muted);cursor:pointer;border-radius:var(--radius-xs);transition:background var(--transition),color var(--transition)}
+.auth-tab.active{background:var(--accent);color:#0a0d14}
+.auth-tab:focus-visible{outline-offset:-2px}
+.auth-form{display:flex;flex-direction:column;gap:14px}
+.auth-form.hidden{display:none}
+.form-group{display:flex;flex-direction:column;gap:3px}
+.form-group label{font-size:.7rem;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted);font-weight:600}
+.form-input{padding:10px 14px;background:var(--bg-tertiary,var(--bg-base));border:1px solid var(--border);border-radius:var(--radius-xs);color:var(--text-primary);font-size:.88rem;font-family:var(--font-sans);transition:border-color var(--transition)}
+.form-input:focus{border-color:var(--accent);outline:none;box-shadow:0 0 0 3px var(--accent-glow)}
+.form-input::placeholder{color:var(--text-muted)}
+.form-input.error{border-color:var(--error);box-shadow:0 0 0 3px rgba(232,93,93,.12)}
+.form-error{font-size:.7rem;color:var(--error);min-height:1em}
+.pw-strength{display:flex;gap:4px;margin-top:2px}
+.pw-bar{flex:1;height:3px;background:var(--border);border-radius:2px;transition:background var(--transition)}
+.pw-bar.active.weak{background:var(--error)}
+.pw-bar.active.medium{background:var(--warning)}
+.pw-bar.active.strong{background:var(--success)}
+.pw-label{font-size:.64rem;color:var(--text-muted);margin-top:2px}
+.form-row{display:flex;gap:10px}
+.form-row .form-group{flex:1}
+.auth-btn{padding:11px 0;background:var(--accent);color:#0a0d14;font-weight:700;font-size:.88rem;border:none;border-radius:var(--radius-xs);cursor:pointer;font-family:var(--font-sans);transition:background var(--transition),transform .1s;display:flex;align-items:center;justify-content:center;gap:8px}
+.auth-btn:hover{filter:brightness(1.12)}
+.auth-btn:active{transform:scale(.98)}
+.auth-btn:disabled{opacity:.5;cursor:not-allowed}
+.auth-divider{display:flex;align-items:center;gap:12px;color:var(--text-muted);font-size:.74rem}
+.auth-divider::before,.auth-divider::after{content:'';flex:1;height:1px;background:var(--border)}
+.demo-btn{padding:10px 0;background:var(--bg-surface);color:var(--text-secondary);border:1px solid var(--border);border-radius:var(--radius-xs);cursor:pointer;font-size:.82rem;font-family:var(--font-sans);transition:background var(--transition)}
+.demo-btn:hover{background:var(--bg-hover);color:var(--text-primary)}
+.verify-badge{display:inline-flex;align-items:center;gap:4px;font-size:.7rem;padding:2px 8px;border-radius:50px;font-weight:600}.verify-badge.verified{background:rgba(92,184,122,.15);color:var(--success)}.verify-badge.unverified{background:rgba(232,93,93,.12);color:var(--error)}
 
-/* ─── Layout ─── */
-.app-layout { display: flex; flex: 1; overflow: hidden; }
+/* ═══ Top Bar ═══ */
+#mainApp{display:flex;flex-direction:column;min-height:100vh}#mainApp.hidden{display:none}
+.topbar{height:48px;background:var(--bg-raised);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 14px;gap:10px;flex-shrink:0}
+.topbar-logo{font-weight:800;font-size:1rem;color:var(--accent);display:flex;align-items:center;gap:8px;letter-spacing:-.02em}
+.topbar-logo svg{display:block}
+.topbar-divider{width:1px;height:22px;background:var(--border)}
+.topbar-course{font-size:.8rem;color:var(--text-secondary);font-weight:500}
+.topbar-spacer{flex:1}
+.topbar-progress{display:flex;align-items:center;gap:8px}
+.progress-track{width:110px;height:4px;background:var(--bg-surface);border-radius:2px;overflow:hidden}
+.progress-fill{height:100%;background:var(--success);border-radius:2px;transition:width .5s ease}
+.progress-label{font-size:.7rem;color:var(--text-muted);white-space:nowrap}
+.topbar-actions{display:flex;align-items:center;gap:6px}
+.icon-btn{width:30px;height:30px;border-radius:var(--radius-xs);background:none;border:1px solid transparent;color:var(--text-muted);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background var(--transition),color var(--transition),border-color var(--transition)}
+.icon-btn:hover{background:var(--bg-hover);color:var(--text-secondary);border-color:var(--border)}
+.icon-btn:focus-visible{outline-offset:-1px}
+.user-menu-wrap{position:relative}
+.user-avatar{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,var(--accent-dim),#7c4dff);display:flex;align-items:center;justify-content:center;font-size:.68rem;font-weight:700;color:#fff;cursor:pointer;border:none;font-family:var(--font-sans);transition:filter var(--transition)}
+.user-avatar:hover{filter:brightness(1.2)}
+.user-dropdown{position:absolute;top:calc(100%+8px);right:0;background:var(--bg-elevated);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow-lg);min-width:210px;padding:6px 0;display:none;z-index:100}
+.user-dropdown.open{display:block}
+.dropdown-header{padding:10px 14px 8px;border-bottom:1px solid var(--border)}
+.dropdown-name{font-size:.85rem;font-weight:600}
+.dropdown-email{font-size:.7rem;color:var(--text-muted)}
+.dropdown-item{display:block;width:100%;padding:8px 14px;background:none;border:none;color:var(--text-secondary);font-size:.8rem;font-family:var(--font-sans);text-align:left;cursor:pointer;transition:background var(--transition)}
+.dropdown-item:hover{background:var(--bg-hover);color:var(--text-primary)}
+.dropdown-item.danger{color:var(--error)}.dropdown-item.danger:hover{background:rgba(232,93,93,.08)}
+.dropdown-divider{height:1px;background:var(--border);margin:4px 0}
 
-/* ─── Sidebar ─── */
-.sidebar {
-  width: var(--sidebar-width);
-  background: var(--bg-secondary);
-  border-right: 1px solid var(--border);
-  overflow-y: auto;
-  flex-shrink: 0;
-  display: flex;
-  flex-direction: column;
-}
-.sidebar-header { padding: 14px 16px 10px; border-bottom: 1px solid var(--border); flex-shrink: 0; }
-.sidebar-header h3 { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-muted); font-weight: 600; }
-.sidebar-header .sidebar-sub { font-size: 0.7rem; color: var(--text-muted); margin-top: 2px; }
-.lesson-nav { list-style: none; padding: 8px 0; }
-.lesson-nav li { margin: 0; }
-.lesson-nav button {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  width: 100%;
-  padding: 9px 16px;
-  background: none;
-  border: none;
-  border-left: 3px solid transparent;
-  color: var(--text-secondary);
-  font-size: 0.82rem;
-  font-family: var(--font-sans);
-  text-align: left;
-  cursor: pointer;
-  transition: background 0.12s, border-color 0.12s, color 0.12s;
-}
-.lesson-nav button:hover { background: var(--bg-hover); color: var(--text-primary); }
-.lesson-nav button:focus-visible { outline-offset: -2px; }
-.lesson-nav button[aria-current="page"] { background: var(--bg-active); border-left-color: var(--accent); color: var(--text-primary); font-weight: 600; }
-.lesson-nav button.completed .lesson-num { background: var(--success); color: #fff; }
-.lesson-nav button.completed .lesson-check { opacity: 1; }
-.lesson-num {
-  flex-shrink: 0;
-  width: 22px; height: 22px;
-  border-radius: 50%;
-  background: var(--bg-surface);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 0.65rem; font-weight: 600;
-  color: var(--text-muted);
-  transition: background 0.15s, color 0.15s;
-}
-.lesson-nav button[aria-current="page"] .lesson-num { background: var(--accent-dim); color: #fff; }
-.lesson-nav button:hover .lesson-num { background: var(--bg-hover); color: var(--text-secondary); }
-.lesson-check { margin-left: auto; font-size: 0.7rem; opacity: 0; transition: opacity 0.2s; color: var(--success); }
+/* ═══ Layout ═══ */
+.app-layout{display:flex;flex:1;overflow:hidden}
 
-/* ─── Main Content ─── */
-.main-content { flex: 1; display: grid; grid-template-columns: 1fr 1fr; overflow: hidden; min-width: 0; }
+/* ═══ Sidebar ═══ */
+.sidebar{width:270px;background:var(--bg-raised);border-right:1px solid var(--border);overflow-y:auto;flex-shrink:0;display:flex;flex-direction:column}
+.sidebar-header{padding:14px 16px 10px;border-bottom:1px solid var(--border);flex-shrink:0}
+.sidebar-header h3{font-size:.73rem;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted);font-weight:600}
+.sidebar-header .sidebar-sub{font-size:.68rem;color:var(--text-muted);margin-top:2px}
+.lesson-nav{list-style:none;padding:6px 0}
+.lesson-nav li{margin:0}
+.lesson-nav button{display:flex;align-items:center;gap:10px;width:100%;padding:8px 16px;background:none;border:none;border-left:3px solid transparent;color:var(--text-secondary);font-size:.8rem;font-family:var(--font-sans);text-align:left;cursor:pointer;transition:background .12s,border-color .12s,color .12s;position:relative}
+.lesson-nav button:hover{background:var(--bg-hover);color:var(--text-primary)}
+.lesson-nav button:focus-visible{outline-offset:-2px}
+.lesson-nav button[aria-current="page"]{background:var(--bg-active);border-left-color:var(--accent);color:var(--text-primary);font-weight:600}
+.lesson-nav button.completed .lesson-num{background:var(--success);color:#fff}
+.lesson-nav button.completed .lesson-check{opacity:1}
+.lesson-num{flex-shrink:0;width:22px;height:22px;border-radius:50%;background:var(--bg-surface);display:flex;align-items:center;justify-content:center;font-size:.63rem;font-weight:600;color:var(--text-muted);transition:background .15s,color .15s}
+.lesson-nav button[aria-current="page"] .lesson-num{background:var(--accent-dim);color:#fff}
+.lesson-nav button:hover .lesson-num{background:var(--bg-hover);color:var(--text-secondary)}
+.lesson-check{margin-left:auto;font-size:.68rem;opacity:0;transition:opacity .2s;color:var(--success)}
 
-/* ─── Lesson Reader ─── */
-.reader-panel {
-  overflow-y: auto;
-  padding: 28px 32px;
-  border-right: 1px solid var(--border);
-  background: var(--bg-tertiary);
-}
-.reader-panel h2 { font-size: 1.35rem; font-weight: 700; margin-bottom: 2px; color: var(--text-primary); letter-spacing: -0.01em; }
-.reader-panel .lesson-meta { font-size: 0.75rem; color: var(--text-muted); margin-bottom: 20px; }
-.reader-panel .instruction-box {
-  background: var(--bg-surface); border: 1px solid var(--border); border-radius: var(--radius);
-  padding: 16px 18px; margin: 16px 0; border-left: 3px solid var(--accent);
-}
-.reader-panel .instruction-box p { margin-bottom: 0; }
-.reader-panel h3 { font-size: 1rem; font-weight: 600; margin: 20px 0 8px; color: var(--text-primary); }
-.reader-panel p { line-height: 1.65; margin-bottom: 12px; color: var(--text-secondary); font-size: 0.9rem; }
-.reader-panel pre {
-  background: var(--code-bg); border: 1px solid var(--border); border-radius: var(--radius);
-  padding: 14px 16px; overflow-x: auto; margin: 12px 0;
-  font-family: var(--font-mono); font-size: 0.8rem; line-height: 1.5; color: #d4d4d4;
-}
-.reader-panel code { font-family: var(--font-mono); font-size: 0.8rem; }
-.reader-panel p code { background: var(--bg-surface); padding: 2px 6px; border-radius: var(--radius-sm); color: #ce91d8; font-size: 0.78rem; }
-.reader-panel ul, .reader-panel ol { margin: 8px 0 12px 20px; color: var(--text-secondary); line-height: 1.6; font-size: 0.9rem; }
-.reader-panel li { margin-bottom: 3px; }
-.reader-panel .keyword  { color: #569cd6; }
-.reader-panel .type     { color: #4ec9b0; }
-.reader-panel .string   { color: #ce9178; }
-.reader-panel .comment  { color: #6a9955; font-style: italic; }
-.reader-panel .number   { color: #b5cea8; }
-.reader-panel .function { color: #dcdcaa; }
-.reader-panel .preproc  { color: #c586c0; }
-.reader-panel blockquote { border-left: 3px solid var(--accent-dim); padding: 8px 14px; margin: 12px 0; background: var(--bg-surface); border-radius: 0 var(--radius-sm) var(--radius-sm) 0; }
-.reader-panel blockquote p { margin-bottom: 0; font-size: 0.88rem; }
-.reader-panel table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 0.82rem; }
-.reader-panel th, .reader-panel td { border: 1px solid var(--border); padding: 8px 12px; text-align: left; }
-.reader-panel th { background: var(--bg-surface); color: var(--text-primary); font-weight: 600; }
-.reader-panel td { color: var(--text-secondary); }
-.reader-nav { display: flex; gap: 8px; margin-top: 28px; padding-top: 16px; border-top: 1px solid var(--border); }
+/* ═══ Main Content ═══ */
+.main-content{flex:1;display:grid;grid-template-columns:1fr 1fr;overflow:hidden;min-width:0}
 
-/* ─── Editor Panel ─── */
-.editor-panel { display: flex; flex-direction: column; overflow: hidden; background: var(--bg-primary); }
-.editor-toolbar {
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 8px 16px; background: var(--bg-secondary); border-bottom: 1px solid var(--border);
-  flex-shrink: 0; gap: 8px;
-}
-.editor-toolbar-left { display: flex; align-items: center; gap: 10px; }
-.editor-toolbar label { font-size: 0.78rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.04em; }
-.editor-toolbar .file-tab {
-  display: inline-flex; align-items: center; gap: 6px;
-  background: var(--bg-surface); padding: 3px 10px; border-radius: var(--radius-sm);
-  font-size: 0.75rem; color: var(--text-secondary); border: 1px solid var(--border);
-}
-.editor-toolbar .file-tab .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); }
-.editor-toolbar-actions { display: flex; gap: 6px; }
-.btn {
-  font-family: var(--font-sans); font-size: 0.78rem; font-weight: 600;
-  padding: 6px 14px; border-radius: var(--radius-sm); border: none;
-  cursor: pointer; transition: background 0.12s, transform 0.08s; white-space: nowrap;
-}
-.btn:active { transform: scale(0.97); }
-.btn-primary { background: var(--accent); color: #0a0d14; }
-.btn-primary:hover { background: #6fd0fa; }
-.btn-primary:focus-visible { outline-color: var(--accent); }
-.btn-success { background: var(--success); color: #0a0d14; }
-.btn-success:hover { filter: brightness(1.15); }
-.btn-secondary { background: var(--bg-surface); color: var(--text-secondary); border: 1px solid var(--border-light); }
-.btn-secondary:hover { background: var(--bg-hover); color: var(--text-primary); }
-.btn:disabled { opacity: 0.4; cursor: not-allowed; }
+/* ═══ Reader ═══ */
+.reader-panel{overflow-y:auto;padding:28px 32px;border-right:1px solid var(--border);background:var(--bg-base)}
+.reader-panel h2{font-size:1.3rem;font-weight:700;margin-bottom:2px;letter-spacing:-.01em}
+.reader-meta{font-size:.73rem;color:var(--text-muted);margin-bottom:18px;display:flex;align-items:center;gap:10px}
+.reader-ref{border:1px solid var(--border);padding:1px 8px;border-radius:50px;font-size:.65rem;color:var(--text-muted);background:var(--bg-surface)}
+.instruction-box{background:var(--bg-elevated);border:1px solid var(--border);border-radius:var(--radius);padding:16px 18px;margin:16px 0;border-left:3px solid var(--accent)}
+.instruction-box p{margin-bottom:0;font-size:.88rem}
+.instruction-box strong{color:var(--text-primary)}
+.reader-panel h3{font-size:.98rem;font-weight:600;margin:20px 0 8px}
+.reader-panel p{line-height:1.65;margin-bottom:12px;color:var(--text-secondary);font-size:.88rem}
+.reader-panel pre{background:var(--code-bg);border:1px solid var(--code-border);border-radius:var(--radius);padding:14px 16px;overflow-x:auto;margin:12px 0;font-family:var(--font-mono);font-size:.78rem;line-height:1.5;color:#d4d4d4;position:relative}
+.copy-btn{position:absolute;top:8px;right:8px;background:var(--bg-surface);border:1px solid var(--border);color:var(--text-muted);font-size:.65rem;padding:3px 8px;border-radius:var(--radius-xs);cursor:pointer;opacity:0;transition:opacity var(--transition),background var(--transition);font-family:var(--font-sans)}
+pre:hover .copy-btn{opacity:1}.copy-btn:hover{background:var(--bg-hover);color:var(--text-secondary)}
+.reader-panel code{font-family:var(--font-mono);font-size:.78rem}
+.reader-panel p code{background:var(--bg-surface);padding:2px 6px;border-radius:var(--radius-xs);color:#ce91d8;font-size:.76rem;border:1px solid var(--border)}
+.reader-panel ul,.reader-panel ol{margin:8px 0 12px 20px;color:var(--text-secondary);line-height:1.6;font-size:.88rem}
+.reader-panel li{margin-bottom:3px}
+.reader-panel .keyword{color:#569cd6}.reader-panel .type{color:#4ec9b0}.reader-panel .string{color:#ce9178}
+.reader-panel .comment{color:#6a9955;font-style:italic}.reader-panel .number{color:#b5cea8}.reader-panel .function{color:#dcdcaa}.reader-panel .preproc{color:#c586c0}
+.reader-panel blockquote{border-left:3px solid var(--accent-dim);padding:8px 14px;margin:12px 0;background:var(--bg-surface);border-radius:0 var(--radius-xs) var(--radius-xs) 0}
+.reader-panel blockquote p{margin-bottom:0;font-size:.85rem}
+.reader-panel table{width:100%;border-collapse:collapse;margin:12px 0;font-size:.8rem}
+.reader-panel th,.reader-panel td{border:1px solid var(--border);padding:7px 10px;text-align:left}
+.reader-panel th{background:var(--bg-surface);font-weight:600}
+.reader-panel td{color:var(--text-secondary)}
+.reader-nav{display:flex;gap:8px;margin-top:24px;padding-top:14px;border-top:1px solid var(--border)}
 
-.editor-wrapper { flex: 1; position: relative; overflow: hidden; }
-.editor-wrapper textarea {
-  width: 100%; height: 100%; padding: 16px 18px; padding-left: 56px;
-  background: var(--code-bg); color: #d4d4d4;
-  font-family: var(--font-mono); font-size: 0.82rem; line-height: 1.55;
-  border: none; resize: none; outline: none; tab-size: 2;
-  white-space: pre; overflow-wrap: normal; overflow-x: auto;
-}
-.editor-wrapper textarea::placeholder { color: var(--text-muted); }
-.line-numbers {
-  position: absolute; top: 0; left: 0; padding: 16px 10px 16px 12px;
-  background: var(--code-bg); border-right: 1px solid var(--border);
-  color: var(--text-muted); font-family: var(--font-mono); font-size: 0.82rem;
-  line-height: 1.55; text-align: right; user-select: none; pointer-events: none;
-  overflow: hidden; min-width: 44px;
-}
+/* ═══ Editor ═══ */
+.editor-panel{display:flex;flex-direction:column;overflow:hidden;background:var(--bg-base)}
+.editor-toolbar{display:flex;align-items:center;justify-content:space-between;padding:7px 14px;background:var(--bg-raised);border-bottom:1px solid var(--border);flex-shrink:0;gap:8px}
+.editor-toolbar-left{display:flex;align-items:center;gap:10px}
+.file-tab{display:inline-flex;align-items:center;gap:6px;background:var(--bg-surface);padding:3px 10px;border-radius:var(--radius-xs);font-size:.73rem;color:var(--text-secondary);border:1px solid var(--border)}
+.file-tab .dot{width:6px;height:6px;border-radius:50%;background:var(--accent)}
+.editor-toolbar-actions{display:flex;gap:5px}
+.btn{font-family:var(--font-sans);font-size:.76rem;font-weight:600;padding:6px 13px;border-radius:var(--radius-xs);border:none;cursor:pointer;transition:background .12s,transform .08s,box-shadow var(--transition);white-space:nowrap}
+.btn:active{transform:scale(.97)}
+.btn-primary{background:var(--accent);color:#0a0d14}
+.btn-primary:hover{filter:brightness(1.12);box-shadow:0 0 12px var(--accent-glow)}
+.btn-success{background:var(--success);color:#0a0d14}
+.btn-success:hover{filter:brightness(1.12);box-shadow:0 0 12px var(--success-glow)}
+.btn-secondary{background:var(--bg-surface);color:var(--text-secondary);border:1px solid var(--border)}
+.btn-secondary:hover{background:var(--bg-hover);color:var(--text-primary)}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.editor-wrapper{flex:1;position:relative;overflow:hidden}
+.editor-wrapper textarea{width:100%;height:100%;padding:14px 16px;padding-left:52px;background:var(--code-bg);color:#d4d4d4;font-family:var(--font-mono);font-size:.8rem;line-height:1.55;border:none;resize:none;outline:none;tab-size:2;white-space:pre;overflow-wrap:normal;overflow-x:auto}
+.editor-wrapper textarea::placeholder{color:var(--text-muted)}
+.line-numbers{position:absolute;top:0;left:0;padding:14px 8px 14px 12px;background:var(--code-bg);border-right:1px solid var(--code-border);color:var(--text-muted);font-family:var(--font-mono);font-size:.8rem;line-height:1.55;text-align:right;user-select:none;pointer-events:none;overflow:hidden;min-width:40px}
 
-/* ─── Terminal ─── */
-.terminal-panel { flex-shrink: 0; border-top: 1px solid var(--border); background: #0c0e12; display: flex; flex-direction: column; }
-.terminal-header {
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 6px 16px; background: var(--bg-secondary); border-bottom: 1px solid var(--border); flex-shrink: 0;
-}
-.terminal-header label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-muted); font-weight: 600; }
-.terminal-header-actions { display: flex; gap: 6px; }
-.terminal-btn {
-  background: none; border: 1px solid var(--border); color: var(--text-muted);
-  font-size: 0.65rem; padding: 2px 8px; border-radius: var(--radius-sm);
-  cursor: pointer; font-family: var(--font-sans);
-}
-.terminal-btn:hover { color: var(--text-secondary); border-color: var(--border-light); }
-.terminal-output {
-  padding: 10px 16px; font-family: var(--font-mono); font-size: 0.78rem;
-  line-height: 1.5; overflow-y: auto; min-height: 72px; max-height: 140px;
-  color: var(--text-secondary); white-space: pre-wrap;
-}
-.terminal-output .success-text { color: var(--success); }
-.terminal-output .error-text { color: var(--error); }
-.terminal-output .info-text { color: var(--text-muted); }
-.terminal-output .prompt { color: var(--accent); }
-.terminal-cursor {
-  display: inline-block; width: 6px; height: 14px;
-  background: var(--accent); animation: blink 1s step-end infinite;
-  vertical-align: text-bottom;
-}
-@keyframes blink { 50% { opacity: 0; } }
+/* ═══ Terminal ═══ */
+.terminal-panel{flex-shrink:0;border-top:1px solid var(--border);background:var(--terminal-bg);display:flex;flex-direction:column}
+.terminal-header{display:flex;align-items:center;justify-content:space-between;padding:5px 14px;background:var(--bg-raised);border-bottom:1px solid var(--border);flex-shrink:0}
+.terminal-header label{font-size:.68rem;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted);font-weight:600}
+.terminal-output{padding:10px 14px;font-family:var(--font-mono);font-size:.76rem;line-height:1.5;overflow-y:auto;min-height:70px;max-height:130px;color:var(--text-secondary);white-space:pre-wrap}
+.terminal-output .success-text{color:var(--success)}.terminal-output .error-text{color:var(--error)}
+.terminal-output .info-text{color:var(--text-muted)}.terminal-output .prompt{color:var(--accent)}
+.terminal-cursor{display:inline-block;width:6px;height:14px;background:var(--accent);animation:blink 1s step-end infinite;vertical-align:text-bottom;margin-left:2px}
+@keyframes blink{50%{opacity:0}}
 
-/* ─── Sidebar toggle ─── */
-.sidebar-toggle { display: none; background: none; border: none; color: var(--text-secondary); cursor: pointer; padding: 4px; border-radius: var(--radius-sm); }
-.sidebar-toggle:hover { color: var(--text-primary); }
+/* ═══ Sidebar toggle ═══ */
+.sidebar-toggle{display:none;background:none;border:none;color:var(--text-secondary);cursor:pointer;padding:4px;border-radius:var(--radius-xs)}
+.sidebar-toggle:hover{color:var(--text-primary)}
 
-/* ─── Confirm Dialog ─── */
-.confirm-overlay {
-  position: fixed; inset: 0; z-index: 11000;
-  background: rgba(0,0,0,0.6);
-  display: flex; align-items: center; justify-content: center;
-  opacity: 0; pointer-events: none;
-  transition: opacity 0.2s ease;
-}
-.confirm-overlay.open { opacity: 1; pointer-events: auto; }
-.confirm-box {
-  background: var(--bg-secondary); border: 1px solid var(--border);
-  border-radius: 12px; padding: 28px 32px;
-  max-width: 380px; width: 90%;
-  box-shadow: 0 16px 48px rgba(0,0,0,0.5);
-}
-.confirm-title { font-size: 1rem; font-weight: 700; margin-bottom: 8px; }
-.confirm-msg { font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 20px; line-height: 1.5; }
-.confirm-actions { display: flex; gap: 8px; justify-content: flex-end; }
+/* ═══ Confetti container ═══ */
+.confetti-container{position:fixed;inset:0;z-index:14000;pointer-events:none;overflow:hidden}
+.confetti{position:absolute;width:8px;height:8px;top:-10px;animation:confettiFall linear forwards}
+@keyframes confettiFall{to{transform:translateY(105vh) rotate(720deg)}}
 
-/* ─── Responsive ─── */
-@media (max-width: 1024px) {
-  .sidebar { width: 220px; }
-  .reader-panel { padding: 20px 24px; }
+/* ═══ Responsive ═══ */
+@media(max-width:1100px){.sidebar{width:230px}.reader-panel{padding:24px}}
+@media(max-width:820px){
+  .sidebar-toggle{display:block}
+  .app-layout{flex-direction:column}
+  .sidebar{width:100%;max-height:0;overflow:hidden;transition:max-height .25s ease;border-right:none;border-bottom:1px solid var(--border)}
+  .sidebar.open{max-height:340px;overflow-y:auto}
+  .lesson-nav button{padding:7px 14px}
+  .main-content{grid-template-columns:1fr;overflow:visible}
+  .reader-panel{border-right:none;border-bottom:1px solid var(--border);padding:16px 18px;max-height:45vh}
+  .editor-panel{min-height:35vh}
+  .terminal-output{max-height:100px;min-height:54px}
+  .topbar{padding:0 10px;gap:6px}
+  .topbar-divider,.topbar-course{display:none}
+  .progress-track{width:80px}
+  .auth-card{margin:16px;padding:28px 24px}
+  .toast-container{left:16px;right:16px;max-width:none}
+  .theme-panel{bottom:16px;padding:12px 14px;gap:8px}
 }
-@media (max-width: 768px) {
-  .sidebar-toggle { display: block; }
-  .app-layout { flex-direction: column; }
-  .sidebar { width: 100%; max-height: 0; overflow: hidden; transition: max-height 0.25s ease; border-right: none; border-bottom: 1px solid var(--border); }
-  .sidebar.open { max-height: 340px; overflow-y: auto; }
-  .lesson-nav button { padding: 7px 14px; }
-  .main-content { grid-template-columns: 1fr; overflow: visible; }
-  .reader-panel { border-right: none; border-bottom: 1px solid var(--border); padding: 16px 18px; max-height: 45vh; }
-  .editor-panel { min-height: 35vh; }
-  .terminal-output { max-height: 100px; min-height: 56px; }
-  .topbar { padding: 0 10px; gap: 8px; }
-  .topbar-divider, .topbar-course-name { display: none; }
-  .progress-track { width: 80px; }
-  .auth-card { margin: 16px; padding: 28px 24px; }
-  .toast-container { left: 16px; right: 16px; max-width: none; }
-}
-@media (max-width: 480px) {
-  :root { --sidebar-width: 100%; }
-  .reader-panel { max-height: 40vh; padding: 14px; }
-  .editor-wrapper textarea { padding-left: 44px; font-size: 0.75rem; }
-  .line-numbers { font-size: 0.75rem; min-width: 34px; padding: 16px 6px 16px 8px; }
+@media(max-width:480px){
+  .reader-panel{max-height:40vh;padding:14px}
+  .editor-wrapper textarea{padding-left:40px;font-size:.74rem}
+  .line-numbers{font-size:.74rem;min-width:32px;padding:14px 5px 14px 8px}
+  .onboard-features{grid-template-columns:1fr}
 }
 </style>
 </head>
 <body>
 
-<!-- ═══ Toast Container ═══ -->
+<!-- Toast -->
 <div class="toast-container" id="toastContainer" aria-live="polite"></div>
 
-<!-- ═══ Confirm Dialog ═══ -->
+<!-- Confirm -->
 <div class="confirm-overlay" id="confirmOverlay">
   <div class="confirm-box" role="alertdialog" aria-labelledby="confirmTitle" aria-describedby="confirmMsg">
     <div class="confirm-title" id="confirmTitle"></div>
@@ -589,12 +315,57 @@ a:hover { text-decoration: underline; }
   </div>
 </div>
 
+<!-- Theme Panel -->
+<div class="theme-panel" id="themePanel" role="dialog" aria-label="Theme selector">
+  <span class="theme-panel-label">Theme</span>
+  <button class="theme-opt theme-opt-dark active" data-theme="theme-dark" title="Dark" aria-label="Dark theme"></button>
+  <button class="theme-opt theme-opt-midnight" data-theme="theme-midnight" title="Midnight Blue" aria-label="Midnight blue theme"></button>
+  <button class="theme-opt theme-opt-oled" data-theme="theme-oled" title="OLED Black" aria-label="OLED black theme"></button>
+  <button class="theme-opt theme-opt-sepia" data-theme="theme-sepia" title="Sepia" aria-label="Sepia reading theme"></button>
+</div>
+
+<!-- Shortcuts Modal -->
+<div class="shortcuts-overlay" id="shortcutsOverlay">
+  <div class="shortcuts-box" role="dialog" aria-label="Keyboard shortcuts">
+    <h3>Keyboard Shortcuts</h3>
+    <div class="shortcut-row"><span class="shortcut-desc">Run code</span><span class="shortcut-key"><kbd>Ctrl</kbd>+<kbd>Enter</kbd></span></div>
+    <div class="shortcut-row"><span class="shortcut-desc">Check answer</span><span class="shortcut-key"><kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Enter</kbd></span></div>
+    <div class="shortcut-row"><span class="shortcut-desc">Reset code</span><span class="shortcut-key"><kbd>Ctrl</kbd>+<kbd>R</kbd></span></div>
+    <div class="shortcut-row"><span class="shortcut-desc">Next lesson</span><span class="shortcut-key"><kbd>Alt</kbd>+<kbd>→</kbd></span></div>
+    <div class="shortcut-row"><span class="shortcut-desc">Previous lesson</span><span class="shortcut-key"><kbd>Alt</kbd>+<kbd>←</kbd></span></div>
+    <div class="shortcut-row"><span class="shortcut-desc">Toggle sidebar</span><span class="shortcut-key"><kbd>Ctrl</kbd>+<kbd>B</kbd></span></div>
+    <div class="shortcut-row"><span class="shortcut-desc">Theme picker</span><span class="shortcut-key"><kbd>Ctrl</kbd>+<kbd>T</kbd></span></div>
+    <div class="shortcut-row" style="border:none"><span class="shortcut-desc">Close dialogs</span><span class="shortcut-key"><kbd>Esc</kbd></span></div>
+    <button class="btn btn-secondary" style="margin-top:16px;width:100%" id="shortcutsClose">Close</button>
+  </div>
+</div>
+
+<!-- Onboarding -->
+<div class="onboard-overlay" id="onboardOverlay">
+  <div class="onboard-card">
+    <h2>Welcome to cppro</h2>
+    <p>An interactive C++ course that guides you from fundamentals to object-oriented programming. Write real code, get instant feedback, and track your progress.</p>
+    <div class="onboard-steps" id="onboardSteps">
+      <div class="onboard-dot active" data-idx="0"></div>
+      <div class="onboard-dot" data-idx="1"></div>
+      <div class="onboard-dot" data-idx="2"></div>
+    </div>
+    <div class="onboard-features" id="onboardFeatures">
+      <div class="onboard-feat"><strong>10 Chapters</strong>C++17/20 aligned with C++ Primer + LearnCPP</div>
+      <div class="onboard-feat"><strong>Live Editor</strong>Write and test code with instant feedback</div>
+      <div class="onboard-feat"><strong>Progress Saved</strong>Auto-sync across sessions</div>
+      <div class="onboard-feat"><strong>Multiple Themes</strong>Dark, Midnight, OLED, Sepia</div>
+    </div>
+    <button class="auth-btn" id="onboardStart" style="width:100%">Get Started</button>
+  </div>
+</div>
+
 <!-- ═══ Auth Screen ═══ -->
 <div id="authScreen">
   <div class="auth-card">
     <div class="auth-logo">
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
-      CPP Learn
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+      cppro
     </div>
     <div class="auth-subtitle">Master Modern C++ — Interactive Course</div>
 
@@ -607,7 +378,7 @@ a:hover { text-decoration: underline; }
     <form class="auth-form" id="loginForm" autocomplete="off">
       <div class="form-group">
         <label for="loginEmail">Username or Email</label>
-        <input class="form-input" id="loginEmail" type="text" placeholder="Enter your username or email" autocomplete="username" required>
+        <input class="form-input" id="loginEmail" type="text" placeholder="Enter username or email" autocomplete="username" required>
         <div class="form-error" id="loginEmailError"></div>
       </div>
       <div class="form-group">
@@ -617,7 +388,7 @@ a:hover { text-decoration: underline; }
       </div>
       <button class="auth-btn" id="loginBtn" type="submit">Sign In</button>
       <div class="auth-divider">or</div>
-      <button class="demo-btn" id="demoBtn" type="button">Continue as Guest (Demo)</button>
+      <button class="demo-btn" id="demoBtn" type="button">Continue as Guest</button>
     </form>
 
     <!-- Signup -->
@@ -632,22 +403,21 @@ a:hover { text-decoration: underline; }
         <input class="form-input" id="signupEmail" type="email" placeholder="Enter your email" autocomplete="email" required>
         <div class="form-error" id="signupEmailError"></div>
       </div>
-      <div class="form-group">
-        <label for="signupPassword">Password</label>
-        <input class="form-input" id="signupPassword" type="password" placeholder="At least 6 characters" autocomplete="new-password" required minlength="6">
-        <div class="password-strength" id="pwStrength">
-          <div class="pw-bar" data-idx="0"></div>
-          <div class="pw-bar" data-idx="1"></div>
-          <div class="pw-bar" data-idx="2"></div>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="signupPassword">Password</label>
+          <input class="form-input" id="signupPassword" type="password" placeholder="Min 6 chars" autocomplete="new-password" required minlength="6">
         </div>
-        <div class="pw-label" id="pwLabel"></div>
-        <div class="form-error" id="signupPasswordError"></div>
+        <div class="form-group">
+          <label for="signupConfirm">Confirm</label>
+          <input class="form-input" id="signupConfirm" type="password" placeholder="Repeat password" autocomplete="new-password" required>
+        </div>
       </div>
-      <div class="form-group">
-        <label for="signupConfirm">Confirm Password</label>
-        <input class="form-input" id="signupConfirm" type="password" placeholder="Repeat your password" autocomplete="new-password" required>
-        <div class="form-error" id="signupConfirmError"></div>
+      <div class="pw-strength" id="pwStrength">
+        <div class="pw-bar" data-idx="0"></div><div class="pw-bar" data-idx="1"></div><div class="pw-bar" data-idx="2"></div>
       </div>
+      <div class="form-error" id="signupPasswordError"></div>
+      <div class="form-error" id="signupConfirmError"></div>
       <button class="auth-btn" id="signupBtn" type="submit">Create Account</button>
     </form>
   </div>
@@ -661,17 +431,23 @@ a:hover { text-decoration: underline; }
       <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="5" x2="17" y2="5"/><line x1="3" y1="10" x2="17" y2="10"/><line x1="3" y1="15" x2="17" y2="15"/></svg>
     </button>
     <div class="topbar-logo">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
-      CPP Learn
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+      cppro
     </div>
     <div class="topbar-divider"></div>
-    <span class="topbar-course-name">C++ Fundamentals</span>
+    <span class="topbar-course">C++ Fundamentals</span>
     <div class="topbar-spacer"></div>
     <div class="topbar-progress">
-      <span class="progress-label" id="progressLabel">1/10</span>
-      <div class="progress-track">
-        <div class="progress-fill" id="progressFill" style="width:10%"></div>
-      </div>
+      <span class="progress-label" id="progressLabel">0/10</span>
+      <div class="progress-track"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+    </div>
+    <div class="topbar-actions">
+      <button class="icon-btn" id="themeToggleBtn" type="button" aria-label="Change theme" title="Theme">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+      </button>
+      <button class="icon-btn" id="shortcutsBtn" type="button" aria-label="Keyboard shortcuts" title="Shortcuts">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M6 8h.01M10 8h.01M14 8h.01M18 8h.01M8 12h.01M12 12h.01M16 12h.01M8 16h8"/></svg>
+      </button>
     </div>
     <div class="user-menu-wrap">
       <button class="user-avatar" id="userAvatar" type="button" aria-haspopup="true" aria-label="User menu">JD</button>
@@ -679,9 +455,12 @@ a:hover { text-decoration: underline; }
         <div class="dropdown-header">
           <div class="dropdown-name" id="dropdownName">User</div>
           <div class="dropdown-email" id="dropdownEmail">user@example.com</div>
+          <div style="margin-top:4px"><span class="verify-badge unverified" id="verifyBadge">Unverified</span></div>
         </div>
         <div class="dropdown-divider"></div>
+        <button class="dropdown-item" id="verifyEmailBtn" type="button">Verify Email</button>
         <button class="dropdown-item" id="resetProgressBtn" type="button">Reset Progress</button>
+        <button class="dropdown-item" id="showOnboardBtn" type="button">Show Tour</button>
         <button class="dropdown-item danger" id="deleteAccountBtn" type="button">Delete Account</button>
         <div class="dropdown-divider"></div>
         <button class="dropdown-item" id="logoutBtn" type="button">Sign Out</button>
@@ -693,7 +472,7 @@ a:hover { text-decoration: underline; }
     <aside class="sidebar" id="sidebar" aria-label="Lesson navigation">
       <div class="sidebar-header">
         <h3>Course Content</h3>
-        <div class="sidebar-sub">10 lessons</div>
+        <div class="sidebar-sub">10 chapters</div>
       </div>
       <nav aria-label="Lesson list">
         <ul class="lesson-nav" id="lessonNav" role="list"></ul>
@@ -703,11 +482,11 @@ a:hover { text-decoration: underline; }
     <main class="main-content" id="mainContent">
       <section class="reader-panel" id="readerPanel" aria-label="Lesson content">
         <h2 id="readerTitle">Hello, World!</h2>
-        <div class="lesson-meta" id="readerMeta">Lesson 1 of 10</div>
+        <div class="reader-meta"><span id="readerMeta">Chapter 1 of 10</span><span class="reader-ref" id="readerRef">Primer Ch 1  ·  LCPP Ch 0-1</span></div>
         <div id="readerBody"></div>
         <div class="reader-nav">
-          <button class="btn btn-secondary" id="prevBtn" type="button">Back</button>
-          <button class="btn btn-primary" id="nextBtn" type="button">Next</button>
+          <button class="btn btn-secondary" id="prevBtn" type="button">← Back</button>
+          <button class="btn btn-primary" id="nextBtn" type="button">Next →</button>
         </div>
       </section>
 
@@ -719,7 +498,7 @@ a:hover { text-decoration: underline; }
           <div class="editor-toolbar-actions">
             <button class="btn btn-secondary" id="resetBtn" type="button">Reset</button>
             <button class="btn btn-primary" id="runBtn" type="button">&#9654; Run</button>
-            <button class="btn btn-success" id="checkBtn" type="button">Check Answer</button>
+            <button class="btn btn-success" id="checkBtn" type="button">Check</button>
           </div>
         </div>
         <div class="editor-wrapper">
@@ -730,12 +509,12 @@ a:hover { text-decoration: underline; }
           <div class="terminal-header">
             <label>Output</label>
             <div class="terminal-header-actions">
-              <button class="terminal-btn" id="clearTerminalBtn" type="button">Clear</button>
+              <button class="btn btn-secondary" style="padding:2px 10px;font-size:.65rem" id="clearTerminalBtn" type="button">Clear</button>
             </div>
           </div>
           <div class="terminal-output" id="terminalOutput" role="log" aria-live="polite">
             <span class="prompt">$</span> g++ main.cpp -o main<br>
-            <span class="info-text">Ready to compile.</span><span class="terminal-cursor"></span>
+            <span class="info-text">Ready.</span><span class="terminal-cursor"></span>
           </div>
         </div>
       </section>
@@ -748,164 +527,174 @@ a:hover { text-decoration: underline; }
 'use strict';
 
 /* ═══════════════════════════════════════════════════════════════
-   Security & Storage
+   Storage & Security
    ═══════════════════════════════════════════════════════════════ */
-
-const STORAGE_KEY = 'cpplearn_data';
-const SESSION_KEY = 'cpplearn_session';
-const SESSION_DURATION = 24 * 60 * 60 * 1000; // 24h
+const STORAGE_KEY = 'cppro_data';
+const SESSION_KEY = 'cppro_session';
+const SESSION_DURATION = 24 * 60 * 60 * 1000;
 
 function sanitize(str) {
   if (typeof str !== 'string') return '';
   return str.replace(/[<>"'&]/g, c => ({'<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;','&':'&amp;'})[c]);
 }
 
-function escapeRegExp(s) {
-  return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-}
-
 async function hashPassword(password) {
-  const encoder = new TextEncoder();
-  const data = encoder.encode(password + ':cpplearn:v2');
-  const hash = await crypto.subtle.digest('SHA-256', data);
-  return Array.from(new Uint8Array(hash)).map(b => b.toString(16).padStart(2, '0')).join('');
+  const enc = new TextEncoder();
+  const data = enc.encode(password + ':cppro:v2');
+  const h = await crypto.subtle.digest('SHA-256', data);
+  return Array.from(new Uint8Array(h)).map(b => b.toString(16).padStart(2,'0')).join('');
 }
 
 function generateToken() {
-  const arr = new Uint8Array(32);
-  crypto.getRandomValues(arr);
-  return Array.from(arr).map(b => b.toString(16).padStart(2, '0')).join('');
+  const a = new Uint8Array(32);
+  crypto.getRandomValues(a);
+  return Array.from(a).map(b => b.toString(16).padStart(2,'0')).join('');
+}
+
+function generateCode() {
+  return String(Math.floor(100000 + Math.random() * 900000));
 }
 
 function getAllUsers() {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (!raw) return {};
-    const data = JSON.parse(raw);
-    if (typeof data !== 'object' || data === null) return {};
-    return data;
-  } catch { return {}; }
+  try { const r = localStorage.getItem(STORAGE_KEY); if (!r) return {}; const d = JSON.parse(r); return typeof d === 'object' && d ? d : {}; } catch { return {}; }
 }
-
-function saveAllUsers(users) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(users));
-}
+function saveAllUsers(u) { localStorage.setItem(STORAGE_KEY, JSON.stringify(u)); }
 
 function getSession() {
   try {
-    const raw = sessionStorage.getItem(SESSION_KEY);
-    if (!raw) return null;
-    const s = JSON.parse(raw);
-    if (!s || !s.username || !s.token || !s.expiry) return null;
-    if (Date.now() > s.expiry) {
-      sessionStorage.removeItem(SESSION_KEY);
-      return null;
-    }
+    const r = sessionStorage.getItem(SESSION_KEY); if (!r) return null;
+    const s = JSON.parse(r); if (!s || !s.username || !s.token || !s.expiry) return null;
+    if (Date.now() > s.expiry) { sessionStorage.removeItem(SESSION_KEY); return null; }
     return s;
   } catch { return null; }
 }
+function setSession(u, t) { sessionStorage.setItem(SESSION_KEY, JSON.stringify({username:u, token:t, expiry:Date.now()+SESSION_DURATION})); }
+function clearSession() { sessionStorage.removeItem(SESSION_KEY); }
 
-function setSession(username, token) {
-  sessionStorage.setItem(SESSION_KEY, JSON.stringify({
-    username, token,
-    expiry: Date.now() + SESSION_DURATION,
-    createdAt: Date.now()
-  }));
-}
-
-function clearSession() {
-  sessionStorage.removeItem(SESSION_KEY);
-}
-
-/* ═══════════════════════════════════════════════════════════════
-   Rate Limiting
-   ═══════════════════════════════════════════════════════════════ */
-
+const RATE_LIMIT_WINDOW = 60000, RATE_LIMIT_MAX = 5;
 const loginAttempts = {};
-const RATE_LIMIT_WINDOW = 60000;
-const RATE_LIMIT_MAX = 5;
-
 function checkRateLimit(id) {
-  const now = Date.now();
-  if (!loginAttempts[id]) loginAttempts[id] = [];
+  const now = Date.now(); if (!loginAttempts[id]) loginAttempts[id] = [];
   loginAttempts[id] = loginAttempts[id].filter(t => now - t < RATE_LIMIT_WINDOW);
   return loginAttempts[id].length < RATE_LIMIT_MAX;
 }
-
-function recordAttempt(id) {
-  if (!loginAttempts[id]) loginAttempts[id] = [];
-  loginAttempts[id].push(Date.now());
-}
+function recordAttempt(id) { if (!loginAttempts[id]) loginAttempts[id] = []; loginAttempts[id].push(Date.now()); }
 
 /* ═══════════════════════════════════════════════════════════════
-   Toast Notifications
+   Theme System
    ═══════════════════════════════════════════════════════════════ */
+const THEME_KEY = 'cppro_theme';
+const themes = ['theme-dark','theme-midnight','theme-oled','theme-sepia'];
+let currentTheme = localStorage.getItem(THEME_KEY) || 'theme-dark';
 
-const container = document.getElementById('toastContainer');
+function applyTheme(t) {
+  document.body.classList.remove(...themes);
+  document.body.classList.add(t);
+  currentTheme = t;
+  localStorage.setItem(THEME_KEY, t);
+  document.querySelectorAll('.theme-opt').forEach(el => el.classList.toggle('active', el.dataset.theme === t));
+}
+applyTheme(currentTheme);
 
-function toast(message, type) {
+document.querySelectorAll('.theme-opt').forEach(btn => {
+  btn.addEventListener('click', () => applyTheme(btn.dataset.theme));
+});
+
+document.getElementById('themeToggleBtn').addEventListener('click', () => {
+  document.getElementById('themePanel').classList.toggle('open');
+});
+
+document.addEventListener('click', (e) => {
+  if (!e.target.closest('#themePanel') && !e.target.closest('#themeToggleBtn')) {
+    document.getElementById('themePanel').classList.remove('open');
+  }
+});
+
+/* ═══════════════════════════════════════════════════════════════
+   Toast
+   ═══════════════════════════════════════════════════════════════ */
+const tContainer = document.getElementById('toastContainer');
+function toast(msg, type) {
   type = type || 'info';
   const el = document.createElement('div');
   el.className = `toast toast-${type}`;
-  const icons = { success: '✓', error: '✗', info: 'i' };
-  el.innerHTML =
-    '<span class="toast-icon">' + icons[type] + '</span>' +
-    '<span class="toast-msg">' + sanitize(message) + '</span>' +
-    '<button class="toast-close" aria-label="Dismiss">&times;</button>';
-  const close = el.querySelector('.toast-close');
-  close.addEventListener('click', () => dismiss(el));
-  container.appendChild(el);
+  const icons = {success:'✓', error:'✗', info:'i'};
+  el.innerHTML = `<span class="toast-icon">${icons[type]}</span><span class="toast-msg">${sanitize(msg)}</span><button class="toast-close">&times;</button>`;
+  el.querySelector('.toast-close').addEventListener('click', () => dismiss(el));
+  tContainer.appendChild(el);
   setTimeout(() => dismiss(el), 4000);
 }
-
-function dismiss(el) {
-  if (el.classList.contains('removing')) return;
-  el.classList.add('removing');
-  setTimeout(() => { if (el.parentNode) el.parentNode.removeChild(el); }, 250);
-}
+function dismiss(el) { if (el.classList.contains('removing')) return; el.classList.add('removing'); setTimeout(() => { if (el.parentNode) el.parentNode.removeChild(el); }, 250); }
 
 /* ═══════════════════════════════════════════════════════════════
-   Confirm Dialog
+   Confirm
    ═══════════════════════════════════════════════════════════════ */
-
 const confirmOverlay = document.getElementById('confirmOverlay');
 const confirmTitle = document.getElementById('confirmTitle');
 const confirmMsg = document.getElementById('confirmMsg');
 const confirmOk = document.getElementById('confirmOk');
 const confirmCancel = document.getElementById('confirmCancel');
 let confirmResolve = null;
+function showConfirm(t, m) { confirmOverlay.classList.add('open'); confirmTitle.textContent = t; confirmMsg.textContent = m; return new Promise(r => { confirmResolve = r; }); }
+confirmOk.addEventListener('click', () => { confirmOverlay.classList.remove('open'); if (confirmResolve) confirmResolve(true); confirmResolve = null; });
+confirmCancel.addEventListener('click', () => { confirmOverlay.classList.remove('open'); if (confirmResolve) confirmResolve(false); confirmResolve = null; });
+confirmOverlay.addEventListener('click', (e) => { if (e.target === confirmOverlay) { confirmOverlay.classList.remove('open'); if (confirmResolve) confirmResolve(false); confirmResolve = null; } });
 
-function showConfirm(title, message) {
-  confirmOverlay.classList.add('open');
-  confirmTitle.textContent = title;
-  confirmMsg.textContent = message;
-  return new Promise((resolve) => {
-    confirmResolve = resolve;
-  });
+/* ═══════════════════════════════════════════════════════════════
+   Confetti
+   ═══════════════════════════════════════════════════════════════ */
+function fireConfetti() {
+  const container = document.createElement('div');
+  container.className = 'confetti-container';
+  document.body.appendChild(container);
+  const colors = ['#5fc3e4','#5cb87a','#d4a76a','#7c8cf0','#e8a84c','#e85d5d','#ce91d8'];
+  for (let i = 0; i < 80; i++) {
+    const c = document.createElement('div');
+    c.className = 'confetti';
+    c.style.left = Math.random() * 100 + '%';
+    c.style.background = colors[Math.floor(Math.random() * colors.length)];
+    c.style.width = (4 + Math.random() * 6) + 'px';
+    c.style.height = (4 + Math.random() * 6) + 'px';
+    c.style.borderRadius = Math.random() > .5 ? '50%' : '2px';
+    c.style.animationDuration = (2 + Math.random() * 2) + 's';
+    c.style.animationDelay = (Math.random() * 1.5) + 's';
+    container.appendChild(c);
+  }
+  setTimeout(() => { if (container.parentNode) container.parentNode.removeChild(container); }, 5000);
 }
 
-confirmOk.addEventListener('click', () => {
-  confirmOverlay.classList.remove('open');
-  if (confirmResolve) confirmResolve(true);
-  confirmResolve = null;
-});
-confirmCancel.addEventListener('click', () => {
-  confirmOverlay.classList.remove('open');
-  if (confirmResolve) confirmResolve(false);
-  confirmResolve = null;
-});
-confirmOverlay.addEventListener('click', (e) => {
-  if (e.target === confirmOverlay) {
-    confirmOverlay.classList.remove('open');
-    if (confirmResolve) confirmResolve(false);
-    confirmResolve = null;
-  }
+/* ═══════════════════════════════════════════════════════════════
+   Onboarding
+   ═══════════════════════════════════════════════════════════════ */
+const onboardOverlay = document.getElementById('onboardOverlay');
+const onboardStart = document.getElementById('onboardStart');
+
+function showOnboarding() {
+  onboardOverlay.classList.add('open');
+}
+function hideOnboarding() {
+  onboardOverlay.classList.remove('open');
+  localStorage.setItem('cppro_onboarded', '1');
+}
+
+onboardStart.addEventListener('click', hideOnboarding);
+
+document.getElementById('showOnboardBtn').addEventListener('click', () => {
+  userDropdown.classList.remove('open');
+  showOnboarding();
 });
 
 /* ═══════════════════════════════════════════════════════════════
-   Auth System
+   Shortcuts
    ═══════════════════════════════════════════════════════════════ */
+const shortcutsOverlay = document.getElementById('shortcutsOverlay');
+document.getElementById('shortcutsBtn').addEventListener('click', () => shortcutsOverlay.classList.add('open'));
+document.getElementById('shortcutsClose').addEventListener('click', () => shortcutsOverlay.classList.remove('open'));
+shortcutsOverlay.addEventListener('click', (e) => { if (e.target === shortcutsOverlay) shortcutsOverlay.classList.remove('open'); });
 
+/* ═══════════════════════════════════════════════════════════════
+   Auth
+   ═══════════════════════════════════════════════════════════════ */
 const authScreen = document.getElementById('authScreen');
 const mainApp = document.getElementById('mainApp');
 const loginForm = document.getElementById('loginForm');
@@ -916,6 +705,7 @@ const demoBtn = document.getElementById('demoBtn');
 const userAvatar = document.getElementById('userAvatar');
 const dropdownName = document.getElementById('dropdownName');
 const dropdownEmail = document.getElementById('dropdownEmail');
+const verifyBadge = document.getElementById('verifyBadge');
 const userDropdown = document.getElementById('userDropdown');
 const logoutBtn = document.getElementById('logoutBtn');
 
@@ -924,121 +714,57 @@ tabs.forEach(tab => {
   tab.addEventListener('click', () => {
     const target = tab.dataset.tab;
     tabs.forEach(t => { t.classList.remove('active'); t.setAttribute('aria-selected', 'false'); });
-    tab.classList.add('active');
-    tab.setAttribute('aria-selected', 'true');
+    tab.classList.add('active'); tab.setAttribute('aria-selected', 'true');
     loginForm.classList.toggle('hidden', target !== 'login');
     signupForm.classList.toggle('hidden', target !== 'signup');
     clearErrors();
   });
 });
 
-function clearErrors() {
-  document.querySelectorAll('.form-error').forEach(el => el.textContent = '');
-  document.querySelectorAll('.form-input').forEach(el => el.classList.remove('error'));
-}
-
-function showError(inputId, msg) {
-  const input = document.getElementById(inputId);
-  if (input) input.classList.add('error');
-  const err = document.getElementById(inputId + 'Error');
-  if (err) err.textContent = msg;
-}
-
+function clearErrors() { document.querySelectorAll('.form-error').forEach(el => el.textContent = ''); document.querySelectorAll('.form-input').forEach(el => el.classList.remove('error')); }
+function showError(id, msg) { const inp = document.getElementById(id); if (inp) inp.classList.add('error'); const err = document.getElementById(id + 'Error'); if (err) err.textContent = msg; }
 function setLoading(btn, loading) {
-  if (loading) {
-    btn.disabled = true;
-    btn.innerHTML = '<span class="spinner"></span>';
-  } else {
-    btn.disabled = false;
-    btn.textContent = btn === loginBtn ? 'Sign In' : btn === signupBtn ? 'Create Account' : '';
-  }
+  if (loading) { btn.disabled = true; btn.innerHTML = '<span class="spinner"></span>'; }
+  else { btn.disabled = false; btn.textContent = btn === loginBtn ? 'Sign In' : btn === signupBtn ? 'Create Account' : ''; }
 }
 
-/* ─── Password Strength ─── */
+// Password strength
 const pwInput = document.getElementById('signupPassword');
 const pwBars = document.querySelectorAll('.pw-bar');
-const pwLabel = document.getElementById('pwLabel');
-
 pwInput.addEventListener('input', () => {
-  const val = pwInput.value;
-  let score = 0;
-  if (val.length >= 6) score++;
-  if (val.length >= 10) score++;
-  if (/[A-Z]/.test(val) && /[a-z]/.test(val)) score++;
-  if (/\d/.test(val)) score++;
-  if (/[^A-Za-z0-9]/.test(val)) score++;
-
-  const strength = score <= 1 ? 'weak' : score <= 3 ? 'medium' : 'strong';
-  const labels = { weak: 'Weak', medium: 'Medium', strong: 'Strong' };
-
-  pwBars.forEach((bar, i) => {
-    bar.classList.toggle('active', i < Math.min(score, 3));
-    bar.className = 'pw-bar active ' + (i < Math.min(score, 3) ? strength : '');
-  });
-  pwLabel.textContent = val.length > 0 ? labels[strength] : '';
+  const v = pwInput.value; let s = 0;
+  if (v.length >= 6) s++; if (v.length >= 10) s++; if (/[A-Z]/.test(v) && /[a-z]/.test(v)) s++; if (/\d/.test(v)) s++; if (/[^A-Za-z0-9]/.test(v)) s++;
+  const st = s <= 1 ? 'weak' : s <= 3 ? 'medium' : 'strong';
+  pwBars.forEach((b, i) => { b.classList.toggle('active', i < Math.min(s, 3)); b.className = 'pw-bar active ' + (i < Math.min(s, 3) ? st : ''); });
 });
 
-/* ─── Login ─── */
+// Login
 loginForm.addEventListener('submit', async (e) => {
-  e.preventDefault();
-  clearErrors();
+  e.preventDefault(); clearErrors();
   const email = loginForm.querySelector('#loginEmail').value.trim();
   const password = loginForm.querySelector('#loginPassword').value;
-
   if (!email) { showError('loginEmail', 'Required'); return; }
   if (!password) { showError('loginPassword', 'Required'); return; }
-
   const rateId = 'login:' + email.toLowerCase();
-  if (!checkRateLimit(rateId)) {
-    toast('Too many login attempts. Please wait 1 minute.', 'error');
-    return;
-  }
-
+  if (!checkRateLimit(rateId)) { toast('Too many attempts. Wait 1 minute.', 'error'); return; }
   setLoading(loginBtn, true);
-
   try {
-    const users = getAllUsers();
-    const key = email.toLowerCase();
-    const user = users[key];
-
-    if (!user || !user.hash) {
-      recordAttempt(rateId);
-      setLoading(loginBtn, false);
-      showError('loginEmail', 'Invalid username or password');
-      return;
-    }
-
+    const users = getAllUsers(); const key = email.toLowerCase(); const user = users[key];
+    if (!user || !user.hash) { recordAttempt(rateId); setLoading(loginBtn, false); showError('loginEmail', 'Invalid username or password'); return; }
     const hash = await hashPassword(password);
-    if (hash !== user.hash) {
-      recordAttempt(rateId);
-      setLoading(loginBtn, false);
-      showError('loginPassword', 'Invalid username or password');
-      return;
-    }
-
-    const token = generateToken();
-    user.token = token;
-    users[key] = user;
-    saveAllUsers(users);
-    setSession(user.username, token);
-    toast('Welcome back, ' + sanitize(user.username) + '!', 'success');
-    enterApp(user);
-  } catch (err) {
-    setLoading(loginBtn, false);
-    toast('An error occurred. Please try again.', 'error');
-    console.error(err);
-  }
+    if (hash !== user.hash) { recordAttempt(rateId); setLoading(loginBtn, false); showError('loginPassword', 'Invalid username or password'); return; }
+    const token = generateToken(); user.token = token; users[key] = user; saveAllUsers(users); setSession(user.username, token);
+    toast('Welcome back, ' + sanitize(user.username) + '!', 'success'); enterApp(user);
+  } catch (err) { setLoading(loginBtn, false); toast('An error occurred.', 'error'); console.error(err); }
 });
 
-/* ─── Signup ─── */
+// Signup
 signupForm.addEventListener('submit', async (e) => {
-  e.preventDefault();
-  clearErrors();
+  e.preventDefault(); clearErrors();
   const name = sanitize(signupForm.querySelector('#signupName').value.trim());
   const email = signupForm.querySelector('#signupEmail').value.trim().toLowerCase();
   const password = signupForm.querySelector('#signupPassword').value;
   const confirm = signupForm.querySelector('#signupConfirm').value;
-
   let hasErr = false;
   if (name.length < 3) { showError('signupName', 'At least 3 characters'); hasErr = true; }
   if (!/^[a-zA-Z0-9_-]+$/.test(name)) { showError('signupName', 'Letters, numbers, hyphens only'); hasErr = true; }
@@ -1046,867 +772,244 @@ signupForm.addEventListener('submit', async (e) => {
   if (password.length < 6) { showError('signupPassword', 'At least 6 characters'); hasErr = true; }
   if (password !== confirm) { showError('signupConfirm', 'Passwords do not match'); hasErr = true; }
   if (hasErr) return;
-
   setLoading(signupBtn, true);
-
   try {
     const users = getAllUsers();
-    const key = email;
-
-    if (users[key]) {
-      setLoading(signupBtn, false);
-      showError('signupEmail', 'Email already registered');
-      return;
-    }
-    if (Object.values(users).some(u => u.username.toLowerCase() === name.toLowerCase())) {
-      setLoading(signupBtn, false);
-      showError('signupName', 'Username already taken');
-      return;
-    }
-
-    const hash = await hashPassword(password);
-    const token = generateToken();
-    const user = {
-      username: name,
-      email: email,
-      hash: hash,
-      token: token,
-      createdAt: Date.now(),
-      completed: [],
-      lastLesson: 0,
-      codeCache: {}
-    };
-    users[key] = user;
-    saveAllUsers(users);
-    setSession(name, token);
+    if (users[email]) { setLoading(signupBtn, false); showError('signupEmail', 'Email already registered'); return; }
+    if (Object.values(users).some(u => u.username.toLowerCase() === name.toLowerCase())) { setLoading(signupBtn, false); showError('signupName', 'Username taken'); return; }
+    const hash = await hashPassword(password); const token = generateToken();
+    const user = { username: name, email, hash, token, createdAt: Date.now(), completed: [], lastLesson: 0, codeCache: {}, verified: false, verifyCode: generateCode() };
+    users[email] = user; saveAllUsers(users); setSession(name, token);
     toast('Account created! Welcome, ' + sanitize(name) + '!', 'success');
+    toast('Verification code sent to ' + sanitize(email) + ': ' + user.verifyCode, 'info');
     enterApp(user);
-  } catch (err) {
-    setLoading(signupBtn, false);
-    toast('An error occurred. Please try again.', 'error');
-    console.error(err);
-  }
+  } catch (err) { setLoading(signupBtn, false); toast('An error occurred.', 'error'); console.error(err); }
 });
 
-/* ─── Demo / Guest ─── */
+// Demo
 demoBtn.addEventListener('click', () => {
-  const demoUser = {
-    username: 'Guest',
-    email: 'guest@demo.local',
-    hash: '',
-    token: generateToken(),
-    createdAt: Date.now(),
-    completed: [],
-    lastLesson: 0,
-    codeCache: {}
-  };
-  setSession(demoUser.username, demoUser.token);
-  toast('Continuing as guest. Sign up to save your progress!', 'info');
-  enterApp(demoUser);
+  const demo = { username:'Guest', email:'guest@cppro.local', hash:'', token:generateToken(), createdAt:Date.now(), completed:[], lastLesson:0, codeCache:{}, verified:false };
+  setSession(demo.username, demo.token); toast('Continuing as guest. Sign up to save progress!', 'info'); enterApp(demo);
 });
 
-/* ─── Logout ─── */
+// Logout
 logoutBtn.addEventListener('click', async () => {
-  const ok = await showConfirm('Sign Out', 'Are you sure you want to sign out?');
-  if (!ok) return;
-  const session = getSession();
-  if (session) {
-    saveCurrentCode();
-    clearSession();
-  }
-  userDropdown.classList.remove('open');
-  toast('Signed out.', 'info');
-  exitApp();
+  const ok = await showConfirm('Sign Out', 'Are you sure?'); if (!ok) return;
+  const session = getSession(); if (session) { saveCurrentCode(); clearSession(); }
+  userDropdown.classList.remove('open'); toast('Signed out.', 'info'); exitApp();
 });
 
-/* ─── Delete Account ─── */
+// Delete account
 document.getElementById('deleteAccountBtn').addEventListener('click', async () => {
-  const ok = await showConfirm(
-    'Delete Account',
-    'This will permanently delete your account and all progress. This cannot be undone.'
-  );
-  if (!ok) return;
-  const session = getSession();
-  if (session) {
-    const users = getAllUsers();
-    const key = Object.keys(users).find(k => users[k].username === session.username);
-    if (key) {
-      delete users[key];
-      saveAllUsers(users);
-    }
-    clearSession();
+  const ok = await showConfirm('Delete Account', 'This permanently deletes all progress. Cannot be undone.'); if (!ok) return;
+  const session = getSession(); if (session) {
+    const users = getAllUsers(); const key = Object.keys(users).find(k => users[k].username === session.username);
+    if (key) { delete users[key]; saveAllUsers(users); } clearSession();
   }
-  userDropdown.classList.remove('open');
-  toast('Account deleted.', 'info');
-  exitApp();
+  userDropdown.classList.remove('open'); toast('Account deleted.', 'info'); exitApp();
 });
 
-/* ─── Reset Progress ─── */
+// Reset progress
 document.getElementById('resetProgressBtn').addEventListener('click', async () => {
-  const ok = await showConfirm('Reset Progress', 'This will clear all completed lessons and saved code.');
-  if (!ok) return;
-  const session = getSession();
-  if (session) {
-    const users = getAllUsers();
-    const key = Object.keys(users).find(k => users[k].username === session.username);
-    if (key) {
-      users[key].completed = [];
-      users[key].codeCache = {};
-      saveAllUsers(users);
-    }
+  const ok = await showConfirm('Reset Progress', 'Clear all completed lessons and saved code?'); if (!ok) return;
+  const session = getSession(); if (session) {
+    const users = getAllUsers(); const key = Object.keys(users).find(k => users[k].username === session.username);
+    if (key) { users[key].completed = []; users[key].codeCache = {}; saveAllUsers(users); }
   }
-  completedLessons.clear();
-  updateSidebar();
-  updateProgress();
-  toast('Progress reset.', 'info');
+  completedLessons.clear(); updateSidebar(); updateProgress(); toast('Progress reset.', 'info'); userDropdown.classList.remove('open');
+});
+
+// Email verification
+document.getElementById('verifyEmailBtn').addEventListener('click', async () => {
   userDropdown.classList.remove('open');
-});
-
-/* ─── Auth App Switch ─── */
-function enterApp(user) {
-  currentUser = user;
-  authScreen.classList.add('hidden');
-  mainApp.classList.remove('hidden');
-  userAvatar.textContent = user.username.charAt(0).toUpperCase();
-  dropdownName.textContent = sanitize(user.username);
-  dropdownEmail.textContent = sanitize(user.email);
-  completedLessons = new Set(user.completed || []);
-  loadLesson(user.lastLesson || 0);
-  updateSidebar();
-  updateProgress();
-}
-
-function exitApp() {
-  currentUser = null;
-  completedLessons = new Set();
-  authScreen.classList.remove('hidden');
-  mainApp.classList.add('hidden');
-}
-
-/* ─── User Menu Toggle ─── */
-userAvatar.addEventListener('click', () => {
-  userDropdown.classList.toggle('open');
-});
-document.addEventListener('click', (e) => {
-  if (!e.target.closest('.user-menu-wrap')) {
-    userDropdown.classList.remove('open');
+  if (!currentUser || currentUser.verified) { toast('Email already verified!', 'success'); return; }
+  const code = await showConfirm('Verify Email', 'Enter the verification code sent to your email:\n\n' + (currentUser._verifyCode || 'Check console'));
+  // Simulated: just mark verified
+  if (currentUser) {
+    currentUser.verified = true;
+    const users = getAllUsers(); const key = Object.keys(users).find(k => users[k].username === currentUser.username);
+    if (key) { users[key].verified = true; delete users[key].verifyCode; saveAllUsers(users); }
+    verifyBadge.textContent = 'Verified'; verifyBadge.className = 'verify-badge verified';
+    toast('Email verified!', 'success');
   }
 });
+
+// Auth switch
+let currentUser = null;
+function enterApp(user) {
+  currentUser = user; authScreen.classList.add('hidden'); mainApp.classList.remove('hidden');
+  userAvatar.textContent = user.username.charAt(0).toUpperCase();
+  dropdownName.textContent = sanitize(user.username); dropdownEmail.textContent = sanitize(user.email);
+  if (user.verified) { verifyBadge.textContent = 'Verified'; verifyBadge.className = 'verify-badge verified'; }
+  else { verifyBadge.textContent = 'Unverified'; verifyBadge.className = 'verify-badge unverified'; }
+  completedLessons = new Set(user.completed || []);
+  loadLesson(user.lastLesson || 0); updateSidebar(); updateProgress();
+  if (!localStorage.getItem('cppro_onboarded') && user.username !== 'Guest') showOnboarding();
+}
+function exitApp() { currentUser = null; completedLessons = new Set(); authScreen.classList.remove('hidden'); mainApp.classList.add('hidden'); }
+
+userAvatar.addEventListener('click', () => userDropdown.classList.toggle('open'));
+document.addEventListener('click', (e) => { if (!e.target.closest('.user-menu-wrap')) userDropdown.classList.remove('open'); });
 
 /* ═══════════════════════════════════════════════════════════════
    Lesson Data
    ═══════════════════════════════════════════════════════════════ */
-
 const lessons = [
-  {
-    id: 1,
-    title: "Getting Started",
-    content: `## Chapter 1: Getting Started
-
-*Inspired by C++ Primer (5th Ed.) Ch 1 | learncpp.com Ch 0-1*
-
-Every C++ program begins its life in a function called \`main\`. The \`main\` function is the **entry point** — when you run your program, the operating system calls \`main\` and your code starts executing.
-
-<div class="instruction-box">
-<p><strong>Your Task:</strong> Write a complete C++ program that prints <code>"Hello, World!"</code> to the console.</p>
-</div>
-
-### Program Structure
-
-\`\`\`cpp
-#include <iostream>          // preprocessor directive — includes the iostream header
-using namespace std;          // lets us write cout instead of std::cout
-
-auto main() -> int {          // every program needs one main()
-    cout << "Hello, World!\\n";  // expression statement — prints to console
-}                             // return 0; is implicit in modern C++
-\`\`\`
-
-### Key Concepts
-
-| Concept              | Explanation                                               |
-|----------------------|-----------------------------------------------------------|
-| \`#include <iostream>\` | Tells the compiler to include the input/output library    |
-| \`using namespace std;\` | Brings all standard library names into global scope       |
-| \`main()\`              | The function that starts when your program runs           |
-| \`cout << "..."\`       | Outputs text to the console                               |
-| \`\\n\`                 | Newline character — faster than \`endl\`                   |
-
-### How Compilation Works
-
-1. **Preprocessor** — handles \`#include\` directives
-2. **Compiler** — translates C++ to machine code
-3. **Linker** — combines object files into an executable
-
-> 💡 **Pro Tip:** Click **Run** to simulate compilation, then **Check Answer** to verify your code.`,
-
-    starterCode: `#include <iostream>\nusing namespace std;\n\nauto main() -> int {\n    cout << "Hello, World!\\n";\n}`
-  },
-  {
-    id: 2,
-    title: "Variables & Types",
-    content: `## Chapter 2: Variables & Fundamental Types
-
-*Inspired by C++ Primer (5th Ed.) Ch 2 | learncpp.com Ch 4-5*
-
-A **variable** is a named piece of memory that stores a value. Every variable has a **type** that determines what kind of data it can hold and what operations are allowed.
-
-### Built-in Types
-
-\`\`\`cpp
-int         age = 25;          // integer: whole numbers
-double      pi  = 3.14159;     // floating-point: fractional numbers
-bool        ok  = true;        // boolean: true or false
-char        ch  = 'A';         // character: a single letter
-\`\`\`
-
-### Type Deduction with \`auto\`
-
-Modern C++ lets the compiler deduce the type:
-
-\`\`\`cpp
-auto x = 42;           // int
-auto y = 3.14;         // double
-auto b = true;         // bool
-auto s = "hello"s;     // std::string (requires the s suffix)
-\`\`\`
-
-### Constants: \`const\` and \`constexpr\`
-
-\`\`\`cpp
-const auto gravity = 9.81;       // runtime constant
-constexpr auto speed = 299792458; // compile-time constant (C++11)
-\`\`\`
-
-### Initialization Styles
-
-\`\`\`cpp
-int a = 5;         // copy initialization
-int b(5);          // direct initialization
-int c{5};          // uniform initialization (prevents narrowing)
-\`\`\`
-
-> ✅ Prefer **uniform initialization** \`{}\` — it catches type errors at compile time.`,
-
-    starterCode: `#include <iostream>\n#include <string>\nusing namespace std;\n\nauto main() -> int {\n    auto name = "Learner"s;\n    auto age = 20;\n    cout << "My name is " << name << " and I am " << age << " years old.\\n";\n}`
-  },
-  {
-    id: 3,
-    title: "Strings, Vectors & Arrays",
-    content: `## Chapter 3: Strings, Vectors & Arrays
-
-*Inspired by C++ Primer (5th Ed.) Ch 3 | learncpp.com Ch 5, 16-17*
-
-### std::string
-
-A dynamic sequence of characters. Include \`<string>\` and use the \`s\` suffix for literals:
-
-\`\`\`cpp
-#include <string>
-using namespace std;
-
-auto greeting = "Hello"s;        // std::string
-cout << greeting.length();       // 5
-cout << greeting.substr(0, 2);   // "He"
-\`\`\`
-
-### std::vector (Dynamic Array)
-
-\`\`\`cpp
-#include <vector>
-
-auto nums = vector{1, 2, 3, 4, 5};   // CTAD deduces vector<int>
-nums.push_back(6);                     // grows dynamically
-\`\`\`
-
-### std::array (Fixed-Size Array)
-
-\`\`\`cpp
-#include <array>
-
-auto nums = array{10, 20, 30};   // std::array<int, 3>
-cout << nums.size();             // 3 — never forgets its size
-\`\`\`
-
-### Range-Based For (C++11)
-
-\`\`\`cpp
-for (const auto& n : nums) {
-    cout << n << ' ';
-}
-\`\`\`
-
-> ✅ Use \`std::array\` for fixed-size, \`std::vector\` for dynamic. Prefer these over raw C-style arrays.`,
-
-    starterCode: `#include <iostream>\n#include <array>\nusing namespace std;\n\nauto main() -> int {\n    auto words = array{"C++", "Python", "Java"};\n\n    for (const auto& w : words) {\n        cout << w << "\\n";\n    }\n}`
-  },
-  {
-    id: 4,
-    title: "Expressions & Operators",
-    content: `## Chapter 4: Expressions & Operators
-
-*Inspired by C++ Primer (5th Ed.) Ch 4 | learncpp.com Ch 6*
-
-An **expression** yields a value. **Operators** combine expressions to produce new values.
-
-### Arithmetic Operators
-
-\`\`\`cpp
-auto sum = 10 + 3;        // 13  — addition
-auto diff = 10 - 3;       // 7   — subtraction
-auto prod = 10 * 3;       // 30  — multiplication
-auto quot = 10 / 3;       // 3   — integer division (truncates)
-auto rem  = 10 % 3;       // 1   — modulus (remainder)
-\`\`\`
-
-### Increment & Decrement
-
-\`\`\`cpp
-auto i = 0;
-++i;    // prefix:  increment then use (preferred)
-i++;    // postfix: use then increment
-\`\`\`
-
-### Relational & Logical Operators
-
-\`\`\`cpp
-==  !=  <  >  <=  >=    // relational — yield bool
-&&  ||  !                // logical — and, or, not
-\`\`\`
-
-### Operator Precedence
-
-| Precedence | Operator        | Associates |
-|------------|-----------------|------------|
-| Highest    | \`::\`            | Left       |
-|            | \`() [] . ->\`    | Left       |
-|            | \`++ -- (post)\`  | —          |
-|            | \`++ -- (pre)\`   | Right      |
-|            | \`* / %\`         | Left       |
-|            | \`+ -\`           | Left       |
-|            | \`<< >>\`         | Left       |
-|            | \`< <= > >=\`     | Left       |
-|            | \`== !=\`         | Left       |
-|            | \`&&\`            | Left       |
-|            | \`||\`            | Left       |
-| Lowest     | \`= += -= ...\`   | Right      |
-
-> 💡 When in doubt, use parentheses \`()\` to make precedence explicit.`,
-
-    starterCode: `#include <iostream>\nusing namespace std;\n\nauto main() -> int {\n    auto a = 15;\n    auto b = 4;\n\n    cout << "a + b = " << (a + b) << "\\n";\n    cout << "a - b = " << (a - b) << "\\n";\n    cout << "a * b = " << (a * b) << "\\n";\n    cout << "a / b = " << (a / b) << "\\n";\n    cout << "a % b = " << (a % b) << "\\n";\n}`
-  },
-  {
-    id: 5,
-    title: "Control Flow",
-    content: `## Chapter 5: Control Flow
-
-*Inspired by C++ Primer (5th Ed.) Ch 5 | learncpp.com Ch 8*
-
-Control flow statements determine the **order** in which your code executes.
-
-### Selection: \`if\` / \`else\`
-
-\`\`\`cpp
-if (condition) {
-    // runs when condition is true
-} else if (other) {
-    // runs when first is false and other is true
-} else {
-    // runs when all are false
-}
-\`\`\`
-
-### Selection: \`switch\`
-
-\`\`\`cpp
-switch (value) {
-    case 1: cout << "One";  break;
-    case 2: cout << "Two";  break;
-    default: cout << "Other";
-}
-\`\`\`
-
-### Iteration: \`for\`
-
-\`\`\`cpp
-for (auto i = 0; i < 5; ++i) {
-    cout << i << ' ';   // 0 1 2 3 4
-}
-\`\`\`
-
-### Iteration: \`while\`
-
-\`\`\`cpp
-auto count = 3;
-while (count > 0) {
-    cout << count << ' ';
-    --count;            // 3 2 1
-}
-\`\`\`
-
-### Iteration: \`do-while\`
-
-Runs the body **at least once**:
-
-\`\`\`cpp
-auto x = 0;
-do {
-    cout << x;
-} while (x != 0);       // prints "0" once
-\`\`\`
-
-### Jump: \`break\` and \`continue\`
-
-- \`break\` — exits the loop immediately
-- \`continue\` — skips to the next iteration
-
-> 💡 Prefer range-based \`for\` over index-based when iterating containers.`,
-
-    starterCode: `#include <iostream>\nusing namespace std;\n\nauto main() -> int {\n    for (auto i = 1; i <= 5; ++i) {\n        cout << "Count: " << i << "\\n";\n    }\n}`
-  },
-  {
-    id: 6,
-    title: "Functions & Overloading",
-    content: `## Chapter 6: Functions & Overloading
-
-*Inspired by C++ Primer (5th Ed.) Ch 6 | learncpp.com Ch 11*
-
-A **function** is a reusable block of code. Functions give names to computations and help organize programs into manageable pieces.
-
-### Function Basics
-
-\`\`\`cpp
-auto add(int a, int b) -> int {  // trailing return type (C++11)
-    return a + b;
-}
-
-auto multiply(int a, int b) {     // deduced return type (C++14)
-    return a * b;
-}
-\`\`\`
-
-### Parameters vs Arguments
-
-| Term        | Meaning                                  |
-|-------------|------------------------------------------|
-| Parameter   | The variable in the function definition   |
-| Argument    | The value passed when calling the function|
-
-### Function Overloading
-
-Multiple functions with the **same name** but different parameters:
-
-\`\`\`cpp
-auto print(int x)       -> void { cout << x; }
-auto print(double x)    -> void { cout << x; }
-auto print(string_view s) -> void { cout << s; }
-\`\`\`
-
-### [[nodiscard]] (C++17)
-
-Warns if the return value is discarded:
-
-\`\`\`cpp
-[[nodiscard]] auto important() -> bool;
-\`\`\`
-
-### constexpr Functions
-
-Evaluated at compile time when inputs are \`constexpr\`:
-
-\`\`\`cpp
-constexpr auto square(int x) -> int { return x * x; }
-\`\`\`
-
-> ✅ Use \`constexpr\` for pure computations. Use \`[[nodiscard]]\` for functions whose return values should never be ignored.`,
-
-    starterCode: `#include <iostream>\nusing namespace std;\n\nauto multiply(int a, int b) -> int {\n    return a * b;\n}\n\nauto main() -> int {\n    constexpr auto a = 4, b = 7;\n    auto result = multiply(a, b);\n    cout << "4 * 7 = " << result << "\\n";\n}`
-  },
-  {
-    id: 7,
-    title: "Classes & OOP",
-    content: `## Chapter 7: Classes & Object-Oriented Design
-
-*Inspired by C++ Primer (5th Ed.) Ch 7 | learncpp.com Ch 14*
-
-A **class** is a user-defined type that bundles **data** (member variables) and **behavior** (member functions). This is the heart of object-oriented programming.
-
-### Defining a Class
-
-\`\`\`cpp
-class Rectangle {
-public:
-    double width  = 1.0;    // default member initializer
-    double height = 1.0;
-
-    auto area() const -> double {
-        return width * height;
-    }
-};
-\`\`\`
-
-### Access Specifiers
-
-| Specifier    | Accessibility                                  |
-|-------------|------------------------------------------------|
-| \`public\`    | Accessible from anywhere                       |
-| \`private\`  | Accessible only within the class                |
-| \`protected\`| Accessible within the class and derived classes |
-
-### Constructors
-
-\`\`\`cpp
-class Rectangle {
-public:
-    double w = 1.0;
-    double h = 1.0;
-
-    Rectangle() = default;                              // default constructor
-    Rectangle(double w, double h) : w{w}, h{h} {}       // parameterized constructor
-    auto area() const -> double { return w * h; }
-};
-\`\`\`
-
-### The \`this\` Pointer
-
-Every member function has an implicit \`this\` pointer to the object on which it was called:
-
-\`\`\`cpp
-auto setWidth(double w) -> void { this->width = w; }
-\`\`\`
-
-> ✅ Mark member functions \`const\` when they don't modify the object. Use \`= default\` for trivial constructors.`,
-
-    starterCode: `#include <iostream>\n#include <string>\nusing namespace std;\n\nclass Dog {\npublic:\n    string name = "Buddy";\n    int age = 0;\n\n    auto bark() const -> void {\n        cout << name << " says Woof!\\n";\n    }\n};\n\nauto main() -> int {\n    auto myDog = Dog{};\n    myDog.bark();\n}`
-  },
-  {
-    id: 8,
-    title: "IO & File Streams",
-    content: `## Chapter 8: The IO Library & File Streams
-
-*Inspired by C++ Primer (5th Ed.) Ch 8 | learncpp.com Ch 28*
-
-C++ provides the **iostream** library for input and output. Streams are a flexible way to handle data from the console, files, or strings.
-
-### Console I/O
-
-\`\`\`cpp
-#include <iostream>
-using namespace std;
-
-auto main() -> int {
-    auto name = string{};
-    cout << "Enter your name: ";       // output
-    getline(cin, name);                 // input (whole line)
-    cerr << "Error log message\\n";     // unbuffered error output
-}
-\`\`\`
-
-### Why \`getline\` over \`>>\`?
-
-\`cin >> name\` stops at the **first whitespace**. \`getline(cin, name)\` reads the **entire line** including spaces.
-
-### File I/O
-
-\`\`\`cpp
-#include <fstream>
-
-auto main() -> int {
-    auto fin  = ifstream{"input.txt"};   // read from file
-    auto fout = ofstream{"output.txt"};  // write to file
-
-    auto line = string{};
-    while (getline(fin, line)) {
-        fout << line << "\\n";
-    }
-}   // files are automatically closed when fout goes out of scope
-\`\`\`
-
-### String Streams
-
-\`\`\`cpp
-#include <sstream>
-
-auto ss = istringstream{"42 3.14"};
-auto x = 0; auto y = 0.0;
-ss >> x >> y;   // parses "42" and "3.14"
-\`\`\`
-
-> ✅ Use \`getline\` for user names. Use RAII — files close automatically when the stream object is destroyed.`,
-
-    starterCode: `#include <iostream>\n#include <string>\nusing namespace std;\n\nauto main() -> int {\n    auto name = string{};\n    auto age = 0;\n\n    cout << "Enter your name: ";\n    getline(cin, name);\n\n    cout << "Enter your age: ";\n    cin >> age;\n\n    cout << "Hello, " << name << " (age " << age << ")\\n";\n}`
-  },
-  {
-    id: 9,
-    title: "Dynamic Memory & Smart Pointers",
-    content: `## Chapter 9: Dynamic Memory & Smart Pointers
-
-*Inspired by C++ Primer (5th Ed.) Ch 12 | learncpp.com Ch 22*
-
-Modern C++ avoids raw \`new\` and \`delete\`. Instead, use **smart pointers** — they automatically free memory when no longer needed.
-
-### The Problem with Raw Pointers
-
-\`\`\`cpp
-auto* ptr = new int{42};   // allocate
-delete ptr;                 // must remember to free — easy to forget!
-\`\`\`
-
-### std::unique_ptr (C++11)
-
-Exclusive ownership — cannot be copied, only moved:
-
-\`\`\`cpp
-#include <memory>
-using namespace std;
-
-auto ptr = make_unique<int>(42);      // preferred (C++14)
-auto ptr2 = unique_ptr<int>{new int(42)};  // also valid
-// no delete needed — automatic when ptr goes out of scope
-\`\`\`
-
-### std::shared_ptr
-
-Shared ownership via reference counting:
-
-\`\`\`cpp
-auto sptr = make_shared<Rectangle>(3.0, 4.0);
-auto sptr2 = sptr;   // reference count = 2
-// memory freed when all shared_ptrs are destroyed
-\`\`\`
-
-### Rule of Thumb
-
-| Need                      | Use                  |
-|---------------------------|----------------------|
-| Single owner              | \`unique_ptr\`          |
-| Shared ownership          | \`shared_ptr\`         |
-| Observing (non-owning)    | Raw pointer or reference |
-| Dynamic array             | \`vector\`              |
-
-> ✅ Always prefer \`make_unique\` and \`make_shared\`. Never call \`delete\` explicitly in modern C++.`,
-
-    starterCode: `#include <iostream>\n#include <memory>\n#include <string_view>\nusing namespace std;\n\nclass Greeter {\npublic:\n    auto greet(string_view name) const -> void {\n        cout << "Hello, " << name << "!\\n";\n    }\n};\n\nauto main() -> int {\n    auto g = make_unique<Greeter>();\n    g->greet("Modern C++");\n}`
-  },
-  {
-    id: 10,
-    title: "Templates & The Standard Library",
-    content: `## Chapter 10: Templates & The Standard Library
-
-*Inspired by C++ Primer (5th Ed.) Ch 16 | learncpp.com Ch 11, 26*
-
-**Templates** let you write code that works with any type. The **Standard Library** builds on templates to provide generic containers, iterators, and algorithms.
-
-### Function Templates
-
-\`\`\`cpp
-template <typename T>
-auto maxOf(T a, T b) -> T {
-    return (a > b) ? a : b;
-}
-
-// Usage:
-auto m1 = maxOf(3, 7);          // T = int
-auto m2 = maxOf(3.14, 2.72);    // T = double
-\`\`\`
-
-### Class Templates
-
-\`\`\`cpp
-template <typename T>
-class Box {
-    T value_;
-public:
-    explicit Box(T v) : value_{v} {}
-    auto get() const -> T { return value_; }
-};
-
-auto box = Box{42};    // CTAD deduces Box<int>
-\`\`\`
-
-### STL Algorithms (C++17)
-
-\`\`\`cpp
-#include <algorithm>
-#include <vector>
-
-auto nums = vector{4, 2, 5, 1, 3};
-sort(nums.begin(), nums.end());             // 1 2 3 4 5
-auto it = find(nums.begin(), nums.end(), 3); // iterator to 3
-\`\`\`
-
-### Lambda Expressions (C++11)
-
-\`\`\`cpp
-sort(nums.begin(), nums.end(),
-    [](int a, int b) { return a > b; });     // descending sort
-\`\`\`
-
-> 💡 Templates are the foundation of modern C++ — the entire STL (containers, algorithms, smart pointers) is built on them. Learn templates well and the whole library opens up.`,
-
-    starterCode: `#include <iostream>\n#include <vector>\n#include <algorithm>\nusing namespace std;\n\ntemplate <typename T>\nauto printAll(const vector<T>& v) -> void {\n    for (const auto& item : v) {\n        cout << item << " "; \n    }\n    cout << "\\n";\n}\n\nauto main() -> int {\n    auto nums = vector{42, 17, 8, 99, 33};\n    sort(nums.begin(), nums.end());\n    printAll(nums);\n}`
-  }
+  { id:1, title:"Getting Started", ref:"Primer Ch 1  ·  LCPP Ch 0-1",
+    content: `<h2>Chapter 1: Getting Started</h2><p>Every C++ program begins its life in a function called <code>main</code>. The <code>main</code> function is the <strong>entry point</strong> — when you run your program, the operating system calls <code>main</code> and your code starts executing.</p>
+<div class="instruction-box"><p><strong>Your Task:</strong> Write a complete C++ program that prints <code>"Hello, World!"</code> to the console.</p></div>
+<h3>Program Structure</h3><pre><button class="copy-btn" onclick="navigator.clipboard.writeText('#include <iostream>\\nusing namespace std;\\n\\nauto main() -> int {\\n    cout << \\"Hello, World!\\\\n\\";\\n}')">Copy</button>#include &lt;iostream&gt;<br>using namespace std;<br><br><span class="keyword">auto</span> <span class="function">main</span>() -> <span class="type">int</span> {<br>    cout &lt;&lt; <span class="string">"Hello, World!\\n"</span>;<br>}</pre>
+<h3>Key Concepts</h3><table><thead><tr><th>Concept</th><th>Explanation</th></tr></thead><tbody>
+<tr><td><code>#include &lt;iostream&gt;</code></td><td>Tells the compiler to include the I/O library</td></tr>
+<tr><td><code>using namespace std;</code></td><td>Brings standard names into scope</td></tr>
+<tr><td><code>main()</code></td><td>The function called when the program runs</td></tr>
+<tr><td><code>cout &lt;&lt; "..."</code></td><td>Prints text to the console</td></tr>
+</tbody></table>
+<blockquote><p>💡 <strong>Pro Tip:</strong> Click <strong>Run</strong> to simulate compilation, then <strong>Check</strong> to verify.</p></blockquote>`,
+    starterCode: '#include <iostream>\nusing namespace std;\n\nauto main() -> int {\n    cout << "Hello, World!\\n";\n}' },
+  { id:2, title:"Variables & Types", ref:"Primer Ch 2  ·  LCPP Ch 4-5",
+    content: `<h2>Chapter 2: Variables &amp; Fundamental Types</h2><p>A <strong>variable</strong> is a named piece of memory storing a value. Every variable has a <strong>type</strong> that determines what data it holds and what operations are allowed.</p>
+<div class="instruction-box"><p><strong>Your Task:</strong> Create variables <code>name</code> and <code>age</code>, then print them.</p></div>
+<h3>Built-in Types</h3><pre><span class="type">int</span> age = <span class="number">25</span>;<br><span class="type">double</span> pi = <span class="number">3.14159</span>;<br><span class="type">bool</span> ok = <span class="keyword">true</span>;<br><span class="type">char</span> ch = <span class="string">'A'</span>;</pre>
+<h3>Type Deduction with <code>auto</code></h3><p>Modern C++ lets the compiler deduce the type:</p><pre><span class="keyword">auto</span> x = <span class="number">42</span>;           <span class="comment">// int</span><br><span class="keyword">auto</span> y = <span class="number">3.14</span>;         <span class="comment">// double</span><br><span class="keyword">auto</span> s = <span class="string">"hello"</span>s;    <span class="comment">// std::string</span></pre>
+<h3><code>const</code> and <code>constexpr</code></h3><pre><span class="keyword">const</span> <span class="keyword">auto</span> gravity = <span class="number">9.81</span>;<br><span class="keyword">constexpr</span> <span class="keyword">auto</span> speed = <span class="number">299792458</span>;</pre>
+<blockquote><p>✅ Prefer <strong>uniform initialization</strong> <code>{}</code> — it catches narrowing conversions at compile time.</p></blockquote>`,
+    starterCode: '#include <iostream>\n#include <string>\nusing namespace std;\n\nauto main() -> int {\n    auto name = "Learner"s;\n    auto age = 20;\n    cout << "My name is " << name << " and I am " << age << " years old.\\n";\n}' },
+  { id:3, title:"Strings, Vectors & Arrays", ref:"Primer Ch 3  ·  LCPP Ch 5, 16-17",
+    content: `<h2>Chapter 3: Strings, Vectors &amp; Arrays</h2><p>The C++ Standard Library provides safe, modern containers that replace raw C-style arrays.</p>
+<div class="instruction-box"><p><strong>Your Task:</strong> Create an array of strings and print each one using a range-based <code>for</code> loop.</p></div>
+<h3>std::string</h3><pre><span class="preproc">#include</span> &lt;string&gt;<br><span class="keyword">auto</span> greeting = <span class="string">"Hello"</span>s;<br>cout &lt;&lt; greeting.<span class="function">length</span>();  <span class="comment">// 5</span></pre>
+<h3>std::vector &amp; std::array</h3><pre><span class="preproc">#include</span> &lt;vector&gt;<br><span class="preproc">#include</span> &lt;array&gt;<br><br><span class="keyword">auto</span> nums = <span class="type">vector</span>{<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>};       <span class="comment">// dynamic</span><br><span class="keyword">auto</span> arr = <span class="type">array</span>{<span class="number">10</span>, <span class="number">20</span>, <span class="number">30</span>};   <span class="comment">// fixed-size</span></pre>
+<h3>Range-Based For (C++11)</h3><pre><span class="keyword">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; n : nums) {<br>    cout &lt;&lt; n &lt;&lt; <span class="string">' '</span>;<br>}</pre>
+<blockquote><p>✅ Use <code>std::array</code> for fixed-size, <code>std::vector</code> for dynamic. Both know their own size — no more buffer overflows.</p></blockquote>`,
+    starterCode: '#include <iostream>\n#include <array>\nusing namespace std;\n\nauto main() -> int {\n    auto words = array{"C++", "Python", "Java"};\n    for (const auto& w : words) {\n        cout << w << "\\n";\n    }\n}' },
+  { id:4, title:"Expressions & Operators", ref:"Primer Ch 4  ·  LCPP Ch 6",
+    content: `<h2>Chapter 4: Expressions &amp; Operators</h2><p>An <strong>expression</strong> yields a value. <strong>Operators</strong> combine expressions to produce new values.</p>
+<div class="instruction-box"><p><strong>Your Task:</strong> Perform arithmetic operations on two numbers and print the results.</p></div>
+<h3>Arithmetic</h3><pre><span class="keyword">auto</span> sum  = <span class="number">10</span> + <span class="number">3</span>;    <span class="comment">// 13</span><br><span class="keyword">auto</span> diff = <span class="number">10</span> - <span class="number">3</span>;    <span class="comment">// 7</span><br><span class="keyword">auto</span> prod = <span class="number">10</span> * <span class="number">3</span>;    <span class="comment">// 30</span><br><span class="keyword">auto</span> quot = <span class="number">10</span> / <span class="number">3</span>;    <span class="comment">// 3 (integer division)</span><br><span class="keyword">auto</span> rem  = <span class="number">10</span> % <span class="number">3</span>;    <span class="comment">// 1</span></pre>
+<h3>Comparison &amp; Logical</h3><pre><span class="number">10</span> == <span class="number">3</span>   <span class="comment">// false</span><br><span class="number">10</span> != <span class="number">3</span>   <span class="comment">// true</span><br><span class="number">10</span> &gt; <span class="number">3</span>    <span class="comment">// true</span><br><span class="keyword">true</span> &amp;&amp; <span class="keyword">false</span>  <span class="comment">// false</span><br><span class="keyword">true</span> || <span class="keyword">false</span>  <span class="comment">// true</span></pre>
+<h3>Precedence</h3><p>When in doubt, use parentheses <code>()</code> to make precedence explicit.</p>`,
+    starterCode: '#include <iostream>\nusing namespace std;\n\nauto main() -> int {\n    auto a = 15, b = 4;\n    cout << "a + b = " << (a + b) << "\\n";\n    cout << "a - b = " << (a - b) << "\\n";\n    cout << "a * b = " << (a * b) << "\\n";\n    cout << "a / b = " << (a / b) << "\\n";\n    cout << "a % b = " << (a % b) << "\\n";\n}' },
+  { id:5, title:"Control Flow", ref:"Primer Ch 5  ·  LCPP Ch 8",
+    content: `<h2>Chapter 5: Control Flow</h2><p>Control flow statements determine the <strong>order</strong> in which your code executes.</p>
+<div class="instruction-box"><p><strong>Your Task:</strong> Use a loop to print numbers 1 through 5.</p></div>
+<h3>Selection: if/else</h3><pre><span class="keyword">if</span> (score &gt;= <span class="number">90</span>) {<br>    cout &lt;&lt; <span class="string">"A"</span>;<br>} <span class="keyword">else</span> <span class="keyword">if</span> (score &gt;= <span class="number">80</span>) {<br>    cout &lt;&lt; <span class="string">"B"</span>;<br>} <span class="keyword">else</span> {<br>    cout &lt;&lt; <span class="string">"C"</span>;<br>}</pre>
+<h3>Iteration: for / while / do-while</h3><pre><span class="keyword">for</span> (<span class="keyword">auto</span> i = <span class="number">0</span>; i &lt; <span class="number">5</span>; ++i) { cout &lt;&lt; i &lt;&lt; <span class="string">' '</span>; }<br><br><span class="keyword">auto</span> count = <span class="number">3</span>;<br><span class="keyword">while</span> (count &gt; <span class="number">0</span>) { cout &lt;&lt; count &lt;&lt; <span class="string">' '</span>; --count; }</pre>
+<blockquote><p>💡 <code>break</code> exits a loop immediately; <code>continue</code> skips to the next iteration.</p></blockquote>`,
+    starterCode: '#include <iostream>\nusing namespace std;\n\nauto main() -> int {\n    for (auto i = 1; i <= 5; ++i) {\n        cout << "Count: " << i << "\\n";\n    }\n}' },
+  { id:6, title:"Functions & Overloading", ref:"Primer Ch 6  ·  LCPP Ch 11",
+    content: `<h2>Chapter 6: Functions &amp; Overloading</h2><p>A <strong>function</strong> is a reusable block of code. Functions name computations and help organize programs.</p>
+<div class="instruction-box"><p><strong>Your Task:</strong> Write a function <code>multiply</code> that returns the product of two numbers.</p></div>
+<h3>Function Basics</h3><pre><span class="keyword">auto</span> <span class="function">add</span>(<span class="type">int</span> a, <span class="type">int</span> b) -> <span class="type">int</span> {      <span class="comment">// trailing return (C++11)</span><br>    <span class="keyword">return</span> a + b;<br>}<br><br><span class="keyword">auto</span> <span class="function">multiply</span>(<span class="type">int</span> a, <span class="type">int</span> b) {        <span class="comment">// deduced return (C++14)</span><br>    <span class="keyword">return</span> a * b;<br>}</pre>
+<h3>Overloading</h3><p>Multiple functions with the <strong>same name</strong>, different parameters:</p><pre><span class="keyword">auto</span> <span class="function">print</span>(<span class="type">int</span> x)    -> <span class="type">void</span> { cout &lt;&lt; x; }<br><span class="keyword">auto</span> <span class="function">print</span>(<span class="type">double</span> x) -> <span class="type">void</span> { cout &lt;&lt; x; }</pre>
+<h3><code>constexpr</code> Functions</h3><pre><span class="keyword">constexpr</span> <span class="keyword">auto</span> <span class="function">square</span>(<span class="type">int</span> x) -> <span class="type">int</span> { <span class="keyword">return</span> x * x; }</pre>`,
+    starterCode: '#include <iostream>\nusing namespace std;\n\nauto multiply(int a, int b) -> int {\n    return a * b;\n}\n\nauto main() -> int {\n    constexpr auto a = 4, b = 7;\n    auto result = multiply(a, b);\n    cout << "4 * 7 = " << result << "\\n";\n}' },
+  { id:7, title:"Classes & OOP", ref:"Primer Ch 7  ·  LCPP Ch 14",
+    content: `<h2>Chapter 7: Classes &amp; Object-Oriented Design</h2><p>A <strong>class</strong> is a user-defined type that bundles <strong>data</strong> (member variables) and <strong>behavior</strong> (member functions).</p>
+<div class="instruction-box"><p><strong>Your Task:</strong> Create a <code>Dog</code> class with a <code>bark()</code> method, then call it.</p></div>
+<h3>Defining a Class</h3><pre><span class="keyword">class</span> <span class="type">Rectangle</span> {<br><span class="keyword">public</span>:<br>    <span class="type">double</span> width  = <span class="number">1.0</span>;<br>    <span class="type">double</span> height = <span class="number">1.0</span>;<br><br>    <span class="keyword">auto</span> <span class="function">area</span>() <span class="keyword">const</span> -> <span class="type">double</span> {<br>        <span class="keyword">return</span> width * height;<br>    }<br>};</pre>
+<h3>Access Specifiers</h3><table><thead><tr><th>Specifier</th><th>Accessibility</th></tr></thead><tbody>
+<tr><td><code>public</code></td><td>Accessible from anywhere</td></tr>
+<tr><td><code>private</code></td><td>Accessible only within the class</td></tr>
+<tr><td><code>protected</code></td><td>Accessible in class and derived classes</td></tr>
+</tbody></table>
+<blockquote><p>✅ Mark member functions <code>const</code> when they don't modify the object.</p></blockquote>`,
+    starterCode: '#include <iostream>\n#include <string>\nusing namespace std;\n\nclass Dog {\npublic:\n    string name = "Buddy";\n    int age = 0;\n    auto bark() const -> void {\n        cout << name << " says Woof!\\n";\n    }\n};\n\nauto main() -> int {\n    auto myDog = Dog{};\n    myDog.bark();\n}' },
+  { id:8, title:"IO & File Streams", ref:"Primer Ch 8  ·  LCPP Ch 28",
+    content: `<h2>Chapter 8: The IO Library &amp; File Streams</h2><p>C++ provides the <strong>iostream</strong> library for input and output. Streams handle data from the console, files, or strings.</p>
+<div class="instruction-box"><p><strong>Your Task:</strong> Ask for the user's name and age, then print a greeting.</p></div>
+<h3>Console I/O</h3><pre><span class="preproc">#include</span> &lt;iostream&gt;<br><span class="keyword">auto</span> name = <span class="type">string</span>{};<br>cout &lt;&lt; <span class="string">"Enter name: "</span>;<br><span class="function">getline</span>(cin, name);  <span class="comment">// reads entire line including spaces</span></pre>
+<h3>File I/O</h3><pre><span class="preproc">#include</span> &lt;fstream&gt;<br><br><span class="keyword">auto</span> fin  = <span class="type">ifstream</span>{<span class="string">"input.txt"</span>};<br><span class="keyword">auto</span> fout = <span class="type">ofstream</span>{<span class="string">"output.txt"</span>};<br><span class="keyword">auto</span> line = <span class="type">string</span>{};<br><span class="keyword">while</span> (<span class="function">getline</span>(fin, line)) { fout &lt;&lt; line &lt;&lt; <span class="string">"\\n"</span>; }</pre>
+<blockquote><p>✅ RAII — files close automatically when the stream object is destroyed.</p></blockquote>`,
+    starterCode: '#include <iostream>\n#include <string>\nusing namespace std;\n\nauto main() -> int {\n    auto name = string{};\n    auto age = 0;\n    cout << "Enter your name: ";\n    getline(cin, name);\n    cout << "Enter your age: ";\n    cin >> age;\n    cout << "Hello, " << name << " (age " << age << ")\\n";\n}' },
+  { id:9, title:"Smart Pointers", ref:"Primer Ch 12  ·  LCPP Ch 22",
+    content: `<h2>Chapter 9: Dynamic Memory &amp; Smart Pointers</h2><p>Modern C++ avoids raw <code>new</code> and <code>delete</code>. Use <strong>smart pointers</strong> — they automatically free memory when no longer needed.</p>
+<div class="instruction-box"><p><strong>Your Task:</strong> Create a <code>Greeter</code> object using <code>make_unique</code> and call its method.</p></div>
+<h3>std::unique_ptr</h3><p>Exclusive ownership — cannot be copied, only moved:</p><pre><span class="preproc">#include</span> &lt;memory&gt;<br><br><span class="keyword">auto</span> ptr = <span class="function">make_unique</span>&lt;<span class="type">int</span>&gt;(<span class="number">42</span>);  <span class="comment">// preferred (C++14)</span><br><span class="comment">// no delete needed</span></pre>
+<h3>std::shared_ptr</h3><p>Shared ownership via reference counting:</p><pre><span class="keyword">auto</span> sptr = <span class="function">make_shared</span>&lt;<span class="type">Rectangle</span>&gt;(<span class="number">3.0</span>, <span class="number">4.0</span>);<br><span class="keyword">auto</span> sptr2 = sptr;  <span class="comment">// ref count = 2</span></pre>
+<blockquote><p>✅ Always prefer <code>make_unique</code> and <code>make_shared</code>. Never call <code>delete</code> explicitly.</p></blockquote>`,
+    starterCode: '#include <iostream>\n#include <memory>\n#include <string_view>\nusing namespace std;\n\nclass Greeter {\npublic:\n    auto greet(string_view name) const -> void {\n        cout << "Hello, " << name << "!\\n";\n    }\n};\n\nauto main() -> int {\n    auto g = make_unique<Greeter>();\n    g->greet("Modern C++");\n}' },
+  { id:10, title:"Templates & STL", ref:"Primer Ch 16  ·  LCPP Ch 11, 26",
+    content: `<h2>Chapter 10: Templates &amp; The Standard Library</h2><p><strong>Templates</strong> let you write code that works with any type. The entire STL is built on templates.</p>
+<div class="instruction-box"><p><strong>Your Task:</strong> Use <code>std::sort</code> and a template function to print a sorted vector.</p></div>
+<h3>Function Templates</h3><pre><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;<br><span class="keyword">auto</span> <span class="function">maxOf</span>(T a, T b) -> T {<br>    <span class="keyword">return</span> (a &gt; b) ? a : b;<br>}</pre>
+<h3>STL Algorithms</h3><pre><span class="preproc">#include</span> &lt;algorithm&gt;<br><span class="preproc">#include</span> &lt;vector&gt;<br><br><span class="keyword">auto</span> nums = <span class="type">vector</span>{<span class="number">4</span>, <span class="number">2</span>, <span class="number">5</span>, <span class="number">1</span>, <span class="number">3</span>};<br><span class="function">sort</span>(nums.<span class="function">begin</span>(), nums.<span class="function">end</span>());  <span class="comment">// 1 2 3 4 5</span></pre>
+<h3>Lambda Expressions (C++11)</h3><pre><span class="function">sort</span>(nums.<span class="function">begin</span>(), nums.<span class="function">end</span>(),<br>     [](<span class="type">int</span> a, <span class="type">int</span> b) { <span class="keyword">return</span> a &gt; b; });</pre>
+<blockquote><p>💡 Templates are the foundation of modern C++ — the STL, smart pointers, and more are all built on them.</p></blockquote>`,
+    starterCode: '#include <iostream>\n#include <vector>\n#include <algorithm>\nusing namespace std;\n\ntemplate <typename T>\nauto printAll(const vector<T>& v) -> void {\n    for (const auto& item : v) {\n        cout << item << " ";\n    }\n    cout << "\\n";\n}\n\nauto main() -> int {\n    auto nums = vector{42, 17, 8, 99, 33};\n    sort(nums.begin(), nums.end());\n    printAll(nums);\n}' }
 ];
 
 /* ═══════════════════════════════════════════════════════════════
-   Helpers
+   App State
    ═══════════════════════════════════════════════════════════════ */
-
-function highlightCode(code) {
-  const s = code.replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'})[c]);
-  const rules = [
-    [/\/\/.*$/gm, '<span class="comment">$&</span>'],
-    [/#\w+\b/g, '<span class="preproc">$&</span>'],
-    [/\b(auto|break|case|catch|class|const|constexpr|continue|default|delete|do|else|enum|explicit|export|extern|false|final|for|friend|goto|if|include|inline|mutable|namespace|new|nullptr|operator|override|private|protected|public|register|return|sizeof|static|struct|switch|template|this|throw|true|try|typedef|typeid|typename|union|using|virtual|void|volatile|while)\b/g, '<span class="keyword">$&</span>'],
-    [/\b(int|bool|char|double|float|long|short|signed|unsigned|string|string_view|size_t|void)\b/g, '<span class="type">$&</span>'],
-    [/"([^"\\]|\\.)*"/g, '<span class="string">$&</span>'],
-    [/'([^'\\]|\\.)'/g, '<span class="string">$&</span>'],
-    [/\b(\d+\.?\d*)\b/g, '<span class="number">$&</span>'],
-    [/\b([a-zA-Z_]\w*)\s*\(/g, '<span class="function">$1</span>(']
-  ];
-  let r = s;
-  for (const [re, repl] of rules) r = r.replace(re, repl);
-  return r;
-}
-
-function renderMarkdown(text) {
-  let html = text
-    .replace(/^### (.+)$/gm, '<h3>$1</h3>')
-    .replace(/^## (.+)$/gm, '<h2>$1</h2>');
-
-  html = html.replace(/```(\w+)?\n([\s\S]*?)```/g, (_, lang, code) => {
-    return '<pre>' + highlightCode(code.trimEnd()) + '</pre>';
-  });
-
-  html = html.replace(/`([^`]+)`/g, '<code>$1</code>');
-  html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
-  html = html.replace(/\*(.+?)\*/g, '<em>$1</em>');
-  html = html.replace(/^- (.+)$/gm, '<li>$1</li>');
-  html = html.replace(/(<li>.*<\/li>\n?)+/g, '<ul>$&</ul>');
-
-  html = html.replace(/\|(.+)\|[\s\S]*?\|(.+)\|/g, (match) => {
-    const rows = match.trim().split('\n');
-    const header = rows[0].split('|').filter(c => c.trim()).map(c => `<th>${c.trim()}</th>`).join('');
-    let body = '';
-    for (let i = 2; i < rows.length; i++) {
-      const cells = rows[i].split('|').filter(c => c.trim()).map(c => `<td>${c.trim()}</td>`).join('');
-      if (cells) body += `<tr>${cells}</tr>`;
-    }
-    return `<table><thead><tr>${header}</tr></thead><tbody>${body}</tbody></table>`;
-  });
-
-  html = html.replace(/\n\n/g, '</p><p>');
-  html = '<p>' + html + '</p>';
-  html = html.replace(/<\/p><p><h([23])>/g, '<h$1>');
-  html = html.replace(/<\/h([23])><p>/g, '</h$1>');
-  html = html.replace(/<p><ul>/g, '<ul>');
-  html = html.replace(/<\/ul><p>/g, '</ul>');
-  html = html.replace(/<p><blockquote>/g, '<blockquote>');
-  html = html.replace(/<\/blockquote><p>/g, '</blockquote>');
-  html = html.replace(/<p><table>/g, '<table>');
-  html = html.replace(/<\/table><p>/g, '</table>');
-  html = html.replace(/<p><div class="instruction-box">/g, '<div class="instruction-box">');
-  html = html.replace(/<\/div><\/p>/g, '</div>');
-  html = html.replace(/<p>\s*<\/p>/g, '');
-  return html;
-}
-
-/* ═══════════════════════════════════════════════════════════════
-   State
-   ═══════════════════════════════════════════════════════════════ */
-
-let currentUser = null;
 let currentLesson = 0;
 let completedLessons = new Set();
 
-const lessonNav    = document.getElementById('lessonNav');
-const readerTitle  = document.getElementById('readerTitle');
-const readerMeta   = document.getElementById('readerMeta');
-const readerBody   = document.getElementById('readerBody');
-const codeEditor   = document.getElementById('codeEditor');
-const lineNumbers  = document.getElementById('lineNumbers');
-const terminalOut  = document.getElementById('terminalOutput');
-const checkBtn     = document.getElementById('checkBtn');
-const runBtn       = document.getElementById('runBtn');
-const resetBtn     = document.getElementById('resetBtn');
-const prevBtn      = document.getElementById('prevBtn');
-const nextBtn      = document.getElementById('nextBtn');
+const lessonNav = document.getElementById('lessonNav');
+const readerTitle = document.getElementById('readerTitle');
+const readerMeta = document.getElementById('readerMeta');
+const readerRef = document.getElementById('readerRef');
+const readerBody = document.getElementById('readerBody');
+const codeEditor = document.getElementById('codeEditor');
+const lineNumbers = document.getElementById('lineNumbers');
+const terminalOut = document.getElementById('terminalOutput');
+const checkBtn = document.getElementById('checkBtn');
+const runBtn = document.getElementById('runBtn');
+const resetBtn = document.getElementById('resetBtn');
+const prevBtn = document.getElementById('prevBtn');
+const nextBtn = document.getElementById('nextBtn');
 const progressFill = document.getElementById('progressFill');
-const progressLabel= document.getElementById('progressLabel');
+const progressLabel = document.getElementById('progressLabel');
 
-/* ─── Line Numbers ─── */
+// Line numbers
 function updateLineNumbers() {
   const lines = codeEditor.value.split('\n');
   lineNumbers.textContent = lines.map((_, i) => i + 1).join('\n');
 }
-
 codeEditor.addEventListener('input', updateLineNumbers);
-codeEditor.addEventListener('scroll', () => {
-  lineNumbers.scrollTop = codeEditor.scrollTop;
-});
+codeEditor.addEventListener('scroll', () => { lineNumbers.scrollTop = codeEditor.scrollTop; });
 
-/* ─── Auto-save code ─── */
+// Auto-save code
 let codeSaveTimer = null;
-codeEditor.addEventListener('input', () => {
-  clearTimeout(codeSaveTimer);
-  codeSaveTimer = setTimeout(saveCurrentCode, 800);
-});
-
+codeEditor.addEventListener('input', () => { clearTimeout(codeSaveTimer); codeSaveTimer = setTimeout(saveCurrentCode, 800); });
 function saveCurrentCode() {
   if (!currentUser) return;
-  const lesson = lessons[currentLesson];
-  if (!lesson) return;
-  const code = codeEditor.value;
-  if (!code) return;
-  const users = getAllUsers();
-  const key = Object.keys(users).find(k => users[k].username === currentUser.username);
-  if (!key) return;
-  if (!users[key].codeCache) users[key].codeCache = {};
-  users[key].codeCache[lesson.id] = code;
-  saveAllUsers(users);
+  const lesson = lessons[currentLesson]; if (!lesson) return;
+  const code = codeEditor.value; if (!code) return;
+  const users = getAllUsers(); const key = Object.keys(users).find(k => users[k].username === currentUser.username);
+  if (!key) return; if (!users[key].codeCache) users[key].codeCache = {};
+  users[key].codeCache[lesson.id] = code; saveAllUsers(users);
 }
-
-function loadSavedCode(lessonId) {
+function loadSavedCode(id) {
   if (!currentUser) return null;
-  const users = getAllUsers();
-  const key = Object.keys(users).find(k => users[k].username === currentUser.username);
-  if (!key) return null;
-  const cache = users[key].codeCache || {};
-  return cache[lessonId] || null;
+  const users = getAllUsers(); const key = Object.keys(users).find(k => users[k].username === currentUser.username);
+  if (!key) return null; const cache = users[key].codeCache || {}; return cache[id] || null;
 }
 
-/* ─── Terminal ─── */
+// Terminal
 function writeTerminal(lines) {
   let html = '';
   for (const line of lines) {
-    if (typeof line === 'object') html += `<span class="${line.class}">${line.text}</span>`;
-    else html += line;
+    if (typeof line === 'object') html += `<span class="${line.class}">${line.text}</span>`; else html += line;
     html += '<br>';
   }
   terminalOut.innerHTML = html + '<span class="terminal-cursor"></span>';
   terminalOut.scrollTop = terminalOut.scrollHeight;
 }
-
 function clearTerminal() {
-  writeTerminal([
-    '<span class="prompt">$</span> g++ main.cpp -o main',
-    '<span class="info-text">Ready to compile.</span>'
-  ]);
+  writeTerminal(['<span class="prompt">$</span> g++ main.cpp -o main','<span class="info-text">Ready.</span>']);
 }
-
 document.getElementById('clearTerminalBtn').addEventListener('click', clearTerminal);
 
-/* ─── Sidebar ─── */
+// Sidebar
 function buildSidebar() {
   lessons.forEach((l, i) => {
     const li = document.createElement('li');
     const btn = document.createElement('button');
-    btn.type = 'button';
-    btn.setAttribute('data-index', i);
+    btn.type = 'button'; btn.setAttribute('data-index', i);
     btn.innerHTML = `<span class="lesson-num">${l.id}</span> ${l.title}<span class="lesson-check">&#10003;</span>`;
     btn.addEventListener('click', () => loadLesson(i));
-    li.appendChild(btn);
-    lessonNav.appendChild(li);
+    li.appendChild(btn); lessonNav.appendChild(li);
   });
 }
 
@@ -1920,100 +1023,64 @@ function updateSidebar() {
 }
 
 function updateProgress() {
-  const pct = Math.round(((completedLessons.size) / lessons.length) * 100);
+  const pct = completedLessons.size > 0 ? Math.round((completedLessons.size / lessons.length) * 100) : 0;
   progressFill.style.width = pct + '%';
   progressLabel.textContent = completedLessons.size + '/' + lessons.length;
 }
 
-/* ─── Load lesson ─── */
+// Load lesson
 function loadLesson(index) {
   currentLesson = index;
   const lesson = lessons[index];
-
   readerTitle.textContent = lesson.title;
-  readerMeta.textContent = 'Lesson ' + lesson.id + ' of ' + lessons.length;
-  readerBody.innerHTML = renderMarkdown(lesson.content);
-
-  // Restore saved code or use starter
+  readerMeta.textContent = 'Chapter ' + lesson.id + ' of ' + lessons.length;
+  readerRef.textContent = lesson.ref || '';
+  readerBody.innerHTML = lesson.content;
   const saved = loadSavedCode(lesson.id);
   codeEditor.value = saved || lesson.starterCode;
   updateLineNumbers();
-
-  const pct = Math.round(((index + 1) / lessons.length) * 100);
-  progressFill.style.width = pct + '%';
-  progressLabel.textContent = (index + 1) + '/' + lessons.length;
-
   updateSidebar();
   clearTerminal();
   document.getElementById('readerPanel').scrollTop = 0;
   const sidebar = document.getElementById('sidebar');
   sidebar.classList.remove('open');
-
   prevBtn.disabled = index === 0;
   nextBtn.disabled = index === lessons.length - 1;
-
-  // Save last lesson
   if (currentUser) {
-    const users = getAllUsers();
-    const key = Object.keys(users).find(k => users[k].username === currentUser.username);
-    if (key) {
-      users[key].lastLesson = index;
-      saveAllUsers(users);
-    }
+    const users = getAllUsers(); const key = Object.keys(users).find(k => users[k].username === currentUser.username);
+    if (key) { users[key].lastLesson = index; saveAllUsers(users); }
   }
 }
 
-/* ─── Run ─── */
+// Run
 function runCode() {
   const code = codeEditor.value.trim();
   if (!code) {
-    writeTerminal([
-      '<span class="prompt">$</span> g++ main.cpp -o main',
-      '<span class="error-text">error: empty source file</span>'
-    ]);
+    writeTerminal(['<span class="prompt">$</span> g++ main.cpp -o main','<span class="error-text">error: empty source file</span>']);
     return;
   }
-
-  const hasMain = /\b(auto|int)\s+main\s*\(/.test(code);
-  if (!hasMain) {
-    writeTerminal([
-      '<span class="prompt">$</span> g++ main.cpp -o main',
-      '<span class="error-text">error: no main() function found</span>'
-    ]);
+  if (!/\b(auto|int)\s+main\s*\(/.test(code)) {
+    writeTerminal(['<span class="prompt">$</span> g++ main.cpp -o main','<span class="error-text">error: no main() function found</span>']);
     return;
   }
-
-  writeTerminal([
-    '<span class="prompt">$</span> g++ main.cpp -o main',
-    '<span class="success-text">Compilation successful.</span>',
-    '<span class="prompt">$</span> ./main',
-    'Hello, World!',
-    ''
-  ]);
+  writeTerminal(['<span class="prompt">$</span> g++ main.cpp -o main','<span class="success-text">Compilation successful.</span>','<span class="prompt">$</span> ./main','Hello, World!','']);
 }
 
-/* ─── Check answer ─── */
+// Check answer
 function checkAnswer() {
   const lesson = lessons[currentLesson];
   const code = codeEditor.value.trim();
   if (!code) {
-    writeTerminal([
-      '<span class="prompt">$</span> check answer',
-      '<span class="error-text">Write some code before checking.</span>'
-    ]);
+    writeTerminal(['<span class="prompt">$</span> check','<span class="error-text">Write some code first.</span>']);
     return;
   }
-
   const hasMain = /\b(auto|int)\s+main\s*\(/.test(code);
-  const hasNS   = /using\s+namespace\s+std/.test(code);
-  const hasIO   = /#\s*include\s*<iostream>/i.test(code) || /\bcout\b/.test(code) || /\bcin\b/.test(code);
-
+  const hasNS = /using\s+namespace\s+std/.test(code);
+  const hasIO = /#\s*include\s*<iostream>/i.test(code) || /\bcout\b/.test(code) || /\bcin\b/.test(code);
   const checks = [hasMain, hasNS];
-
   const checkMap = {
-    1: () => hasIO,
-    2: () => hasIO,
-    3: () => hasIO && (/\bcin\b/.test(code) || /\bgetline\b/.test(code)),
+    1: () => hasIO, 2: () => hasIO,
+    3: () => hasIO,
     4: () => /\b[+\-*/%]\b/.test(code),
     5: () => /\b(for|while)\b/.test(code),
     6: () => /\bauto\b.*\(/.test(code),
@@ -2022,88 +1089,59 @@ function checkAnswer() {
     9: () => /\b(make_unique|unique_ptr|make_shared|shared_ptr)\b/.test(code),
     10: () => /\btemplate\b/.test(code)
   };
-
-  const checkFn = checkMap[lesson.id];
-  if (checkFn) checks.push(checkFn());
-
+  const fn = checkMap[lesson.id]; if (fn) checks.push(fn());
   const passed = checks.every(Boolean);
   const total = checks.length;
   const ok = checks.filter(Boolean).length;
-
   if (passed) {
-    writeTerminal([
-      '<span class="prompt">$</span> check answer',
-      '<span class="success-text">✓ All ' + total + ' checks passed! Great work!</span>'
-    ]);
-    toast('Lesson ' + lesson.id + ' completed!', 'success');
+    writeTerminal(['<span class="prompt">$</span> check','<span class="success-text">✓ All ' + total + ' checks passed!</span>']);
+    if (!completedLessons.has(currentLesson)) {
+      toast('Chapter ' + lesson.id + ' completed!', 'success');
+      fireConfetti();
+    }
     completedLessons.add(currentLesson);
-    updateSidebar();
-    updateProgress();
-
-    // Persist completed
+    updateSidebar(); updateProgress();
     if (currentUser) {
-      const users = getAllUsers();
-      const key = Object.keys(users).find(k => users[k].username === currentUser.username);
-      if (key) {
-        users[key].completed = Array.from(completedLessons);
-        saveAllUsers(users);
-      }
+      const users = getAllUsers(); const key = Object.keys(users).find(k => users[k].username === currentUser.username);
+      if (key) { users[key].completed = Array.from(completedLessons); saveAllUsers(users); }
     }
   } else {
     const hints = [];
-    if (!hasMain) hints.push('Missing main() function');
+    if (!hasMain) hints.push('Missing main()');
     if (!hasNS) hints.push('Add using namespace std;');
-    if (!hasIO) hints.push('Need #include <iostream> or cout');
-    writeTerminal([
-      '<span class="prompt">$</span> check answer',
-      '<span class="error-text">✗ ' + ok + '/' + total + ' checks passed.</span>',
-      '<span class="error-text">' + hints.join('; ') + '</span>'
-    ]);
+    if (!hasIO) hints.push('Need iostream/cout');
+    writeTerminal(['<span class="prompt">$</span> check','<span class="error-text">✗ ' + ok + '/' + total + ' passed.</span>','<span class="error-text">' + hints.join('; ') + '</span>']);
   }
 }
 
-/* ─── Reset ─── */
+// Reset
 function resetCode() {
-  const lesson = lessons[currentLesson];
-  codeEditor.value = lesson.starterCode;
-  updateLineNumbers();
-  clearTerminal();
-  toast('Code reset to starter.', 'info');
+  codeEditor.value = lessons[currentLesson].starterCode;
+  updateLineNumbers(); clearTerminal();
+  toast('Code reset.', 'info');
 }
 
-/* ─── Keyboard shortcuts ─── */
+// Keyboard shortcuts
 document.addEventListener('keydown', (e) => {
-  if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
-    e.preventDefault();
-    runCode();
-  }
-  if (e.key === 'Escape') {
-    userDropdown.classList.remove('open');
-  }
+  const c = e.ctrlKey || e.metaKey;
+  if (c && e.key === 'Enter') { e.preventDefault(); runCode(); }
+  if (c && e.shiftKey && e.key === 'Enter') { e.preventDefault(); checkAnswer(); }
+  if (c && e.key === 'r' && !e.shiftKey && !e.altKey) { e.preventDefault(); resetCode(); }
+  if (c && e.key === 'b') { e.preventDefault(); document.getElementById('sidebar').classList.toggle('open'); }
+  if (c && e.key === 't') { e.preventDefault(); document.getElementById('themePanel').classList.toggle('open'); }
+  if (e.key === 'Escape') { userDropdown.classList.remove('open'); document.getElementById('themePanel').classList.remove('open'); }
+  if (e.altKey && e.key === 'ArrowRight') { e.preventDefault(); if (currentLesson < lessons.length - 1) loadLesson(currentLesson + 1); }
+  if (e.altKey && e.key === 'ArrowLeft') { e.preventDefault(); if (currentLesson > 0) loadLesson(currentLesson - 1); }
 });
 
-/* ═══════════════════════════════════════════════════════════════
-   Init
-   ═══════════════════════════════════════════════════════════════ */
-
+// Init
 buildSidebar();
-
-// Check for existing session
 const session = getSession();
 if (session) {
-  const users = getAllUsers();
-  const key = Object.keys(users).find(k => users[k].username === session.username);
-  if (key && users[key].token === session.token) {
-    enterApp(users[key]);
-  } else {
-    clearSession();
-    authScreen.classList.remove('hidden');
-    mainApp.classList.add('hidden');
-  }
-} else {
-  authScreen.classList.remove('hidden');
-  mainApp.classList.add('hidden');
-}
+  const users = getAllUsers(); const key = Object.keys(users).find(k => users[k].username === session.username);
+  if (key && users[key].token === session.token) { enterApp(users[key]); }
+  else { clearSession(); authScreen.classList.remove('hidden'); mainApp.classList.add('hidden'); }
+} else { authScreen.classList.remove('hidden'); mainApp.classList.add('hidden'); }
 
 prevBtn.addEventListener('click', () => loadLesson(Math.max(0, currentLesson - 1)));
 nextBtn.addEventListener('click', () => loadLesson(Math.min(lessons.length - 1, currentLesson + 1)));
