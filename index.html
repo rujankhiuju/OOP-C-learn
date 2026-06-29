@@ -38,12 +38,40 @@ html{font-size:16px;scroll-behavior:smooth}
   --text-muted:#5a5a5a;--accent:#5fc3e4;--accent-dim:#1a6ea0;--accent-glow:rgba(95,195,228,0.12);
   --success:#4caf60;--error:#e05050;--warning:#e09840
 }
+.theme-neutral{
+  --bg-base:#111214;--bg-raised:#18191c;--bg-surface:#1f2023;--bg-elevated:#26272b;
+  --bg-hover:#2d2e32;--bg-active:#34353a;--bg-overlay:rgba(0,0,0,0.5);
+  --border:#28292d;--border-light:#36373c;--text-primary:#e0e2e6;--text-secondary:#a6a8ae;
+  --text-muted:#6a6c74;--accent:#b0b3b8;--accent-dim:#787a82;--accent-glow:rgba(176,179,184,0.15);
+  --code-bg:#0b0c0e;--code-border:#202124;--terminal-bg:#08090a;
+  --success:#84a87e;--error:#c87a7a;--warning:#b89a6a
+}
 .theme-sepia{
   --bg-base:#1a1612;--bg-raised:#231e19;--bg-surface:#2c2620;--bg-elevated:#352e27;
   --bg-hover:#3e362f;--bg-active:#473f37;--bg-overlay:rgba(0,0,0,0.45);
   --border:#3a322b;--border-light:#4a4139;--text-primary:#d9cdbf;--text-secondary:#b0a394;
   --text-muted:#7a6e61;--accent:#d4a76a;--accent-dim:#a87d4a;--accent-glow:rgba(212,167,106,0.15);
   --success:#8bb86a;--error:#c96a5a;--warning:#c99a4a
+}
+.theme-light{
+  --bg-base:#f5f5f7;--bg-raised:#ffffff;--bg-surface:#eaeaee;--bg-elevated:#ffffff;
+  --bg-hover:#e0e0e5;--bg-active:#d4d4da;--bg-overlay:rgba(0,0,0,0.15);
+  --border:#d4d4da;--border-light:#c4c4cb;--text-primary:#1d1d1f;--text-secondary:#56565a;
+  --text-muted:#8a8a90;--accent:#3a7bd5;--accent-dim:#2563a8;--accent-glow:rgba(58,123,213,0.12);
+  --code-bg:#eaeaee;--code-border:#d4d4da;--terminal-bg:#e0e0e5;
+  --success:#3a9b5e;--error:#c83030;--warning:#b88a30;
+  --shadow-sm:0 1px 2px rgba(0,0,0,0.06);--shadow-md:0 4px 16px rgba(0,0,0,0.08);
+  --shadow-lg:0 12px 40px rgba(0,0,0,0.10)
+}
+.theme-light-sepia{
+  --bg-base:#f7f2ea;--bg-raised:#fdfaf5;--bg-surface:#ede6dc;--bg-elevated:#fdfaf5;
+  --bg-hover:#e2d9ce;--bg-active:#d6ccc0;--bg-overlay:rgba(0,0,0,0.12);
+  --border:#d6ccc0;--border-light:#c6bca8;--text-primary:#2c241c;--text-secondary:#5e5242;
+  --text-muted:#8a7a66;--accent:#8a6e4a;--accent-dim:#6a5238;--accent-glow:rgba(138,110,74,0.12);
+  --code-bg:#ede6dc;--code-border:#d6ccc0;--terminal-bg:#e2d9ce;
+  --success:#6a8a5a;--error:#b05a48;--warning:#9a7a3a;
+  --shadow-sm:0 1px 2px rgba(0,0,0,0.06);--shadow-md:0 4px 16px rgba(0,0,0,0.07);
+  --shadow-lg:0 12px 40px rgba(0,0,0,0.09)
 }
 body{font-family:var(--font-sans);background:var(--bg-base);color:var(--text-primary);min-height:100vh;display:flex;flex-direction:column;transition:background var(--transition),color var(--transition)}
 a{color:var(--accent);text-decoration:none}a:hover{text-decoration:underline}
@@ -87,7 +115,10 @@ a{color:var(--accent);text-decoration:none}a:hover{text-decoration:underline}
 .theme-opt-dark{background:#15171d}
 .theme-opt-midnight{background:#13172a}
 .theme-opt-oled{background:#000}
+.theme-opt-neutral{background:#1f2023;border-color:#555}
 .theme-opt-sepia{background:#231e19}
+.theme-opt-light{background:#f5f5f7;border-color:#ccc}
+.theme-opt-light-sepia{background:#f7f2ea;border-color:#d6ccc0}
 .theme-panel-label{font-size:.72rem;color:var(--text-muted);margin-right:4px}
 
 /* ═══ Shortcuts Modal ═══ */
@@ -214,7 +245,7 @@ a{color:var(--accent);text-decoration:none}a:hover{text-decoration:underline}
 .instruction-box strong{color:var(--text-primary)}
 .reader-panel h3{font-size:.98rem;font-weight:600;margin:20px 0 8px}
 .reader-panel p{line-height:1.65;margin-bottom:12px;color:var(--text-secondary);font-size:.88rem}
-.reader-panel pre{background:var(--code-bg);border:1px solid var(--code-border);border-radius:var(--radius);padding:14px 16px;overflow-x:auto;margin:12px 0;font-family:var(--font-mono);font-size:.78rem;line-height:1.5;color:#d4d4d4;position:relative}
+.reader-panel pre{background:var(--code-bg);border:1px solid var(--code-border);border-radius:var(--radius);padding:14px 16px;overflow-x:auto;margin:12px 0;font-family:var(--font-mono);font-size:.78rem;line-height:1.5;color:var(--text-primary);position:relative}
 .copy-btn{position:absolute;top:8px;right:8px;background:var(--bg-surface);border:1px solid var(--border);color:var(--text-muted);font-size:.65rem;padding:3px 8px;border-radius:var(--radius-xs);cursor:pointer;opacity:0;transition:opacity var(--transition),background var(--transition);font-family:var(--font-sans)}
 pre:hover .copy-btn{opacity:1}.copy-btn:hover{background:var(--bg-hover);color:var(--text-secondary)}
 .reader-panel code{font-family:var(--font-mono);font-size:.78rem}
@@ -222,6 +253,12 @@ pre:hover .copy-btn{opacity:1}.copy-btn:hover{background:var(--bg-hover);color:v
 .reader-panel ul,.reader-panel ol{margin:8px 0 12px 20px;color:var(--text-secondary);line-height:1.6;font-size:.88rem}
 .reader-panel li{margin-bottom:3px}
 .reader-panel .keyword{color:#569cd6}.reader-panel .type{color:#4ec9b0}.reader-panel .string{color:#ce9178}
+.theme-light .reader-panel .keyword,.theme-light-sepia .reader-panel .keyword{color:#2a7ab5}
+.theme-light .reader-panel .type,.theme-light-sepia .reader-panel .type{color:#2a8a6a}
+.theme-light .reader-panel .string,.theme-light-sepia .reader-panel .string{color:#b85a3a}
+.theme-light .reader-panel .comment,.theme-light-sepia .reader-panel .comment{color:#5a8a5a}
+.theme-light .reader-panel .number,.theme-light-sepia .reader-panel .number{color:#6a9a3a}
+.theme-light .reader-panel .function,.theme-light-sepia .reader-panel .function{color:#7a5ab8}
 .reader-panel .comment{color:#6a9955;font-style:italic}.reader-panel .number{color:#b5cea8}.reader-panel .function{color:#dcdcaa}.reader-panel .preproc{color:#c586c0}
 .reader-panel blockquote{border-left:3px solid var(--accent-dim);padding:8px 14px;margin:12px 0;background:var(--bg-surface);border-radius:0 var(--radius-xs) var(--radius-xs) 0}
 .reader-panel blockquote p{margin-bottom:0;font-size:.85rem}
@@ -249,6 +286,7 @@ pre:hover .copy-btn{opacity:1}.copy-btn:hover{background:var(--bg-hover);color:v
 .btn:disabled{opacity:.4;cursor:not-allowed}
 .editor-wrapper{flex:1;position:relative;overflow:hidden}
 .editor-wrapper textarea{width:100%;height:100%;padding:14px 16px;padding-left:52px;background:var(--code-bg);color:#d4d4d4;font-family:var(--font-mono);font-size:.8rem;line-height:1.55;border:none;resize:none;outline:none;tab-size:2;white-space:pre;overflow-wrap:normal;overflow-x:auto}
+.theme-light .editor-wrapper textarea,.theme-light-sepia .editor-wrapper textarea{color:#1d1d1f}
 .editor-wrapper textarea::placeholder{color:var(--text-muted)}
 .line-numbers{position:absolute;top:0;left:0;padding:14px 8px 14px 12px;background:var(--code-bg);border-right:1px solid var(--code-border);color:var(--text-muted);font-family:var(--font-mono);font-size:.8rem;line-height:1.55;text-align:right;user-select:none;pointer-events:none;overflow:hidden;min-width:40px}
 
@@ -321,7 +359,10 @@ pre:hover .copy-btn{opacity:1}.copy-btn:hover{background:var(--bg-hover);color:v
   <button class="theme-opt theme-opt-dark active" data-theme="theme-dark" title="Dark" aria-label="Dark theme"></button>
   <button class="theme-opt theme-opt-midnight" data-theme="theme-midnight" title="Midnight Blue" aria-label="Midnight blue theme"></button>
   <button class="theme-opt theme-opt-oled" data-theme="theme-oled" title="OLED Black" aria-label="OLED black theme"></button>
-  <button class="theme-opt theme-opt-sepia" data-theme="theme-sepia" title="Sepia" aria-label="Sepia reading theme"></button>
+  <button class="theme-opt theme-opt-neutral" data-theme="theme-neutral" title="Neutral" aria-label="Neutral grayscale theme"></button>
+  <span class="theme-panel-label" style="margin-left:4px">Light</span>
+  <button class="theme-opt theme-opt-light" data-theme="theme-light" title="Light" aria-label="Light theme"></button>
+  <button class="theme-opt theme-opt-light-sepia" data-theme="theme-light-sepia" title="Light Sepia" aria-label="Warm light theme"></button>
 </div>
 
 <!-- Shortcuts Modal -->
@@ -584,7 +625,7 @@ function recordAttempt(id) { if (!loginAttempts[id]) loginAttempts[id] = []; log
    Theme System
    ═══════════════════════════════════════════════════════════════ */
 const THEME_KEY = 'cppro_theme';
-const themes = ['theme-dark','theme-midnight','theme-oled','theme-sepia'];
+const themes = ['theme-dark','theme-midnight','theme-oled','theme-neutral','theme-sepia','theme-light','theme-light-sepia'];
 let currentTheme = localStorage.getItem(THEME_KEY) || 'theme-dark';
 
 function applyTheme(t) {
