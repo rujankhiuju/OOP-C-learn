@@ -454,26 +454,28 @@ Modern C++ (C++11 and later) brings cleaner syntax, safer memory management, and
 
 ### Your First Program
 
-Every C++ program starts with a ` + "`main()`" + ` function. Modern C++ prefers **type deduction** with \`auto\` and avoids \`std::endl\` in favor of \`\\n\`:
+Every C++ program starts with a ` + "`main()`" + ` function. Modern C++ prefers **type deduction** with \`auto\` and avoids \`endl\` in favor of \`\\n\`:
 
 \`\`\`cpp
 #include <iostream>
+using namespace std;
 
 auto main() -> int {
-    std::cout << "Hello, World!\\n";
+    cout << "Hello, World!\\n";
 }
 \`\`\`
 
 ### How It Works
 
 - <code class="keyword">#include &lt;iostream&gt;</code> — input/output library
+- <code class="keyword">using namespace std;</code> — lets you write <code class="keyword">cout</code> instead of <code class="keyword">std::cout</code>
 - <code class="keyword">auto main() -> int</code> — trailing return type (C++11)
-- <code class="keyword">std::cout</code> — prints text; prefer <code class="keyword">\\n</code> over <code class="keyword">std::endl</code>
+- <code class="keyword">cout</code> — prints text; prefer <code class="keyword">\\n</code> over <code class="keyword">endl</code>
 - <code class="keyword">return 0;</code> is **optional** in <code class="keyword">main()</code> — it returns 0 by default
 
 > 💡 **Try it:** Change the string to print your own message, then click **Check Answer**.`,
 
-    starterCode: `#include <iostream>\n\nauto main() -> int {\n    std::cout << "Hello, Modern C++!\\n";\n}`
+    starterCode: `#include <iostream>\nusing namespace std;\n\nauto main() -> int {\n    cout << "Hello, Modern C++!\\n";\n}`
   },
   {
     id: 2,
@@ -487,7 +489,7 @@ Modern C++ uses \`auto\` to deduce types and brace initialization \`{}\` for saf
 \`\`\`cpp
 auto year = 2026;         // int
 auto price = 19.99;       // double
-auto name = "Modern"s;    // std::string (s suffix)
+auto name = "Modern"s;    // string (s suffix)
 \`\`\`
 
 ### Uniform Initialization
@@ -495,7 +497,7 @@ auto name = "Modern"s;    // std::string (s suffix)
 \`\`\`cpp
 int a{42};                     // direct
 auto b = double{3.14};         // deduced from braced init
-auto c = std::string{"Hi"};
+auto c = string{"Hi"};
 \`\`\`
 
 ### constexpr — Compile-Time Constants
@@ -509,52 +511,53 @@ constexpr auto gravity = 9.81;    // evaluated at compile time
 \`\`\`cpp
 #include <iostream>
 #include <string>
-using namespace std::string_literals;
+using namespace std;
 
 auto main() -> int {
     constexpr auto year = 2026;
     auto product = "Widget"s;
     auto price = 19.99;
 
-    std::cout << product << " costs $" << price
+    cout << product << " costs $" << price
               << " (" << year << ")\\n";
 }
 \`\`\``,
-    starterCode: `#include <iostream>\n#include <string>\nusing namespace std::string_literals;\n\nauto main() -> int {\n    auto name = "Learner"s;\n    auto age = 20;\n    std::cout << "My name is " << name << " and I am " << age << " years old.\\n";\n}`
+    starterCode: `#include <iostream>\n#include <string>\nusing namespace std;\n\nauto main() -> int {\n    auto name = "Learner"s;\n    auto age = 20;\n    cout << "My name is " << name << " and I am " << age << " years old.\\n";\n}`
   },
   {
     id: 3,
     title: "Input & Output",
     content: `## Console I/O in Modern C++
 
-C++ uses **streams** for I/O. For strings, prefer \`std::getline\` over \`>>\`:
+C++ uses **streams** for I/O. For strings, prefer \`getline\` over \`>>\`:
 
 \`\`\`cpp
 #include <iostream>
 #include <string>
+using namespace std;
 
 auto main() -> int {
-    auto line = std::string{};
-    std::cout << "Enter your name: ";
-    std::getline(std::cin, line);
-    std::cout << "Hello, " << line << "!\\n";
+    auto line = string{};
+    cout << "Enter your name: ";
+    getline(cin, line);
+    cout << "Hello, " << line << "!\\n";
 }
 \`\`\`
 
 ### Why getline?
 
-\`std::cin >> name\` stops at whitespace. \`std::getline\` reads the entire line.
+\`cin >> name\` stops at whitespace. \`getline\` reads the entire line.
 
 ### Chaining
 
 \`\`\`cpp
 auto x = 0, y = 0;
-std::cin >> x >> y;              // chain input
-std::cout << x << " + " << y << " = " << x + y << "\\n";
+cin >> x >> y;              // chain input
+cout << x << " + " << y << " = " << x + y << "\\n";
 \`\`\`
 
 > **Practice:** Ask for the user's full name and age, then print a greeting.`,
-    starterCode: `#include <iostream>\n#include <string>\n\nauto main() -> int {\n    auto name = std::string{};\n    auto age = 0;\n\n    std::cout << "What is your name? ";\n    std::getline(std::cin, name);\n\n    std::cout << "Hello, " << name << "!\\n";\n}`
+    starterCode: `#include <iostream>\n#include <string>\nusing namespace std;\n\nauto main() -> int {\n    auto name = string{};\n    auto age = 0;\n\n    cout << "What is your name? ";\n    getline(cin, name);\n\n    cout << "Hello, " << name << "!\\n";\n}`
   },
   {
     id: 4,
@@ -578,7 +581,7 @@ if (condition) {
 Evaluated at **compile time** — dead branches are discarded:
 
 \`\`\`cpp
-if constexpr (std::is_integral_v<T>) {
+if constexpr (is_integral_v<T>) {
     // only compiled for integral types
 }
 \`\`\`
@@ -587,7 +590,7 @@ if constexpr (std::is_integral_v<T>) {
 
 \`\`\`cpp
 if (score >= 90) [[likely]] {
-    std::cout << "Excellent!\\n";
+    cout << "Excellent!\\n";
 }
 \`\`\`
 
@@ -599,20 +602,21 @@ if (score >= 90) [[likely]] {
 
 \`\`\`cpp
 #include <iostream>
+using namespace std;
 
 auto main() -> int {
     constexpr auto score = 85;
 
     if (score >= 90) [[likely]] {
-        std::cout << "Grade: A\\n";
+        cout << "Grade: A\\n";
     } else if (score >= 80) {
-        std::cout << "Grade: B\\n";
+        cout << "Grade: B\\n";
     } else {
-        std::cout << "Grade: C or lower\\n";
+        cout << "Grade: C or lower\\n";
     }
 }
 \`\`\``,
-    starterCode: `#include <iostream>\n\nauto main() -> int {\n    constexpr auto temperature = 30;\n\n    if (temperature > 25) {\n        std::cout << "It's hot outside!\\n";\n    } else if (temperature > 15) {\n        std::cout << "It's warm outside.\\n";\n    } else {\n        std::cout << "It's cold outside.\\n";\n    }\n}`
+    starterCode: `#include <iostream>\nusing namespace std;\n\nauto main() -> int {\n    constexpr auto temperature = 30;\n\n    if (temperature > 25) {\n        cout << "It's hot outside!\\n";\n    } else if (temperature > 15) {\n        cout << "It's warm outside.\\n";\n    } else {\n        cout << "It's cold outside.\\n";\n    }\n}`
   },
   {
     id: 5,
@@ -625,12 +629,13 @@ Iterate over containers cleanly:
 
 \`\`\`cpp
 #include <vector>
+using namespace std;
 
 auto main() -> int {
-    auto nums = std::vector{10, 20, 30, 40, 50};
+    auto nums = vector{10, 20, 30, 40, 50};
 
     for (const auto& n : nums) {
-        std::cout << n << " ";
+        cout << n << " ";
     }
     // Output: 10 20 30 40 50
 }
@@ -640,7 +645,7 @@ auto main() -> int {
 
 \`\`\`cpp
 for (auto i = 0; i < 5; ++i) {
-    std::cout << i << " ";
+    cout << i << " ";
 }
 \`\`\`
 
@@ -649,7 +654,7 @@ for (auto i = 0; i < 5; ++i) {
 \`\`\`cpp
 auto count = 0;
 while (count < 3) {
-    std::cout << count << " ";
+    cout << count << " ";
     ++count;
 }
 \`\`\`
@@ -661,10 +666,10 @@ Runs **at least once**:
 \`\`\`cpp
 auto x = 10;
 do {
-    std::cout << x << "\\n";
+    cout << x << "\\n";
 } while (--x > 0);
 \`\`\``,
-    starterCode: `#include <iostream>\n\nauto main() -> int {\n    for (auto i = 1; i <= 5; ++i) {\n        std::cout << "Count: " << i << "\\n";\n    }\n}`
+    starterCode: `#include <iostream>\nusing namespace std;\n\nauto main() -> int {\n    for (auto i = 1; i <= 5; ++i) {\n        cout << "Count: " << i << "\\n";\n    }\n}`
   },
   {
     id: 6,
@@ -706,6 +711,7 @@ Multiple functions with the same name, different parameters.
 
 \`\`\`cpp
 #include <iostream>
+using namespace std;
 
 [[nodiscard]] auto add(int a, int b) -> int {
     return a + b;
@@ -714,49 +720,51 @@ Multiple functions with the same name, different parameters.
 auto main() -> int {
     constexpr auto x = 10, y = 5;
     auto sum = add(x, y);
-    std::cout << "Sum: " << sum << "\\n";
+    cout << "Sum: " << sum << "\\n";
 }
 \`\`\``,
-    starterCode: `#include <iostream>\n\nauto multiply(int a, int b) -> int {\n    return a * b;\n}\n\nauto main() -> int {\n    constexpr auto a = 4, b = 7;\n    auto result = multiply(a, b);\n    std::cout << "4 * 7 = " << result << "\\n";\n}`
+    starterCode: `#include <iostream>\nusing namespace std;\n\nauto multiply(int a, int b) -> int {\n    return a * b;\n}\n\nauto main() -> int {\n    constexpr auto a = 4, b = 7;\n    auto result = multiply(a, b);\n    cout << "4 * 7 = " << result << "\\n";\n}`
   },
   {
     id: 7,
     title: "Containers & Strings",
     content: `## Modern Collections
 
-### std::array (C++11)
+### array (C++11)
 
 Fixed-size, stack-allocated, knows its size:
 
 \`\`\`cpp
 #include <array>
+using namespace std;
 
 auto main() -> int {
-    auto nums = std::array{10, 20, 30, 40, 50};
-    std::cout << nums[2];                 // 30
-    std::cout << nums.size();             // 5
+    auto nums = array{10, 20, 30, 40, 50};
+    cout << nums[2];                 // 30
+    cout << nums.size();             // 5
     for (const auto& n : nums) { /* ... */ }
 }
 \`\`\`
 
-### std::vector
+### vector
 
 Dynamic, heap-allocated:
 
 \`\`\`cpp
-auto vec = std::vector{1, 2, 3};
+auto vec = vector{1, 2, 3};
 vec.push_back(4);
 \`\`\`
 
-### std::string Views (C++17)
+### string_view (C++17)
 
 Non-owning string reference:
 
 \`\`\`cpp
 #include <string_view>
+using namespace std;
 
-auto greet(std::string_view name) -> void {
-    std::cout << "Hello " << name << "\\n";
+auto greet(string_view name) -> void {
+    cout << "Hello " << name << "\\n";
 }
 \`\`\`
 
@@ -768,7 +776,7 @@ auto greet(std::string_view name) -> void {
 | \`.substr(pos)\`  | Extracts substring           |
 | \`.find(str)\`    | Finds substring              |
 | \`.starts_with()\`| C++20 prefix check           |`,
-    starterCode: `#include <iostream>\n#include <array>\n\nauto main() -> int {\n    auto words = std::array{"C++", "Java", "Python"};\n\n    for (const auto& w : words) {\n        std::cout << w << "\\n";\n    }\n}`
+    starterCode: `#include <iostream>\n#include <array>\nusing namespace std;\n\nauto main() -> int {\n    auto words = array{"C++", "Java", "Python"};\n\n    for (const auto& w : words) {\n        cout << w << "\\n";\n    }\n}`
   },
   {
     id: 8,
@@ -810,7 +818,7 @@ public:
 Use \`auto\` return types and \`const\` for const-correctness.
 
 > 🧠 Modern C++ favors **value semantics**, **const correctness**, and **default member initializers**.`,
-    starterCode: `#include <iostream>\n#include <string>\n\nclass Dog {\npublic:\n    std::string name = "Buddy";\n    int age = 0;\n\n    auto bark() const -> void {\n        std::cout << name << " says Woof!\\n";\n    }\n};\n\nauto main() -> int {\n    auto myDog = Dog{};\n    myDog.bark();\n}`
+    starterCode: `#include <iostream>\n#include <string>\nusing namespace std;\n\nclass Dog {\npublic:\n    string name = "Buddy";\n    int age = 0;\n\n    auto bark() const -> void {\n        cout << name << " says Woof!\\n";\n    }\n};\n\nauto main() -> int {\n    auto myDog = Dog{};\n    myDog.bark();\n}`
   },
   {
     id: 9,
@@ -822,10 +830,13 @@ Use \`auto\` return types and \`const\` for const-correctness.
 Always mark overridden methods with \`override\`:
 
 \`\`\`cpp
+#include <iostream>
+using namespace std;
+
 class Animal {
 public:
     virtual auto speak() const -> void {
-        std::cout << "Animal sound\\n";
+        cout << "Animal sound\\n";
     }
     virtual ~Animal() = default;
 };
@@ -833,7 +844,7 @@ public:
 class Cat : public Animal {
 public:
     auto speak() const -> void override {
-        std::cout << "Meow!\\n";
+        cout << "Meow!\\n";
     }
 };
 \`\`\`
@@ -857,7 +868,7 @@ class Derived : public Base {
 \`\`\`
 
 > 🔑 Inheritance models an **is-a** relationship. Prefer composition over inheritance where possible.`,
-    starterCode: `#include <iostream>\n\nclass Vehicle {\npublic:\n    auto start() const -> void {\n        std::cout << "Vehicle started.\\n";\n    }\n    virtual ~Vehicle() = default;\n};\n\nclass Car : public Vehicle {\npublic:\n    auto honk() const -> void {\n        std::cout << "Beep beep!\\n";\n    }\n};\n\nauto main() -> int {\n    auto myCar = Car{};\n    myCar.start();\n    myCar.honk();\n}`
+    starterCode: `#include <iostream>\nusing namespace std;\n\nclass Vehicle {\npublic:\n    auto start() const -> void {\n        cout << "Vehicle started.\\n";\n    }\n    virtual ~Vehicle() = default;\n};\n\nclass Car : public Vehicle {\npublic:\n    auto honk() const -> void {\n        cout << "Beep beep!\\n";\n    }\n};\n\nauto main() -> int {\n    auto myCar = Car{};\n    myCar.start();\n    myCar.honk();\n}`
   },
   {
     id: 10,
@@ -867,6 +878,9 @@ class Derived : public Base {
 ### Pure Virtual + override
 
 \`\`\`cpp
+#include <iostream>
+using namespace std;
+
 class Shape {
 public:
     virtual auto area() const -> double = 0;
@@ -883,22 +897,24 @@ public:
 };
 \`\`\`
 
-### std::unique_ptr — No Raw delete
+### unique_ptr — No Raw delete
 
 \`\`\`cpp
 #include <memory>
+#include <vector>
+using namespace std;
 
-auto shapes = std::vector<std::unique_ptr<Shape>>{};
-shapes.push_back(std::make_unique<Circle>(5.0));
+auto shapes = vector<unique_ptr<Shape>>{};
+shapes.push_back(make_unique<Circle>(5.0));
 
 for (const auto& s : shapes) {
-    std::cout << s->area() << "\\n";
+    cout << s->area() << "\\n";
 }
 // No delete needed — unique_ptr handles it
 \`\`\`
 
-> 💡 Modern C++ avoids \`new\`/\`delete\`. Use \`std::make_unique\` (C++14) and smart pointers instead.`,
-    starterCode: `#include <iostream>\n#include <memory>\n#include <vector>\n\nclass Bird {\npublic:\n    virtual auto speak() const -> void {\n        std::cout << "Bird sound\\n";\n    }\n    virtual ~Bird() = default;\n};\n\nclass Parrot : public Bird {\npublic:\n    auto speak() const -> void override {\n        std::cout << "Squawk!\\n";\n    }\n};\n\nauto main() -> int {\n    auto birds = std::vector<std::unique_ptr<Bird>>{};\n    birds.push_back(std::make_unique<Parrot>());\n\n    for (const auto& b : birds) {\n        b->speak();\n    }\n}`
+> 💡 Modern C++ avoids \`new\`/\`delete\`. Use \`make_unique\` (C++14) and smart pointers instead.`,
+    starterCode: `#include <iostream>\n#include <memory>\n#include <vector>\nusing namespace std;\n\nclass Bird {\npublic:\n    virtual auto speak() const -> void {\n        cout << "Bird sound\\n";\n    }\n    virtual ~Bird() = default;\n};\n\nclass Parrot : public Bird {\npublic:\n    auto speak() const -> void override {\n        cout << "Squawk!\\n";\n    }\n};\n\nauto main() -> int {\n    auto birds = vector<unique_ptr<Bird>>{};\n    birds.push_back(make_unique<Parrot>());\n\n    for (const auto& b : birds) {\n        b->speak();\n    }\n}`
   }
 ];
 
@@ -1050,10 +1066,10 @@ function checkAnswer() {
   }
 
   const hasMain  = /\b(auto|int)\s+main\s*\(/.test(code);
+  const hasNS    = /using\s+namespace\s+std/.test(code);
   const hasIO    = /#\s*include\s*<iostream>/i.test(code) || /\bcout\b/.test(code) || /\bcin\b/.test(code);
-  const hasReturn = /\breturn\b/.test(code);
 
-  const checks = [hasMain];
+  const checks = [hasMain, hasNS];
 
   if (lesson.id === 1) {
     checks.push(hasIO);
@@ -1082,6 +1098,7 @@ function checkAnswer() {
   } else {
     const hints = [];
     if (!hasMain) hints.push('Missing main() function');
+    if (!hasNS) hints.push('Add using namespace std;');
     if (!hasIO) hints.push('Need #include <iostream> or cout');
     setStatus('error', `${ok}/${total} checks passed. ${hints.join('; ')}`);
   }
