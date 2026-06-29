@@ -1200,286 +1200,343 @@ document.addEventListener('click', (e) => {
 const lessons = [
   {
     id: 1,
-    title: "Hello, World!",
-    content: `## Hello, World!
+    title: "Getting Started",
+    content: `## Chapter 1: Getting Started
 
-Let's write your first C++ program! Every C++ program needs a \`main()\` function — that's where the program starts running.
+*Inspired by C++ Primer (5th Ed.) Ch 1 | learncpp.com Ch 0-1*
+
+Every C++ program begins its life in a function called \`main\`. The \`main\` function is the **entry point** — when you run your program, the operating system calls \`main\` and your code starts executing.
 
 <div class="instruction-box">
-<p><strong>Instructions:</strong> Write a program that prints <code>"Hello, World!"</code> to the console.</p>
+<p><strong>Your Task:</strong> Write a complete C++ program that prints <code>"Hello, World!"</code> to the console.</p>
 </div>
 
-### Code Explanation
+### Program Structure
 
 \`\`\`cpp
-#include <iostream>
-using namespace std;
+#include <iostream>          // preprocessor directive — includes the iostream header
+using namespace std;          // lets us write cout instead of std::cout
 
-auto main() -> int {
-    cout << "Hello, World!\\n";
-}
+auto main() -> int {          // every program needs one main()
+    cout << "Hello, World!\\n";  // expression statement — prints to console
+}                             // return 0; is implicit in modern C++
 \`\`\`
 
-- <code class="keyword">#include &lt;iostream&gt;</code> — lets you use input/output
-- <code class="keyword">using namespace std;</code> — use names like <code class="keyword">cout</code> directly
-- <code class="keyword">auto main() -> int</code> — the program entry point (modern C++ style)
-- <code class="keyword">cout &lt;&lt; "..."</code> — prints text to the screen
-- <code class="keyword">\\n</code> — adds a newline (faster than \`endl\`)
+### Key Concepts
 
-> 💡 **Tip:** Click **Run** to see the output, then **Check Answer** to verify your code.`,
+| Concept              | Explanation                                               |
+|----------------------|-----------------------------------------------------------|
+| \`#include <iostream>\` | Tells the compiler to include the input/output library    |
+| \`using namespace std;\` | Brings all standard library names into global scope       |
+| \`main()\`              | The function that starts when your program runs           |
+| \`cout << "..."\`       | Outputs text to the console                               |
+| \`\\n\`                 | Newline character — faster than \`endl\`                   |
+
+### How Compilation Works
+
+1. **Preprocessor** — handles \`#include\` directives
+2. **Compiler** — translates C++ to machine code
+3. **Linker** — combines object files into an executable
+
+> 💡 **Pro Tip:** Click **Run** to simulate compilation, then **Check Answer** to verify your code.`,
 
     starterCode: `#include <iostream>\nusing namespace std;\n\nauto main() -> int {\n    cout << "Hello, World!\\n";\n}`
   },
   {
     id: 2,
-    title: "Variables & Auto",
-    content: `## Storing Data
+    title: "Variables & Types",
+    content: `## Chapter 2: Variables & Fundamental Types
 
-Variables let you store information. Modern C++ uses \`auto\` to figure out the type automatically.
+*Inspired by C++ Primer (5th Ed.) Ch 2 | learncpp.com Ch 4-5*
 
-<div class="instruction-box">
-<p><strong>Instructions:</strong> Create a variable <code>name</code> and <code>age</code>, then print them.</p>
-</div>
+A **variable** is a named piece of memory that stores a value. Every variable has a **type** that determines what kind of data it can hold and what operations are allowed.
 
-### Examples
+### Built-in Types
 
 \`\`\`cpp
-auto year = 2026;        // int
-auto price = 19.99;      // double
-auto greeting = "Hi"s;   // string (s suffix)
+int         age = 25;          // integer: whole numbers
+double      pi  = 3.14159;     // floating-point: fractional numbers
+bool        ok  = true;        // boolean: true or false
+char        ch  = 'A';         // character: a single letter
 \`\`\`
 
-### Type Table
+### Type Deduction with \`auto\`
 
-| Code                     | Type     |
-|--------------------------|----------|
-| \`auto x = 42\`            | \`int\`     |
-| \`auto y = 3.14\`          | \`double\`  |
-| \`auto z = "hello"s\`      | \`string\`  |
-| \`auto b = true\`          | \`bool\`    |
+Modern C++ lets the compiler deduce the type:
 
-> 💡 The \`s\` suffix after a string literal makes it \`std::string\`.`,
+\`\`\`cpp
+auto x = 42;           // int
+auto y = 3.14;         // double
+auto b = true;         // bool
+auto s = "hello"s;     // std::string (requires the s suffix)
+\`\`\`
+
+### Constants: \`const\` and \`constexpr\`
+
+\`\`\`cpp
+const auto gravity = 9.81;       // runtime constant
+constexpr auto speed = 299792458; // compile-time constant (C++11)
+\`\`\`
+
+### Initialization Styles
+
+\`\`\`cpp
+int a = 5;         // copy initialization
+int b(5);          // direct initialization
+int c{5};          // uniform initialization (prevents narrowing)
+\`\`\`
+
+> ✅ Prefer **uniform initialization** \`{}\` — it catches type errors at compile time.`,
 
     starterCode: `#include <iostream>\n#include <string>\nusing namespace std;\n\nauto main() -> int {\n    auto name = "Learner"s;\n    auto age = 20;\n    cout << "My name is " << name << " and I am " << age << " years old.\\n";\n}`
   },
   {
     id: 3,
-    title: "Input & Output",
-    content: `## Reading User Input
+    title: "Strings, Vectors & Arrays",
+    content: `## Chapter 3: Strings, Vectors & Arrays
 
-Use \`cin\` to read input from the keyboard. For text with spaces, use \`getline\`.
+*Inspired by C++ Primer (5th Ed.) Ch 3 | learncpp.com Ch 5, 16-17*
 
-<div class="instruction-box">
-<p><strong>Instructions:</strong> Ask for the user's name, then greet them.</p>
-</div>
+### std::string
 
-### Example
+A dynamic sequence of characters. Include \`<string>\` and use the \`s\` suffix for literals:
 
 \`\`\`cpp
-#include <iostream>
 #include <string>
 using namespace std;
 
-auto main() -> int {
-    auto name = string{};
-    cout << "Enter your name: ";
-    getline(cin, name);
-    cout << "Hello, " << name << "!\\n";
-}
+auto greeting = "Hello"s;        // std::string
+cout << greeting.length();       // 5
+cout << greeting.substr(0, 2);   // "He"
 \`\`\`
 
-### Why getline?
-
-- \`cin >> name\` stops at the first space
-- \`getline(cin, name)\` reads the whole line
-
-> **Practice:** Ask for full name and age, then print a greeting.`,
-
-    starterCode: `#include <iostream>\n#include <string>\nusing namespace std;\n\nauto main() -> int {\n    auto name = string{};\n    auto age = 0;\n\n    cout << "What is your name? ";\n    getline(cin, name);\n\n    cout << "Hello, " << name << "!\\n";\n}`
-  },
-  {
-    id: 4,
-    title: "Conditionals",
-    content: `## Making Decisions
-
-Use \`if\`, \`else if\`, and \`else\` to run code conditionally.
-
-<div class="instruction-box">
-<p><strong>Instructions:</strong> Check if a temperature is hot, warm, or cold and print the result.</p>
-</div>
-
-### Syntax
+### std::vector (Dynamic Array)
 
 \`\`\`cpp
-if (condition) {
-    // runs if true
-} else if (other) {
-    // runs if first is false
-} else {
-    // runs if all false
-}
+#include <vector>
+
+auto nums = vector{1, 2, 3, 4, 5};   // CTAD deduces vector<int>
+nums.push_back(6);                     // grows dynamically
 \`\`\`
 
-### Operators
-
-- Comparison: \`==\` \`!=\` \`<\` \`>\` \`<=\` \`>=\`
-- Logical: \`&&\` (and), \`||\` (or), \`!\` (not)
-
-### Modern Touch
-
-Use \`constexpr\` for compile-time constants and \`[[likely]]\` to hint the compiler:
+### std::array (Fixed-Size Array)
 
 \`\`\`cpp
-if (score >= 90) [[likely]] {
-    cout << "Excellent!\\n";
-}
-\`\`\``,
+#include <array>
 
-    starterCode: `#include <iostream>\nusing namespace std;\n\nauto main() -> int {\n    constexpr auto temperature = 30;\n\n    if (temperature > 25) {\n        cout << "It's hot outside!\\n";\n    } else if (temperature > 15) {\n        cout << "It's warm outside.\\n";\n    } else {\n        cout << "It's cold outside.\\n";\n    }\n}`
-  },
-  {
-    id: 5,
-    title: "Loops",
-    content: `## Repeating Code
-
-C++ has three loop types: \`for\`, \`while\`, and range-based \`for\`.
-
-<div class="instruction-box">
-<p><strong>Instructions:</strong> Use a loop to print numbers 1 through 5.</p>
-</div>
+auto nums = array{10, 20, 30};   // std::array<int, 3>
+cout << nums.size();             // 3 — never forgets its size
+\`\`\`
 
 ### Range-Based For (C++11)
 
 \`\`\`cpp
-#include <vector>
-using namespace std;
-
-auto nums = vector{10, 20, 30};
 for (const auto& n : nums) {
-    cout << n << " ";
+    cout << n << ' ';
 }
 \`\`\`
 
-### Traditional For
+> ✅ Use \`std::array\` for fixed-size, \`std::vector\` for dynamic. Prefer these over raw C-style arrays.`,
+
+    starterCode: `#include <iostream>\n#include <array>\nusing namespace std;\n\nauto main() -> int {\n    auto words = array{"C++", "Python", "Java"};\n\n    for (const auto& w : words) {\n        cout << w << "\\n";\n    }\n}`
+  },
+  {
+    id: 4,
+    title: "Expressions & Operators",
+    content: `## Chapter 4: Expressions & Operators
+
+*Inspired by C++ Primer (5th Ed.) Ch 4 | learncpp.com Ch 6*
+
+An **expression** yields a value. **Operators** combine expressions to produce new values.
+
+### Arithmetic Operators
+
+\`\`\`cpp
+auto sum = 10 + 3;        // 13  — addition
+auto diff = 10 - 3;       // 7   — subtraction
+auto prod = 10 * 3;       // 30  — multiplication
+auto quot = 10 / 3;       // 3   — integer division (truncates)
+auto rem  = 10 % 3;       // 1   — modulus (remainder)
+\`\`\`
+
+### Increment & Decrement
+
+\`\`\`cpp
+auto i = 0;
+++i;    // prefix:  increment then use (preferred)
+i++;    // postfix: use then increment
+\`\`\`
+
+### Relational & Logical Operators
+
+\`\`\`cpp
+==  !=  <  >  <=  >=    // relational — yield bool
+&&  ||  !                // logical — and, or, not
+\`\`\`
+
+### Operator Precedence
+
+| Precedence | Operator        | Associates |
+|------------|-----------------|------------|
+| Highest    | \`::\`            | Left       |
+|            | \`() [] . ->\`    | Left       |
+|            | \`++ -- (post)\`  | —          |
+|            | \`++ -- (pre)\`   | Right      |
+|            | \`* / %\`         | Left       |
+|            | \`+ -\`           | Left       |
+|            | \`<< >>\`         | Left       |
+|            | \`< <= > >=\`     | Left       |
+|            | \`== !=\`         | Left       |
+|            | \`&&\`            | Left       |
+|            | \`||\`            | Left       |
+| Lowest     | \`= += -= ...\`   | Right      |
+
+> 💡 When in doubt, use parentheses \`()\` to make precedence explicit.`,
+
+    starterCode: `#include <iostream>\nusing namespace std;\n\nauto main() -> int {\n    auto a = 15;\n    auto b = 4;\n\n    cout << "a + b = " << (a + b) << "\\n";\n    cout << "a - b = " << (a - b) << "\\n";\n    cout << "a * b = " << (a * b) << "\\n";\n    cout << "a / b = " << (a / b) << "\\n";\n    cout << "a % b = " << (a % b) << "\\n";\n}`
+  },
+  {
+    id: 5,
+    title: "Control Flow",
+    content: `## Chapter 5: Control Flow
+
+*Inspired by C++ Primer (5th Ed.) Ch 5 | learncpp.com Ch 8*
+
+Control flow statements determine the **order** in which your code executes.
+
+### Selection: \`if\` / \`else\`
+
+\`\`\`cpp
+if (condition) {
+    // runs when condition is true
+} else if (other) {
+    // runs when first is false and other is true
+} else {
+    // runs when all are false
+}
+\`\`\`
+
+### Selection: \`switch\`
+
+\`\`\`cpp
+switch (value) {
+    case 1: cout << "One";  break;
+    case 2: cout << "Two";  break;
+    default: cout << "Other";
+}
+\`\`\`
+
+### Iteration: \`for\`
 
 \`\`\`cpp
 for (auto i = 0; i < 5; ++i) {
-    cout << i << " ";
+    cout << i << ' ';   // 0 1 2 3 4
 }
 \`\`\`
 
-### While
+### Iteration: \`while\`
 
 \`\`\`cpp
-auto count = 0;
-while (count < 3) {
-    cout << count << " ";
-    ++count;
+auto count = 3;
+while (count > 0) {
+    cout << count << ' ';
+    --count;            // 3 2 1
 }
-\`\`\``,
+\`\`\`
+
+### Iteration: \`do-while\`
+
+Runs the body **at least once**:
+
+\`\`\`cpp
+auto x = 0;
+do {
+    cout << x;
+} while (x != 0);       // prints "0" once
+\`\`\`
+
+### Jump: \`break\` and \`continue\`
+
+- \`break\` — exits the loop immediately
+- \`continue\` — skips to the next iteration
+
+> 💡 Prefer range-based \`for\` over index-based when iterating containers.`,
 
     starterCode: `#include <iostream>\nusing namespace std;\n\nauto main() -> int {\n    for (auto i = 1; i <= 5; ++i) {\n        cout << "Count: " << i << "\\n";\n    }\n}`
   },
   {
     id: 6,
-    title: "Functions",
-    content: `## Writing Functions
+    title: "Functions & Overloading",
+    content: `## Chapter 6: Functions & Overloading
 
-Functions group reusable code. Modern C++ uses \`auto\` return types.
+*Inspired by C++ Primer (5th Ed.) Ch 6 | learncpp.com Ch 11*
 
-<div class="instruction-box">
-<p><strong>Instructions:</strong> Write a function <code>multiply</code> that returns the product of two numbers.</p>
-</div>
+A **function** is a reusable block of code. Functions give names to computations and help organize programs into manageable pieces.
 
-### Syntax
+### Function Basics
 
 \`\`\`cpp
-auto add(int a, int b) -> int {  // trailing return
+auto add(int a, int b) -> int {  // trailing return type (C++11)
     return a + b;
 }
 
-auto multiply(int a, int b) {     // deduced return (C++14)
+auto multiply(int a, int b) {     // deduced return type (C++14)
     return a * b;
 }
 \`\`\`
 
-### constexpr Functions
+### Parameters vs Arguments
+
+| Term        | Meaning                                  |
+|-------------|------------------------------------------|
+| Parameter   | The variable in the function definition   |
+| Argument    | The value passed when calling the function|
+
+### Function Overloading
+
+Multiple functions with the **same name** but different parameters:
 
 \`\`\`cpp
-constexpr auto square(int x) -> int {
-    return x * x;
-}
+auto print(int x)       -> void { cout << x; }
+auto print(double x)    -> void { cout << x; }
+auto print(string_view s) -> void { cout << s; }
 \`\`\`
 
 ### [[nodiscard]] (C++17)
 
-Warns if you ignore the return value:
+Warns if the return value is discarded:
 
 \`\`\`cpp
 [[nodiscard]] auto important() -> bool;
-\`\`\``,
+\`\`\`
+
+### constexpr Functions
+
+Evaluated at compile time when inputs are \`constexpr\`:
+
+\`\`\`cpp
+constexpr auto square(int x) -> int { return x * x; }
+\`\`\`
+
+> ✅ Use \`constexpr\` for pure computations. Use \`[[nodiscard]]\` for functions whose return values should never be ignored.`,
 
     starterCode: `#include <iostream>\nusing namespace std;\n\nauto multiply(int a, int b) -> int {\n    return a * b;\n}\n\nauto main() -> int {\n    constexpr auto a = 4, b = 7;\n    auto result = multiply(a, b);\n    cout << "4 * 7 = " << result << "\\n";\n}`
   },
   {
     id: 7,
-    title: "Arrays & Vectors",
-    content: `## Collections
+    title: "Classes & OOP",
+    content: `## Chapter 7: Classes & Object-Oriented Design
 
-Modern C++ uses \`array\` (fixed size) and \`vector\` (dynamic) instead of raw arrays.
+*Inspired by C++ Primer (5th Ed.) Ch 7 | learncpp.com Ch 14*
 
-<div class="instruction-box">
-<p><strong>Instructions:</strong> Create an array of strings and print each one.</p>
-</div>
+A **class** is a user-defined type that bundles **data** (member variables) and **behavior** (member functions). This is the heart of object-oriented programming.
 
-### array (C++11)
-
-\`\`\`cpp
-#include <array>
-using namespace std;
-
-auto nums = array{10, 20, 30, 40, 50};
-cout << nums.size();  // 5
-\`\`\`
-
-### vector
-
-\`\`\`cpp
-#include <vector>
-
-auto vec = vector{1, 2, 3};
-vec.push_back(4);
-\`\`\`
-
-### string_view (C++17)
-
-Non-owning string reference — great for function parameters:
-
-\`\`\`cpp
-auto greet(string_view name) -> void {
-    cout << "Hello " << name << "\\n";
-}
-\`\`\``,
-
-    starterCode: `#include <iostream>\n#include <array>\nusing namespace std;\n\nauto main() -> int {\n    auto words = array{"C++", "Java", "Python"};\n\n    for (const auto& w : words) {\n        cout << w << "\\n";\n    }\n}`
-  },
-  {
-    id: 8,
-    title: "Classes",
-    content: `## Object-Oriented Programming
-
-A **class** bundles data and behavior together.
-
-<div class="instruction-box">
-<p><strong>Instructions:</strong> Create a <code>Dog</code> class with a <code>bark()</code> method and call it.</p>
-</div>
-
-### Default Member Initializers (C++11)
+### Defining a Class
 
 \`\`\`cpp
 class Rectangle {
 public:
-    double width  = 1.0;
+    double width  = 1.0;    // default member initializer
     double height = 1.0;
 
     auto area() const -> double {
@@ -1487,6 +1544,14 @@ public:
     }
 };
 \`\`\`
+
+### Access Specifiers
+
+| Specifier    | Accessibility                                  |
+|-------------|------------------------------------------------|
+| \`public\`    | Accessible from anywhere                       |
+| \`private\`  | Accessible only within the class                |
+| \`protected\`| Accessible within the class and derived classes |
 
 ### Constructors
 
@@ -1496,102 +1561,190 @@ public:
     double w = 1.0;
     double h = 1.0;
 
-    Rectangle() = default;
-    Rectangle(double w, double h) : w{w}, h{h} {}
+    Rectangle() = default;                              // default constructor
+    Rectangle(double w, double h) : w{w}, h{h} {}       // parameterized constructor
     auto area() const -> double { return w * h; }
 };
 \`\`\`
 
-> 🧠 Use \`= default\` for trivial constructors. Mark methods \`const\` when they don't modify the object.`,
+### The \`this\` Pointer
+
+Every member function has an implicit \`this\` pointer to the object on which it was called:
+
+\`\`\`cpp
+auto setWidth(double w) -> void { this->width = w; }
+\`\`\`
+
+> ✅ Mark member functions \`const\` when they don't modify the object. Use \`= default\` for trivial constructors.`,
 
     starterCode: `#include <iostream>\n#include <string>\nusing namespace std;\n\nclass Dog {\npublic:\n    string name = "Buddy";\n    int age = 0;\n\n    auto bark() const -> void {\n        cout << name << " says Woof!\\n";\n    }\n};\n\nauto main() -> int {\n    auto myDog = Dog{};\n    myDog.bark();\n}`
   },
   {
-    id: 9,
-    title: "Inheritance",
-    content: `## Reusing Code
+    id: 8,
+    title: "IO & File Streams",
+    content: `## Chapter 8: The IO Library & File Streams
 
-Inheritance lets a derived class reuse members from a base class.
+*Inspired by C++ Primer (5th Ed.) Ch 8 | learncpp.com Ch 28*
 
-<div class="instruction-box">
-<p><strong>Instructions:</strong> Create a <code>Vehicle</code> base class and a <code>Car</code> that inherits from it.</p>
-</div>
+C++ provides the **iostream** library for input and output. Streams are a flexible way to handle data from the console, files, or strings.
 
-### override (C++11)
-
-Always mark overridden methods:
+### Console I/O
 
 \`\`\`cpp
-class Animal {
-public:
-    virtual auto speak() const -> void {
-        cout << "Animal sound\\n";
-    }
-    virtual ~Animal() = default;
-};
+#include <iostream>
+using namespace std;
 
-class Cat : public Animal {
-public:
-    auto speak() const -> void override {
-        cout << "Meow!\\n";
-    }
-};
-\`\`\`
-
-### final
-
-\`\`\`cpp
-class Persian final : public Cat { };
-\`\`\`
-
-> 🔑 Prefer **composition** over inheritance where possible.`,
-
-    starterCode: `#include <iostream>\nusing namespace std;\n\nclass Vehicle {\npublic:\n    auto start() const -> void {\n        cout << "Vehicle started.\\n";\n    }\n    virtual ~Vehicle() = default;\n};\n\nclass Car : public Vehicle {\npublic:\n    auto honk() const -> void {\n        cout << "Beep beep!\\n";\n    }\n};\n\nauto main() -> int {\n    auto myCar = Car{};\n    myCar.start();\n    myCar.honk();\n}`
-  },
-  {
-    id: 10,
-    title: "Polymorphism",
-    content: `## Many Forms, One Interface
-
-Polymorphism lets different classes respond to the same method call.
-
-<div class="instruction-box">
-<p><strong>Instructions:</strong> Use a <code>unique_ptr</code> to store a <code>Parrot</code> in a vector of <code>Bird</code> pointers and call <code>speak()</code>.</p>
-</div>
-
-### Pure Virtual + override
-
-\`\`\`cpp
-class Shape {
-public:
-    virtual auto area() const -> double = 0;
-    virtual ~Shape() = default;
-};
-
-class Circle : public Shape {
-    double r_;
-public:
-    explicit Circle(double r) : r_{r} {}
-    auto area() const -> double override {
-        return 3.14159 * r_ * r_;
-    }
-};
-\`\`\`
-
-### Smart Pointers
-
-\`\`\`cpp
-auto shapes = vector<unique_ptr<Shape>>{};
-shapes.push_back(make_unique<Circle>(5.0));
-
-for (const auto& s : shapes) {
-    cout << s->area() << "\\n";
+auto main() -> int {
+    auto name = string{};
+    cout << "Enter your name: ";       // output
+    getline(cin, name);                 // input (whole line)
+    cerr << "Error log message\\n";     // unbuffered error output
 }
 \`\`\`
 
-> 💡 Use \`make_unique\` (C++14) — no \`new\` or \`delete\` needed.`,
+### Why \`getline\` over \`>>\`?
 
-    starterCode: `#include <iostream>\n#include <memory>\n#include <vector>\nusing namespace std;\n\nclass Bird {\npublic:\n    virtual auto speak() const -> void {\n        cout << "Bird sound\\n";\n    }\n    virtual ~Bird() = default;\n};\n\nclass Parrot : public Bird {\npublic:\n    auto speak() const -> void override {\n        cout << "Squawk!\\n";\n    }\n};\n\nauto main() -> int {\n    auto birds = vector<unique_ptr<Bird>>{};\n    birds.push_back(make_unique<Parrot>());\n\n    for (const auto& b : birds) {\n        b->speak();\n    }\n}`
+\`cin >> name\` stops at the **first whitespace**. \`getline(cin, name)\` reads the **entire line** including spaces.
+
+### File I/O
+
+\`\`\`cpp
+#include <fstream>
+
+auto main() -> int {
+    auto fin  = ifstream{"input.txt"};   // read from file
+    auto fout = ofstream{"output.txt"};  // write to file
+
+    auto line = string{};
+    while (getline(fin, line)) {
+        fout << line << "\\n";
+    }
+}   // files are automatically closed when fout goes out of scope
+\`\`\`
+
+### String Streams
+
+\`\`\`cpp
+#include <sstream>
+
+auto ss = istringstream{"42 3.14"};
+auto x = 0; auto y = 0.0;
+ss >> x >> y;   // parses "42" and "3.14"
+\`\`\`
+
+> ✅ Use \`getline\` for user names. Use RAII — files close automatically when the stream object is destroyed.`,
+
+    starterCode: `#include <iostream>\n#include <string>\nusing namespace std;\n\nauto main() -> int {\n    auto name = string{};\n    auto age = 0;\n\n    cout << "Enter your name: ";\n    getline(cin, name);\n\n    cout << "Enter your age: ";\n    cin >> age;\n\n    cout << "Hello, " << name << " (age " << age << ")\\n";\n}`
+  },
+  {
+    id: 9,
+    title: "Dynamic Memory & Smart Pointers",
+    content: `## Chapter 9: Dynamic Memory & Smart Pointers
+
+*Inspired by C++ Primer (5th Ed.) Ch 12 | learncpp.com Ch 22*
+
+Modern C++ avoids raw \`new\` and \`delete\`. Instead, use **smart pointers** — they automatically free memory when no longer needed.
+
+### The Problem with Raw Pointers
+
+\`\`\`cpp
+auto* ptr = new int{42};   // allocate
+delete ptr;                 // must remember to free — easy to forget!
+\`\`\`
+
+### std::unique_ptr (C++11)
+
+Exclusive ownership — cannot be copied, only moved:
+
+\`\`\`cpp
+#include <memory>
+using namespace std;
+
+auto ptr = make_unique<int>(42);      // preferred (C++14)
+auto ptr2 = unique_ptr<int>{new int(42)};  // also valid
+// no delete needed — automatic when ptr goes out of scope
+\`\`\`
+
+### std::shared_ptr
+
+Shared ownership via reference counting:
+
+\`\`\`cpp
+auto sptr = make_shared<Rectangle>(3.0, 4.0);
+auto sptr2 = sptr;   // reference count = 2
+// memory freed when all shared_ptrs are destroyed
+\`\`\`
+
+### Rule of Thumb
+
+| Need                      | Use                  |
+|---------------------------|----------------------|
+| Single owner              | \`unique_ptr\`          |
+| Shared ownership          | \`shared_ptr\`         |
+| Observing (non-owning)    | Raw pointer or reference |
+| Dynamic array             | \`vector\`              |
+
+> ✅ Always prefer \`make_unique\` and \`make_shared\`. Never call \`delete\` explicitly in modern C++.`,
+
+    starterCode: `#include <iostream>\n#include <memory>\n#include <string_view>\nusing namespace std;\n\nclass Greeter {\npublic:\n    auto greet(string_view name) const -> void {\n        cout << "Hello, " << name << "!\\n";\n    }\n};\n\nauto main() -> int {\n    auto g = make_unique<Greeter>();\n    g->greet("Modern C++");\n}`
+  },
+  {
+    id: 10,
+    title: "Templates & The Standard Library",
+    content: `## Chapter 10: Templates & The Standard Library
+
+*Inspired by C++ Primer (5th Ed.) Ch 16 | learncpp.com Ch 11, 26*
+
+**Templates** let you write code that works with any type. The **Standard Library** builds on templates to provide generic containers, iterators, and algorithms.
+
+### Function Templates
+
+\`\`\`cpp
+template <typename T>
+auto maxOf(T a, T b) -> T {
+    return (a > b) ? a : b;
+}
+
+// Usage:
+auto m1 = maxOf(3, 7);          // T = int
+auto m2 = maxOf(3.14, 2.72);    // T = double
+\`\`\`
+
+### Class Templates
+
+\`\`\`cpp
+template <typename T>
+class Box {
+    T value_;
+public:
+    explicit Box(T v) : value_{v} {}
+    auto get() const -> T { return value_; }
+};
+
+auto box = Box{42};    // CTAD deduces Box<int>
+\`\`\`
+
+### STL Algorithms (C++17)
+
+\`\`\`cpp
+#include <algorithm>
+#include <vector>
+
+auto nums = vector{4, 2, 5, 1, 3};
+sort(nums.begin(), nums.end());             // 1 2 3 4 5
+auto it = find(nums.begin(), nums.end(), 3); // iterator to 3
+\`\`\`
+
+### Lambda Expressions (C++11)
+
+\`\`\`cpp
+sort(nums.begin(), nums.end(),
+    [](int a, int b) { return a > b; });     // descending sort
+\`\`\`
+
+> 💡 Templates are the foundation of modern C++ — the entire STL (containers, algorithms, smart pointers) is built on them. Learn templates well and the whole library opens up.`,
+
+    starterCode: `#include <iostream>\n#include <vector>\n#include <algorithm>\nusing namespace std;\n\ntemplate <typename T>\nauto printAll(const vector<T>& v) -> void {\n    for (const auto& item : v) {\n        cout << item << " "; \n    }\n    cout << "\\n";\n}\n\nauto main() -> int {\n    auto nums = vector{42, 17, 8, 99, 33};\n    sort(nums.begin(), nums.end());\n    printAll(nums);\n}`
   }
 ];
 
@@ -1857,14 +2010,21 @@ function checkAnswer() {
 
   const checks = [hasMain, hasNS];
 
-  if (lesson.id === 1) checks.push(hasIO);
-  else if (lesson.id === 2) checks.push(hasIO);
-  else if (lesson.id === 3) checks.push(hasIO && (/\bcin\b/.test(code) || /\bgetline\b/.test(code)));
-  else if (lesson.id === 4) checks.push(/\bif\b/.test(code));
-  else if (lesson.id === 5) checks.push(/\b(for|while)\b/.test(code));
-  else if (lesson.id === 6) checks.push(/\bauto\b.*\(/.test(code));
-  else if (lesson.id === 7) checks.push(/\b(array|vector)\b/.test(code));
-  else if (lesson.id >= 8) checks.push(/\bclass\b/.test(code));
+  const checkMap = {
+    1: () => hasIO,
+    2: () => hasIO,
+    3: () => hasIO && (/\bcin\b/.test(code) || /\bgetline\b/.test(code)),
+    4: () => /\b[+\-*/%]\b/.test(code),
+    5: () => /\b(for|while)\b/.test(code),
+    6: () => /\bauto\b.*\(/.test(code),
+    7: () => /\bclass\b/.test(code),
+    8: () => (/\bcin\b/.test(code) || /\bgetline\b/.test(code) || /\bifstream|ofstream\b/.test(code)),
+    9: () => /\b(make_unique|unique_ptr|make_shared|shared_ptr)\b/.test(code),
+    10: () => /\btemplate\b/.test(code)
+  };
+
+  const checkFn = checkMap[lesson.id];
+  if (checkFn) checks.push(checkFn());
 
   const passed = checks.every(Boolean);
   const total = checks.length;
