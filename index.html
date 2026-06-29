@@ -535,7 +535,7 @@ pre:hover .copy-btn{opacity:1}.copy-btn:hover{background:var(--bg-hover);color:v
     <main class="main-content" id="mainContent">
       <section class="reader-panel" id="readerPanel" aria-label="Lesson content">
         <h2 id="readerTitle">Hello, World!</h2>
-        <div class="reader-meta"><span id="readerMeta">Chapter 1 of 10</span><span class="reader-ref" id="readerRef">Primer Ch 1  ·  LCPP Ch 0-1</span></div>
+        <div class="reader-meta"><span id="readerMeta">Chapter 1 of 11</span><span class="reader-ref" id="readerRef">Primer Ch 1  ·  LCPP Ch 0-1</span></div>
         <div id="readerBody"></div>
         <div class="reader-nav">
           <button class="btn btn-secondary" id="prevBtn" type="button">← Back</button>
@@ -1129,15 +1129,21 @@ function runCode() {
     writeTerminal(['<span class="prompt">$</span> g++ main.cpp -o main','<span class="error-text">error: no main() function found</span>']);
     return;
   }
-  writeTerminal(['<span class="prompt">$</span> g++ main.cpp -o main','<span class="success-text">Compilation successful.</span>','<span class="prompt">$</span> ./main']);
-  const lessonId = lessons[currentLesson].id;
-  if (lessonId === 11) {
-    writeTerminal(['<span class="prompt">$</span> g++ main.cpp -o main','<span class="success-text">Compilation successful.</span>','<span class="prompt">$</span> ./main','Balance: $1200','Balance: $448.5','']);
-  } else if (lessonId === 10) {
-    writeTerminal(['<span class="prompt">$</span> g++ main.cpp -o main','<span class="success-text">Compilation successful.</span>','<span class="prompt">$</span> ./main','8 17 33 42 99','']);
-  } else {
-    writeTerminal(['<span class="prompt">$</span> g++ main.cpp -o main','<span class="success-text">Compilation successful.</span>','<span class="prompt">$</span> ./main','Hello, World!','']);
-  }
+  const output = {
+    1: ['Hello, World!'],
+    2: ['My name is Learner and I am 20 years old.'],
+    3: ['C++','Python','Java'],
+    4: ['a + b = 19','a - b = 11','a * b = 60','a / b = 3','a % b = 3'],
+    5: ['Count: 1','Count: 2','Count: 3','Count: 4','Count: 5'],
+    6: ['4 * 7 = 28'],
+    7: ['Buddy says Woof!'],
+    8: ['Enter your name: Learner','Enter your age: 20','Hello, Learner (age 20)'],
+    9: ['Hello, Modern C++!'],
+    10: ['8 17 33 42 99'],
+    11: ['Balance: $1200','Balance: $448.5']
+  };
+  const lines = output[lessons[currentLesson].id] || ['Hello, World!'];
+  writeTerminal(['<span class="prompt">$</span> g++ main.cpp -o main','<span class="success-text">Compilation successful.</span>','<span class="prompt">$</span> ./main',...lines,'']);
 }
 
 // Check answer
