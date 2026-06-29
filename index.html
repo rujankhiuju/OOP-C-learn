@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'unsafe-inline' 'self'; script-src 'self' 'unsafe-inline';">
 <title>CPP Learn — Interactive C++ Course</title>
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -32,6 +33,7 @@ html { font-size: 16px; }
   --radius-sm: 4px;
   --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   --font-mono: "Cascadia Code", "Fira Code", "JetBrains Mono", "Consolas", monospace;
+  --transition: 0.2s ease;
 }
 
 body {
@@ -42,25 +44,228 @@ body {
   display: flex;
   flex-direction: column;
 }
-
 a { color: var(--accent); text-decoration: none; }
 a:hover { text-decoration: underline; }
-
-:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
-  border-radius: var(--radius-sm);
-}
-
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: var(--radius-sm); }
 ::selection { background: var(--accent-dim); color: #fff; }
-
-/* ─── Scrollbar ─── */
 ::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: var(--border-light); border-radius: 3px; }
 ::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
 
+/* ─── Spinner ─── */
+.spinner {
+  display: inline-block;
+  width: 20px; height: 20px;
+  border: 2px solid var(--border);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ─── Toast ─── */
+.toast-container {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  z-index: 10000;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-width: 360px;
+}
+.toast {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+  border-radius: var(--radius);
+  font-size: 0.82rem;
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+  animation: toastIn 0.25s ease;
+  cursor: default;
+}
+.toast.removing { animation: toastOut 0.2s ease forwards; }
+@keyframes toastIn { from { opacity: 0; transform: translateX(40px); } to { opacity: 1; transform: translateX(0); } }
+@keyframes toastOut { from { opacity: 1; transform: translateX(0); } to { opacity: 0; transform: translateX(40px); } }
+.toast-success { border-left: 3px solid var(--success); }
+.toast-error { border-left: 3px solid var(--error); }
+.toast-info { border-left: 3px solid var(--accent); }
+.toast-icon { font-size: 1rem; flex-shrink: 0; }
+.toast-msg { flex: 1; color: var(--text-secondary); }
+.toast-close {
+  background: none; border: none; color: var(--text-muted); cursor: pointer;
+  font-size: 1rem; padding: 0 2px; line-height: 1;
+}
+
+/* ─── Auth Screen ─── */
+#authScreen {
+  position: fixed;
+  inset: 0;
+  z-index: 9000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-primary);
+  transition: opacity 0.3s ease;
+}
+#authScreen.hidden { opacity: 0; pointer-events: none; }
+.auth-card {
+  width: 100%;
+  max-width: 400px;
+  padding: 40px 36px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  box-shadow: 0 16px 48px rgba(0,0,0,0.5);
+}
+.auth-logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--accent);
+  margin-bottom: 6px;
+}
+.auth-logo svg { display: block; }
+.auth-subtitle {
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 0.82rem;
+  margin-bottom: 28px;
+}
+.auth-tabs {
+  display: flex;
+  gap: 0;
+  margin-bottom: 24px;
+  background: var(--bg-surface);
+  border-radius: var(--radius);
+  padding: 3px;
+}
+.auth-tab {
+  flex: 1;
+  padding: 8px 0;
+  text-align: center;
+  font-size: 0.82rem;
+  font-weight: 600;
+  font-family: var(--font-sans);
+  border: none;
+  background: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  border-radius: var(--radius-sm);
+  transition: background var(--transition), color var(--transition);
+}
+.auth-tab.active {
+  background: var(--accent);
+  color: #0a0d14;
+}
+.auth-tab:focus-visible { outline-offset: -2px; }
+.auth-form { display: flex; flex-direction: column; gap: 16px; }
+.auth-form.hidden { display: none; }
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.form-group label {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+.form-input {
+  padding: 10px 14px;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text-primary);
+  font-size: 0.88rem;
+  font-family: var(--font-sans);
+  transition: border-color var(--transition);
+}
+.form-input:focus { border-color: var(--accent); outline: none; }
+.form-input::placeholder { color: var(--text-muted); }
+.form-input.error { border-color: var(--error); }
+.form-error {
+  font-size: 0.72rem;
+  color: var(--error);
+  min-height: 1em;
+}
+.password-strength {
+  display: flex;
+  gap: 4px;
+  margin-top: 2px;
+}
+.pw-bar {
+  flex: 1;
+  height: 3px;
+  background: var(--border);
+  border-radius: 2px;
+  transition: background var(--transition);
+}
+.pw-bar.active.weak { background: var(--error); }
+.pw-bar.active.medium { background: var(--warning); }
+.pw-bar.active.strong { background: var(--success); }
+.pw-label {
+  font-size: 0.65rem;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+.auth-btn {
+  padding: 11px 0;
+  background: var(--accent);
+  color: #0a0d14;
+  font-weight: 700;
+  font-size: 0.88rem;
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-family: var(--font-sans);
+  transition: background var(--transition), transform 0.1s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+.auth-btn:hover { background: #6fd0fa; }
+.auth-btn:active { transform: scale(0.98); }
+.auth-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.auth-divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--text-muted);
+  font-size: 0.75rem;
+}
+.auth-divider::before, .auth-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+.demo-btn {
+  padding: 10px 0;
+  background: var(--bg-surface);
+  color: var(--text-secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-size: 0.82rem;
+  font-family: var(--font-sans);
+  transition: background var(--transition);
+}
+.demo-btn:hover { background: var(--bg-hover); color: var(--text-primary); }
+
 /* ─── Top Bar ─── */
+#mainApp { display: flex; flex-direction: column; min-height: 100vh; }
+#mainApp.hidden { display: none; }
 .topbar {
   height: var(--topbar-height);
   background: #0f1115;
@@ -81,58 +286,68 @@ a:hover { text-decoration: underline; }
   letter-spacing: -0.02em;
 }
 .topbar-logo svg { display: block; }
-.topbar-divider {
-  width: 1px;
-  height: 24px;
-  background: var(--border);
-}
-.topbar-course-name {
-  font-size: 0.82rem;
-  color: var(--text-secondary);
-  font-weight: 500;
-}
+.topbar-divider { width: 1px; height: 24px; background: var(--border); }
+.topbar-course-name { font-size: 0.82rem; color: var(--text-secondary); font-weight: 500; }
 .topbar-spacer { flex: 1; }
+.topbar-progress { display: flex; align-items: center; gap: 10px; }
+.progress-track { width: 120px; height: 4px; background: var(--bg-surface); border-radius: 2px; overflow: hidden; }
+.progress-fill { height: 100%; background: var(--success); border-radius: 2px; transition: width 0.4s ease; }
+.progress-label { font-size: 0.72rem; color: var(--text-muted); white-space: nowrap; }
 
-/* Progress */
-.topbar-progress {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-.progress-track {
-  width: 120px;
-  height: 4px;
-  background: var(--bg-surface);
-  border-radius: 2px;
-  overflow: hidden;
-}
-.progress-fill {
-  height: 100%;
-  background: var(--success);
-  border-radius: 2px;
-  transition: width 0.4s ease;
-}
-.progress-label {
-  font-size: 0.72rem;
-  color: var(--text-muted);
-  white-space: nowrap;
-}
-
-.topbar-profile {
+/* ─── User Menu ─── */
+.user-menu-wrap { position: relative; }
+.user-avatar {
   width: 30px; height: 30px;
   border-radius: 50%;
   background: linear-gradient(135deg, var(--accent-dim), #7c4dff);
   display: flex; align-items: center; justify-content: center;
   font-size: 0.7rem; font-weight: 700; color: #fff;
-  cursor: default;
+  cursor: pointer;
+  border: none;
+  font-family: var(--font-sans);
+  transition: filter var(--transition);
 }
+.user-avatar:hover { filter: brightness(1.2); }
+.user-dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: 0 12px 32px rgba(0,0,0,0.5);
+  min-width: 200px;
+  padding: 6px 0;
+  display: none;
+  z-index: 100;
+}
+.user-dropdown.open { display: block; }
+.dropdown-header {
+  padding: 10px 14px 8px;
+  border-bottom: 1px solid var(--border);
+}
+.dropdown-name { font-size: 0.85rem; font-weight: 600; color: var(--text-primary); }
+.dropdown-email { font-size: 0.72rem; color: var(--text-muted); }
+.dropdown-item {
+  display: block;
+  width: 100%;
+  padding: 8px 14px;
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  font-size: 0.82rem;
+  font-family: var(--font-sans);
+  text-align: left;
+  cursor: pointer;
+  transition: background var(--transition);
+}
+.dropdown-item:hover { background: var(--bg-hover); color: var(--text-primary); }
+.dropdown-item.danger { color: var(--error); }
+.dropdown-item.danger:hover { background: rgba(239,83,80,0.1); }
+.dropdown-divider { height: 1px; background: var(--border); margin: 4px 0; }
 
 /* ─── Layout ─── */
-.app-layout {
-  display: flex;
-  flex: 1;
-  overflow: hidden;
-}
+.app-layout { display: flex; flex: 1; overflow: hidden; }
 
 /* ─── Sidebar ─── */
 .sidebar {
@@ -144,27 +359,10 @@ a:hover { text-decoration: underline; }
   display: flex;
   flex-direction: column;
 }
-.sidebar-header {
-  padding: 14px 16px 10px;
-  border-bottom: 1px solid var(--border);
-  flex-shrink: 0;
-}
-.sidebar-header h3 {
-  font-size: 0.75rem;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: var(--text-muted);
-  font-weight: 600;
-}
-.sidebar-header .sidebar-sub {
-  font-size: 0.7rem;
-  color: var(--text-muted);
-  margin-top: 2px;
-}
-.lesson-nav {
-  list-style: none;
-  padding: 8px 0;
-}
+.sidebar-header { padding: 14px 16px 10px; border-bottom: 1px solid var(--border); flex-shrink: 0; }
+.sidebar-header h3 { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-muted); font-weight: 600; }
+.sidebar-header .sidebar-sub { font-size: 0.7rem; color: var(--text-muted); margin-top: 2px; }
+.lesson-nav { list-style: none; padding: 8px 0; }
 .lesson-nav li { margin: 0; }
 .lesson-nav button {
   display: flex;
@@ -184,19 +382,9 @@ a:hover { text-decoration: underline; }
 }
 .lesson-nav button:hover { background: var(--bg-hover); color: var(--text-primary); }
 .lesson-nav button:focus-visible { outline-offset: -2px; }
-.lesson-nav button[aria-current="page"] {
-  background: var(--bg-active);
-  border-left-color: var(--accent);
-  color: var(--text-primary);
-  font-weight: 600;
-}
-.lesson-nav button.completed .lesson-num {
-  background: var(--success);
-  color: #fff;
-}
-.lesson-nav button.completed .lesson-check {
-  opacity: 1;
-}
+.lesson-nav button[aria-current="page"] { background: var(--bg-active); border-left-color: var(--accent); color: var(--text-primary); font-weight: 600; }
+.lesson-nav button.completed .lesson-num { background: var(--success); color: #fff; }
+.lesson-nav button.completed .lesson-check { opacity: 1; }
 .lesson-num {
   flex-shrink: 0;
   width: 22px; height: 22px;
@@ -207,27 +395,12 @@ a:hover { text-decoration: underline; }
   color: var(--text-muted);
   transition: background 0.15s, color 0.15s;
 }
-.lesson-nav button[aria-current="page"] .lesson-num {
-  background: var(--accent-dim);
-  color: #fff;
-}
+.lesson-nav button[aria-current="page"] .lesson-num { background: var(--accent-dim); color: #fff; }
 .lesson-nav button:hover .lesson-num { background: var(--bg-hover); color: var(--text-secondary); }
-.lesson-check {
-  margin-left: auto;
-  font-size: 0.7rem;
-  opacity: 0;
-  transition: opacity 0.2s;
-  color: var(--success);
-}
+.lesson-check { margin-left: auto; font-size: 0.7rem; opacity: 0; transition: opacity 0.2s; color: var(--success); }
 
 /* ─── Main Content ─── */
-.main-content {
-  flex: 1;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  overflow: hidden;
-  min-width: 0;
-}
+.main-content { flex: 1; display: grid; grid-template-columns: 1fr 1fr; overflow: hidden; min-width: 0; }
 
 /* ─── Lesson Reader ─── */
 .reader-panel {
@@ -236,70 +409,23 @@ a:hover { text-decoration: underline; }
   border-right: 1px solid var(--border);
   background: var(--bg-tertiary);
 }
-.reader-panel h2 {
-  font-size: 1.35rem;
-  font-weight: 700;
-  margin-bottom: 2px;
-  color: var(--text-primary);
-  letter-spacing: -0.01em;
-}
-.reader-panel .lesson-meta {
-  font-size: 0.75rem;
-  color: var(--text-muted);
-  margin-bottom: 20px;
-}
+.reader-panel h2 { font-size: 1.35rem; font-weight: 700; margin-bottom: 2px; color: var(--text-primary); letter-spacing: -0.01em; }
+.reader-panel .lesson-meta { font-size: 0.75rem; color: var(--text-muted); margin-bottom: 20px; }
 .reader-panel .instruction-box {
-  background: var(--bg-surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 16px 18px;
-  margin: 16px 0;
-  border-left: 3px solid var(--accent);
+  background: var(--bg-surface); border: 1px solid var(--border); border-radius: var(--radius);
+  padding: 16px 18px; margin: 16px 0; border-left: 3px solid var(--accent);
 }
-.reader-panel .instruction-box p {
-  margin-bottom: 0;
-}
-.reader-panel h3 {
-  font-size: 1rem;
-  font-weight: 600;
-  margin: 20px 0 8px;
-  color: var(--text-primary);
-}
-.reader-panel p {
-  line-height: 1.65;
-  margin-bottom: 12px;
-  color: var(--text-secondary);
-  font-size: 0.9rem;
-}
+.reader-panel .instruction-box p { margin-bottom: 0; }
+.reader-panel h3 { font-size: 1rem; font-weight: 600; margin: 20px 0 8px; color: var(--text-primary); }
+.reader-panel p { line-height: 1.65; margin-bottom: 12px; color: var(--text-secondary); font-size: 0.9rem; }
 .reader-panel pre {
-  background: var(--code-bg);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 14px 16px;
-  overflow-x: auto;
-  margin: 12px 0;
-  font-family: var(--font-mono);
-  font-size: 0.8rem;
-  line-height: 1.5;
-  color: #d4d4d4;
+  background: var(--code-bg); border: 1px solid var(--border); border-radius: var(--radius);
+  padding: 14px 16px; overflow-x: auto; margin: 12px 0;
+  font-family: var(--font-mono); font-size: 0.8rem; line-height: 1.5; color: #d4d4d4;
 }
-.reader-panel code {
-  font-family: var(--font-mono);
-  font-size: 0.8rem;
-}
-.reader-panel p code {
-  background: var(--bg-surface);
-  padding: 2px 6px;
-  border-radius: var(--radius-sm);
-  color: #ce91d8;
-  font-size: 0.78rem;
-}
-.reader-panel ul, .reader-panel ol {
-  margin: 8px 0 12px 20px;
-  color: var(--text-secondary);
-  line-height: 1.6;
-  font-size: 0.9rem;
-}
+.reader-panel code { font-family: var(--font-mono); font-size: 0.8rem; }
+.reader-panel p code { background: var(--bg-surface); padding: 2px 6px; border-radius: var(--radius-sm); color: #ce91d8; font-size: 0.78rem; }
+.reader-panel ul, .reader-panel ol { margin: 8px 0 12px 20px; color: var(--text-secondary); line-height: 1.6; font-size: 0.9rem; }
 .reader-panel li { margin-bottom: 3px; }
 .reader-panel .keyword  { color: #569cd6; }
 .reader-panel .type     { color: #4ec9b0; }
@@ -308,278 +434,136 @@ a:hover { text-decoration: underline; }
 .reader-panel .number   { color: #b5cea8; }
 .reader-panel .function { color: #dcdcaa; }
 .reader-panel .preproc  { color: #c586c0; }
-
-.reader-panel blockquote {
-  border-left: 3px solid var(--accent-dim);
-  padding: 8px 14px;
-  margin: 12px 0;
-  background: var(--bg-surface);
-  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
-}
-.reader-panel blockquote p {
-  margin-bottom: 0;
-  font-size: 0.88rem;
-}
-.reader-panel table {
-  width: 100%;
-  border-collapse: collapse;
-  margin: 12px 0;
-  font-size: 0.82rem;
-}
-.reader-panel th, .reader-panel td {
-  border: 1px solid var(--border);
-  padding: 8px 12px;
-  text-align: left;
-}
-.reader-panel th {
-  background: var(--bg-surface);
-  color: var(--text-primary);
-  font-weight: 600;
-}
-.reader-panel td {
-  color: var(--text-secondary);
-}
-
-.reader-nav {
-  display: flex;
-  gap: 8px;
-  margin-top: 28px;
-  padding-top: 16px;
-  border-top: 1px solid var(--border);
-}
+.reader-panel blockquote { border-left: 3px solid var(--accent-dim); padding: 8px 14px; margin: 12px 0; background: var(--bg-surface); border-radius: 0 var(--radius-sm) var(--radius-sm) 0; }
+.reader-panel blockquote p { margin-bottom: 0; font-size: 0.88rem; }
+.reader-panel table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 0.82rem; }
+.reader-panel th, .reader-panel td { border: 1px solid var(--border); padding: 8px 12px; text-align: left; }
+.reader-panel th { background: var(--bg-surface); color: var(--text-primary); font-weight: 600; }
+.reader-panel td { color: var(--text-secondary); }
+.reader-nav { display: flex; gap: 8px; margin-top: 28px; padding-top: 16px; border-top: 1px solid var(--border); }
 
 /* ─── Editor Panel ─── */
-.editor-panel {
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-  background: var(--bg-primary);
-}
+.editor-panel { display: flex; flex-direction: column; overflow: hidden; background: var(--bg-primary); }
 .editor-toolbar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 8px 16px;
-  background: var(--bg-secondary);
-  border-bottom: 1px solid var(--border);
-  flex-shrink: 0;
-  gap: 8px;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 8px 16px; background: var(--bg-secondary); border-bottom: 1px solid var(--border);
+  flex-shrink: 0; gap: 8px;
 }
-.editor-toolbar-left {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-.editor-toolbar label {
-  font-size: 0.78rem;
-  font-weight: 600;
-  color: var(--text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-}
+.editor-toolbar-left { display: flex; align-items: center; gap: 10px; }
+.editor-toolbar label { font-size: 0.78rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.04em; }
 .editor-toolbar .file-tab {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  background: var(--bg-surface);
-  padding: 3px 10px;
-  border-radius: var(--radius-sm);
-  font-size: 0.75rem;
-  color: var(--text-secondary);
-  border: 1px solid var(--border);
+  display: inline-flex; align-items: center; gap: 6px;
+  background: var(--bg-surface); padding: 3px 10px; border-radius: var(--radius-sm);
+  font-size: 0.75rem; color: var(--text-secondary); border: 1px solid var(--border);
 }
-.editor-toolbar .file-tab .dot {
-  width: 6px; height: 6px;
-  border-radius: 50%;
-  background: var(--accent);
-}
+.editor-toolbar .file-tab .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); }
 .editor-toolbar-actions { display: flex; gap: 6px; }
 .btn {
-  font-family: var(--font-sans);
-  font-size: 0.78rem;
-  font-weight: 600;
-  padding: 6px 14px;
-  border-radius: var(--radius-sm);
-  border: none;
-  cursor: pointer;
-  transition: background 0.12s, transform 0.08s;
-  white-space: nowrap;
+  font-family: var(--font-sans); font-size: 0.78rem; font-weight: 600;
+  padding: 6px 14px; border-radius: var(--radius-sm); border: none;
+  cursor: pointer; transition: background 0.12s, transform 0.08s; white-space: nowrap;
 }
 .btn:active { transform: scale(0.97); }
-.btn-primary {
-  background: var(--accent);
-  color: #0a0d14;
-}
+.btn-primary { background: var(--accent); color: #0a0d14; }
 .btn-primary:hover { background: #6fd0fa; }
 .btn-primary:focus-visible { outline-color: var(--accent); }
-.btn-success {
-  background: var(--success);
-  color: #0a0d14;
-}
+.btn-success { background: var(--success); color: #0a0d14; }
 .btn-success:hover { filter: brightness(1.15); }
-.btn-secondary {
-  background: var(--bg-surface);
-  color: var(--text-secondary);
-  border: 1px solid var(--border-light);
-}
+.btn-secondary { background: var(--bg-surface); color: var(--text-secondary); border: 1px solid var(--border-light); }
 .btn-secondary:hover { background: var(--bg-hover); color: var(--text-primary); }
+.btn:disabled { opacity: 0.4; cursor: not-allowed; }
 
-.editor-wrapper {
-  flex: 1;
-  position: relative;
-  overflow: hidden;
-}
+.editor-wrapper { flex: 1; position: relative; overflow: hidden; }
 .editor-wrapper textarea {
-  width: 100%;
-  height: 100%;
-  padding: 16px 18px;
-  padding-left: 56px;
-  background: var(--code-bg);
-  color: #d4d4d4;
-  font-family: var(--font-mono);
-  font-size: 0.82rem;
-  line-height: 1.55;
-  border: none;
-  resize: none;
-  outline: none;
-  tab-size: 2;
-  white-space: pre;
-  overflow-wrap: normal;
-  overflow-x: auto;
+  width: 100%; height: 100%; padding: 16px 18px; padding-left: 56px;
+  background: var(--code-bg); color: #d4d4d4;
+  font-family: var(--font-mono); font-size: 0.82rem; line-height: 1.55;
+  border: none; resize: none; outline: none; tab-size: 2;
+  white-space: pre; overflow-wrap: normal; overflow-x: auto;
 }
 .editor-wrapper textarea::placeholder { color: var(--text-muted); }
-
-/* Line numbers */
 .line-numbers {
-  position: absolute;
-  top: 0;
-  left: 0;
-  padding: 16px 10px 16px 12px;
-  background: var(--code-bg);
-  border-right: 1px solid var(--border);
-  color: var(--text-muted);
-  font-family: var(--font-mono);
-  font-size: 0.82rem;
-  line-height: 1.55;
-  text-align: right;
-  user-select: none;
-  pointer-events: none;
-  overflow: hidden;
-  min-width: 44px;
+  position: absolute; top: 0; left: 0; padding: 16px 10px 16px 12px;
+  background: var(--code-bg); border-right: 1px solid var(--border);
+  color: var(--text-muted); font-family: var(--font-mono); font-size: 0.82rem;
+  line-height: 1.55; text-align: right; user-select: none; pointer-events: none;
+  overflow: hidden; min-width: 44px;
 }
 
-/* ─── Terminal/Output ─── */
-.terminal-panel {
-  flex-shrink: 0;
-  border-top: 1px solid var(--border);
-  background: #0c0e12;
-  transition: height 0.2s ease;
-  display: flex;
-  flex-direction: column;
-}
+/* ─── Terminal ─── */
+.terminal-panel { flex-shrink: 0; border-top: 1px solid var(--border); background: #0c0e12; display: flex; flex-direction: column; }
 .terminal-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 6px 16px;
-  background: var(--bg-secondary);
-  border-bottom: 1px solid var(--border);
-  flex-shrink: 0;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 6px 16px; background: var(--bg-secondary); border-bottom: 1px solid var(--border); flex-shrink: 0;
 }
-.terminal-header label {
-  font-size: 0.7rem;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: var(--text-muted);
-  font-weight: 600;
-}
+.terminal-header label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-muted); font-weight: 600; }
 .terminal-header-actions { display: flex; gap: 6px; }
 .terminal-btn {
-  background: none;
-  border: 1px solid var(--border);
-  color: var(--text-muted);
-  font-size: 0.65rem;
-  padding: 2px 8px;
-  border-radius: var(--radius-sm);
-  cursor: pointer;
-  font-family: var(--font-sans);
+  background: none; border: 1px solid var(--border); color: var(--text-muted);
+  font-size: 0.65rem; padding: 2px 8px; border-radius: var(--radius-sm);
+  cursor: pointer; font-family: var(--font-sans);
 }
 .terminal-btn:hover { color: var(--text-secondary); border-color: var(--border-light); }
-
 .terminal-output {
-  padding: 10px 16px;
-  font-family: var(--font-mono);
-  font-size: 0.78rem;
-  line-height: 1.5;
-  overflow-y: auto;
-  min-height: 72px;
-  max-height: 140px;
-  color: var(--text-secondary);
-  white-space: pre-wrap;
+  padding: 10px 16px; font-family: var(--font-mono); font-size: 0.78rem;
+  line-height: 1.5; overflow-y: auto; min-height: 72px; max-height: 140px;
+  color: var(--text-secondary); white-space: pre-wrap;
 }
 .terminal-output .success-text { color: var(--success); }
 .terminal-output .error-text { color: var(--error); }
 .terminal-output .info-text { color: var(--text-muted); }
 .terminal-output .prompt { color: var(--accent); }
 .terminal-cursor {
-  display: inline-block;
-  width: 6px;
-  height: 14px;
-  background: var(--accent);
-  animation: blink 1s step-end infinite;
+  display: inline-block; width: 6px; height: 14px;
+  background: var(--accent); animation: blink 1s step-end infinite;
   vertical-align: text-bottom;
 }
 @keyframes blink { 50% { opacity: 0; } }
 
 /* ─── Sidebar toggle ─── */
-.sidebar-toggle {
-  display: none;
-  background: none;
-  border: none;
-  color: var(--text-secondary);
-  cursor: pointer;
-  padding: 4px;
-  border-radius: var(--radius-sm);
-}
+.sidebar-toggle { display: none; background: none; border: none; color: var(--text-secondary); cursor: pointer; padding: 4px; border-radius: var(--radius-sm); }
 .sidebar-toggle:hover { color: var(--text-primary); }
+
+/* ─── Confirm Dialog ─── */
+.confirm-overlay {
+  position: fixed; inset: 0; z-index: 11000;
+  background: rgba(0,0,0,0.6);
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+.confirm-overlay.open { opacity: 1; pointer-events: auto; }
+.confirm-box {
+  background: var(--bg-secondary); border: 1px solid var(--border);
+  border-radius: 12px; padding: 28px 32px;
+  max-width: 380px; width: 90%;
+  box-shadow: 0 16px 48px rgba(0,0,0,0.5);
+}
+.confirm-title { font-size: 1rem; font-weight: 700; margin-bottom: 8px; }
+.confirm-msg { font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 20px; line-height: 1.5; }
+.confirm-actions { display: flex; gap: 8px; justify-content: flex-end; }
 
 /* ─── Responsive ─── */
 @media (max-width: 1024px) {
   .sidebar { width: 220px; }
   .reader-panel { padding: 20px 24px; }
 }
-
 @media (max-width: 768px) {
   .sidebar-toggle { display: block; }
   .app-layout { flex-direction: column; }
-  .sidebar {
-    width: 100%;
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height 0.25s ease;
-    border-right: none;
-    border-bottom: 1px solid var(--border);
-  }
+  .sidebar { width: 100%; max-height: 0; overflow: hidden; transition: max-height 0.25s ease; border-right: none; border-bottom: 1px solid var(--border); }
   .sidebar.open { max-height: 340px; overflow-y: auto; }
   .lesson-nav button { padding: 7px 14px; }
-
-  .main-content {
-    grid-template-columns: 1fr;
-    overflow: visible;
-  }
-  .reader-panel {
-    border-right: none;
-    border-bottom: 1px solid var(--border);
-    padding: 16px 18px;
-    max-height: 45vh;
-  }
+  .main-content { grid-template-columns: 1fr; overflow: visible; }
+  .reader-panel { border-right: none; border-bottom: 1px solid var(--border); padding: 16px 18px; max-height: 45vh; }
   .editor-panel { min-height: 35vh; }
   .terminal-output { max-height: 100px; min-height: 56px; }
   .topbar { padding: 0 10px; gap: 8px; }
   .topbar-divider, .topbar-course-name { display: none; }
   .progress-track { width: 80px; }
+  .auth-card { margin: 16px; padding: 28px 24px; }
+  .toast-container { left: 16px; right: 16px; max-width: none; }
 }
-
 @media (max-width: 480px) {
   :root { --sidebar-width: 100%; }
   .reader-panel { max-height: 40vh; padding: 14px; }
@@ -590,95 +574,628 @@ a:hover { text-decoration: underline; }
 </head>
 <body>
 
-<header class="topbar" role="banner">
-  <button class="sidebar-toggle" aria-label="Toggle lesson list" id="sidebarToggle" type="button">
-    <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="5" x2="17" y2="5"/><line x1="3" y1="10" x2="17" y2="10"/><line x1="3" y1="15" x2="17" y2="15"/></svg>
-  </button>
-  <div class="topbar-logo">
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
-    CPP Learn
-  </div>
-  <div class="topbar-divider"></div>
-  <span class="topbar-course-name">C++ Fundamentals</span>
-  <div class="topbar-spacer"></div>
-  <div class="topbar-progress">
-    <span class="progress-label" id="progressLabel">1/10</span>
-    <div class="progress-track">
-      <div class="progress-fill" id="progressFill" style="width:10%"></div>
+<!-- ═══ Toast Container ═══ -->
+<div class="toast-container" id="toastContainer" aria-live="polite"></div>
+
+<!-- ═══ Confirm Dialog ═══ -->
+<div class="confirm-overlay" id="confirmOverlay">
+  <div class="confirm-box" role="alertdialog" aria-labelledby="confirmTitle" aria-describedby="confirmMsg">
+    <div class="confirm-title" id="confirmTitle"></div>
+    <div class="confirm-msg" id="confirmMsg"></div>
+    <div class="confirm-actions">
+      <button class="btn btn-secondary" id="confirmCancel">Cancel</button>
+      <button class="btn btn-primary" id="confirmOk">Confirm</button>
     </div>
   </div>
-  <div class="topbar-profile" aria-label="User avatar" role="img">JD</div>
-</header>
+</div>
 
-<div class="app-layout">
-
-  <aside class="sidebar" id="sidebar" aria-label="Lesson navigation">
-    <div class="sidebar-header">
-      <h3>Course Content</h3>
-      <div class="sidebar-sub">10 lessons</div>
+<!-- ═══ Auth Screen ═══ -->
+<div id="authScreen">
+  <div class="auth-card">
+    <div class="auth-logo">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+      CPP Learn
     </div>
-    <nav aria-label="Lesson list">
-      <ul class="lesson-nav" id="lessonNav" role="list"></ul>
-    </nav>
-  </aside>
+    <div class="auth-subtitle">Master Modern C++ — Interactive Course</div>
 
-  <main class="main-content" id="mainContent">
+    <div class="auth-tabs" role="tablist">
+      <button class="auth-tab active" role="tab" aria-selected="true" data-tab="login" type="button">Sign In</button>
+      <button class="auth-tab" role="tab" aria-selected="false" data-tab="signup" type="button">Sign Up</button>
+    </div>
 
-    <!-- Reader -->
-    <section class="reader-panel" id="readerPanel" aria-label="Lesson content">
-      <h2 id="readerTitle">Introduction to Modern C++</h2>
-      <div class="lesson-meta" id="readerMeta">Lesson 1 of 10</div>
-      <div id="readerBody"></div>
-      <div class="reader-nav">
-        <button class="btn btn-secondary" id="prevBtn" type="button">Back</button>
-        <button class="btn btn-primary" id="nextBtn" type="button">Next</button>
+    <!-- Login -->
+    <form class="auth-form" id="loginForm" autocomplete="off">
+      <div class="form-group">
+        <label for="loginEmail">Username or Email</label>
+        <input class="form-input" id="loginEmail" type="text" placeholder="Enter your username or email" autocomplete="username" required>
+        <div class="form-error" id="loginEmailError"></div>
       </div>
-    </section>
+      <div class="form-group">
+        <label for="loginPassword">Password</label>
+        <input class="form-input" id="loginPassword" type="password" placeholder="Enter your password" autocomplete="current-password" required>
+        <div class="form-error" id="loginPasswordError"></div>
+      </div>
+      <button class="auth-btn" id="loginBtn" type="submit">Sign In</button>
+      <div class="auth-divider">or</div>
+      <button class="demo-btn" id="demoBtn" type="button">Continue as Guest (Demo)</button>
+    </form>
 
-    <!-- Editor -->
-    <section class="editor-panel" aria-label="Code editor">
-      <div class="editor-toolbar">
-        <div class="editor-toolbar-left">
-          <span class="file-tab"><span class="dot"></span> main.cpp</span>
+    <!-- Signup -->
+    <form class="auth-form hidden" id="signupForm" autocomplete="off">
+      <div class="form-group">
+        <label for="signupName">Username</label>
+        <input class="form-input" id="signupName" type="text" placeholder="Choose a username" autocomplete="username" required minlength="3" maxlength="20">
+        <div class="form-error" id="signupNameError"></div>
+      </div>
+      <div class="form-group">
+        <label for="signupEmail">Email</label>
+        <input class="form-input" id="signupEmail" type="email" placeholder="Enter your email" autocomplete="email" required>
+        <div class="form-error" id="signupEmailError"></div>
+      </div>
+      <div class="form-group">
+        <label for="signupPassword">Password</label>
+        <input class="form-input" id="signupPassword" type="password" placeholder="At least 6 characters" autocomplete="new-password" required minlength="6">
+        <div class="password-strength" id="pwStrength">
+          <div class="pw-bar" data-idx="0"></div>
+          <div class="pw-bar" data-idx="1"></div>
+          <div class="pw-bar" data-idx="2"></div>
         </div>
-        <div class="editor-toolbar-actions">
-          <button class="btn btn-secondary" id="resetBtn" type="button">Reset</button>
-          <button class="btn btn-primary" id="runBtn" type="button">&#9654; Run</button>
-          <button class="btn btn-success" id="checkBtn" type="button">Check Answer</button>
-        </div>
+        <div class="pw-label" id="pwLabel"></div>
+        <div class="form-error" id="signupPasswordError"></div>
       </div>
-      <div class="editor-wrapper">
-        <div class="line-numbers" id="lineNumbers" aria-hidden="true">1</div>
-        <textarea
-          id="codeEditor"
-          spellcheck="false"
-          autocomplete="off"
-          aria-label="C++ code editor"
-          placeholder="// Write your C++ code here"
-        ></textarea>
+      <div class="form-group">
+        <label for="signupConfirm">Confirm Password</label>
+        <input class="form-input" id="signupConfirm" type="password" placeholder="Repeat your password" autocomplete="new-password" required>
+        <div class="form-error" id="signupConfirmError"></div>
       </div>
+      <button class="auth-btn" id="signupBtn" type="submit">Create Account</button>
+    </form>
+  </div>
+</div>
 
-      <!-- Terminal / Output -->
-      <div class="terminal-panel" id="terminalPanel">
-        <div class="terminal-header">
-          <label>Output</label>
-          <div class="terminal-header-actions">
-            <button class="terminal-btn" id="clearTerminalBtn" type="button">Clear</button>
+<!-- ═══ Main App ═══ -->
+<div id="mainApp" class="hidden">
+
+  <header class="topbar" role="banner">
+    <button class="sidebar-toggle" aria-label="Toggle lesson list" id="sidebarToggle" type="button">
+      <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="5" x2="17" y2="5"/><line x1="3" y1="10" x2="17" y2="10"/><line x1="3" y1="15" x2="17" y2="15"/></svg>
+    </button>
+    <div class="topbar-logo">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+      CPP Learn
+    </div>
+    <div class="topbar-divider"></div>
+    <span class="topbar-course-name">C++ Fundamentals</span>
+    <div class="topbar-spacer"></div>
+    <div class="topbar-progress">
+      <span class="progress-label" id="progressLabel">1/10</span>
+      <div class="progress-track">
+        <div class="progress-fill" id="progressFill" style="width:10%"></div>
+      </div>
+    </div>
+    <div class="user-menu-wrap">
+      <button class="user-avatar" id="userAvatar" type="button" aria-haspopup="true" aria-label="User menu">JD</button>
+      <div class="user-dropdown" id="userDropdown" role="menu">
+        <div class="dropdown-header">
+          <div class="dropdown-name" id="dropdownName">User</div>
+          <div class="dropdown-email" id="dropdownEmail">user@example.com</div>
+        </div>
+        <div class="dropdown-divider"></div>
+        <button class="dropdown-item" id="resetProgressBtn" type="button">Reset Progress</button>
+        <button class="dropdown-item danger" id="deleteAccountBtn" type="button">Delete Account</button>
+        <div class="dropdown-divider"></div>
+        <button class="dropdown-item" id="logoutBtn" type="button">Sign Out</button>
+      </div>
+    </div>
+  </header>
+
+  <div class="app-layout">
+    <aside class="sidebar" id="sidebar" aria-label="Lesson navigation">
+      <div class="sidebar-header">
+        <h3>Course Content</h3>
+        <div class="sidebar-sub">10 lessons</div>
+      </div>
+      <nav aria-label="Lesson list">
+        <ul class="lesson-nav" id="lessonNav" role="list"></ul>
+      </nav>
+    </aside>
+
+    <main class="main-content" id="mainContent">
+      <section class="reader-panel" id="readerPanel" aria-label="Lesson content">
+        <h2 id="readerTitle">Hello, World!</h2>
+        <div class="lesson-meta" id="readerMeta">Lesson 1 of 10</div>
+        <div id="readerBody"></div>
+        <div class="reader-nav">
+          <button class="btn btn-secondary" id="prevBtn" type="button">Back</button>
+          <button class="btn btn-primary" id="nextBtn" type="button">Next</button>
+        </div>
+      </section>
+
+      <section class="editor-panel" aria-label="Code editor">
+        <div class="editor-toolbar">
+          <div class="editor-toolbar-left">
+            <span class="file-tab"><span class="dot"></span> main.cpp</span>
+          </div>
+          <div class="editor-toolbar-actions">
+            <button class="btn btn-secondary" id="resetBtn" type="button">Reset</button>
+            <button class="btn btn-primary" id="runBtn" type="button">&#9654; Run</button>
+            <button class="btn btn-success" id="checkBtn" type="button">Check Answer</button>
           </div>
         </div>
-        <div class="terminal-output" id="terminalOutput" role="log" aria-live="polite">
-          <span class="prompt">$</span> g++ main.cpp -o main<br>
-          <span class="info-text">Ready to compile.</span><span class="terminal-cursor"></span>
+        <div class="editor-wrapper">
+          <div class="line-numbers" id="lineNumbers" aria-hidden="true">1</div>
+          <textarea id="codeEditor" spellcheck="false" autocomplete="off" aria-label="C++ code editor" placeholder="// Write your C++ code here"></textarea>
         </div>
-      </div>
-    </section>
-
-  </main>
+        <div class="terminal-panel" id="terminalPanel">
+          <div class="terminal-header">
+            <label>Output</label>
+            <div class="terminal-header-actions">
+              <button class="terminal-btn" id="clearTerminalBtn" type="button">Clear</button>
+            </div>
+          </div>
+          <div class="terminal-output" id="terminalOutput" role="log" aria-live="polite">
+            <span class="prompt">$</span> g++ main.cpp -o main<br>
+            <span class="info-text">Ready to compile.</span><span class="terminal-cursor"></span>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
 </div>
 
 <script>
 (function() {
 'use strict';
+
+/* ═══════════════════════════════════════════════════════════════
+   Security & Storage
+   ═══════════════════════════════════════════════════════════════ */
+
+const STORAGE_KEY = 'cpplearn_data';
+const SESSION_KEY = 'cpplearn_session';
+const SESSION_DURATION = 24 * 60 * 60 * 1000; // 24h
+
+function sanitize(str) {
+  if (typeof str !== 'string') return '';
+  return str.replace(/[<>"'&]/g, c => ({'<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;','&':'&amp;'})[c]);
+}
+
+function escapeRegExp(s) {
+  return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+async function hashPassword(password) {
+  const encoder = new TextEncoder();
+  const data = encoder.encode(password + ':cpplearn:v2');
+  const hash = await crypto.subtle.digest('SHA-256', data);
+  return Array.from(new Uint8Array(hash)).map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
+function generateToken() {
+  const arr = new Uint8Array(32);
+  crypto.getRandomValues(arr);
+  return Array.from(arr).map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
+function getAllUsers() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return {};
+    const data = JSON.parse(raw);
+    if (typeof data !== 'object' || data === null) return {};
+    return data;
+  } catch { return {}; }
+}
+
+function saveAllUsers(users) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(users));
+}
+
+function getSession() {
+  try {
+    const raw = sessionStorage.getItem(SESSION_KEY);
+    if (!raw) return null;
+    const s = JSON.parse(raw);
+    if (!s || !s.username || !s.token || !s.expiry) return null;
+    if (Date.now() > s.expiry) {
+      sessionStorage.removeItem(SESSION_KEY);
+      return null;
+    }
+    return s;
+  } catch { return null; }
+}
+
+function setSession(username, token) {
+  sessionStorage.setItem(SESSION_KEY, JSON.stringify({
+    username, token,
+    expiry: Date.now() + SESSION_DURATION,
+    createdAt: Date.now()
+  }));
+}
+
+function clearSession() {
+  sessionStorage.removeItem(SESSION_KEY);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   Rate Limiting
+   ═══════════════════════════════════════════════════════════════ */
+
+const loginAttempts = {};
+const RATE_LIMIT_WINDOW = 60000;
+const RATE_LIMIT_MAX = 5;
+
+function checkRateLimit(id) {
+  const now = Date.now();
+  if (!loginAttempts[id]) loginAttempts[id] = [];
+  loginAttempts[id] = loginAttempts[id].filter(t => now - t < RATE_LIMIT_WINDOW);
+  return loginAttempts[id].length < RATE_LIMIT_MAX;
+}
+
+function recordAttempt(id) {
+  if (!loginAttempts[id]) loginAttempts[id] = [];
+  loginAttempts[id].push(Date.now());
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   Toast Notifications
+   ═══════════════════════════════════════════════════════════════ */
+
+const container = document.getElementById('toastContainer');
+
+function toast(message, type) {
+  type = type || 'info';
+  const el = document.createElement('div');
+  el.className = `toast toast-${type}`;
+  const icons = { success: '✓', error: '✗', info: 'i' };
+  el.innerHTML =
+    '<span class="toast-icon">' + icons[type] + '</span>' +
+    '<span class="toast-msg">' + sanitize(message) + '</span>' +
+    '<button class="toast-close" aria-label="Dismiss">&times;</button>';
+  const close = el.querySelector('.toast-close');
+  close.addEventListener('click', () => dismiss(el));
+  container.appendChild(el);
+  setTimeout(() => dismiss(el), 4000);
+}
+
+function dismiss(el) {
+  if (el.classList.contains('removing')) return;
+  el.classList.add('removing');
+  setTimeout(() => { if (el.parentNode) el.parentNode.removeChild(el); }, 250);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   Confirm Dialog
+   ═══════════════════════════════════════════════════════════════ */
+
+const confirmOverlay = document.getElementById('confirmOverlay');
+const confirmTitle = document.getElementById('confirmTitle');
+const confirmMsg = document.getElementById('confirmMsg');
+const confirmOk = document.getElementById('confirmOk');
+const confirmCancel = document.getElementById('confirmCancel');
+let confirmResolve = null;
+
+function showConfirm(title, message) {
+  confirmOverlay.classList.add('open');
+  confirmTitle.textContent = title;
+  confirmMsg.textContent = message;
+  return new Promise((resolve) => {
+    confirmResolve = resolve;
+  });
+}
+
+confirmOk.addEventListener('click', () => {
+  confirmOverlay.classList.remove('open');
+  if (confirmResolve) confirmResolve(true);
+  confirmResolve = null;
+});
+confirmCancel.addEventListener('click', () => {
+  confirmOverlay.classList.remove('open');
+  if (confirmResolve) confirmResolve(false);
+  confirmResolve = null;
+});
+confirmOverlay.addEventListener('click', (e) => {
+  if (e.target === confirmOverlay) {
+    confirmOverlay.classList.remove('open');
+    if (confirmResolve) confirmResolve(false);
+    confirmResolve = null;
+  }
+});
+
+/* ═══════════════════════════════════════════════════════════════
+   Auth System
+   ═══════════════════════════════════════════════════════════════ */
+
+const authScreen = document.getElementById('authScreen');
+const mainApp = document.getElementById('mainApp');
+const loginForm = document.getElementById('loginForm');
+const signupForm = document.getElementById('signupForm');
+const loginBtn = document.getElementById('loginBtn');
+const signupBtn = document.getElementById('signupBtn');
+const demoBtn = document.getElementById('demoBtn');
+const userAvatar = document.getElementById('userAvatar');
+const dropdownName = document.getElementById('dropdownName');
+const dropdownEmail = document.getElementById('dropdownEmail');
+const userDropdown = document.getElementById('userDropdown');
+const logoutBtn = document.getElementById('logoutBtn');
+
+const tabs = document.querySelectorAll('.auth-tab');
+tabs.forEach(tab => {
+  tab.addEventListener('click', () => {
+    const target = tab.dataset.tab;
+    tabs.forEach(t => { t.classList.remove('active'); t.setAttribute('aria-selected', 'false'); });
+    tab.classList.add('active');
+    tab.setAttribute('aria-selected', 'true');
+    loginForm.classList.toggle('hidden', target !== 'login');
+    signupForm.classList.toggle('hidden', target !== 'signup');
+    clearErrors();
+  });
+});
+
+function clearErrors() {
+  document.querySelectorAll('.form-error').forEach(el => el.textContent = '');
+  document.querySelectorAll('.form-input').forEach(el => el.classList.remove('error'));
+}
+
+function showError(inputId, msg) {
+  const input = document.getElementById(inputId);
+  if (input) input.classList.add('error');
+  const err = document.getElementById(inputId + 'Error');
+  if (err) err.textContent = msg;
+}
+
+function setLoading(btn, loading) {
+  if (loading) {
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner"></span>';
+  } else {
+    btn.disabled = false;
+    btn.textContent = btn === loginBtn ? 'Sign In' : btn === signupBtn ? 'Create Account' : '';
+  }
+}
+
+/* ─── Password Strength ─── */
+const pwInput = document.getElementById('signupPassword');
+const pwBars = document.querySelectorAll('.pw-bar');
+const pwLabel = document.getElementById('pwLabel');
+
+pwInput.addEventListener('input', () => {
+  const val = pwInput.value;
+  let score = 0;
+  if (val.length >= 6) score++;
+  if (val.length >= 10) score++;
+  if (/[A-Z]/.test(val) && /[a-z]/.test(val)) score++;
+  if (/\d/.test(val)) score++;
+  if (/[^A-Za-z0-9]/.test(val)) score++;
+
+  const strength = score <= 1 ? 'weak' : score <= 3 ? 'medium' : 'strong';
+  const labels = { weak: 'Weak', medium: 'Medium', strong: 'Strong' };
+
+  pwBars.forEach((bar, i) => {
+    bar.classList.toggle('active', i < Math.min(score, 3));
+    bar.className = 'pw-bar active ' + (i < Math.min(score, 3) ? strength : '');
+  });
+  pwLabel.textContent = val.length > 0 ? labels[strength] : '';
+});
+
+/* ─── Login ─── */
+loginForm.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  clearErrors();
+  const email = loginForm.querySelector('#loginEmail').value.trim();
+  const password = loginForm.querySelector('#loginPassword').value;
+
+  if (!email) { showError('loginEmail', 'Required'); return; }
+  if (!password) { showError('loginPassword', 'Required'); return; }
+
+  const rateId = 'login:' + email.toLowerCase();
+  if (!checkRateLimit(rateId)) {
+    toast('Too many login attempts. Please wait 1 minute.', 'error');
+    return;
+  }
+
+  setLoading(loginBtn, true);
+
+  try {
+    const users = getAllUsers();
+    const key = email.toLowerCase();
+    const user = users[key];
+
+    if (!user || !user.hash) {
+      recordAttempt(rateId);
+      setLoading(loginBtn, false);
+      showError('loginEmail', 'Invalid username or password');
+      return;
+    }
+
+    const hash = await hashPassword(password);
+    if (hash !== user.hash) {
+      recordAttempt(rateId);
+      setLoading(loginBtn, false);
+      showError('loginPassword', 'Invalid username or password');
+      return;
+    }
+
+    const token = generateToken();
+    user.token = token;
+    users[key] = user;
+    saveAllUsers(users);
+    setSession(user.username, token);
+    toast('Welcome back, ' + sanitize(user.username) + '!', 'success');
+    enterApp(user);
+  } catch (err) {
+    setLoading(loginBtn, false);
+    toast('An error occurred. Please try again.', 'error');
+    console.error(err);
+  }
+});
+
+/* ─── Signup ─── */
+signupForm.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  clearErrors();
+  const name = sanitize(signupForm.querySelector('#signupName').value.trim());
+  const email = signupForm.querySelector('#signupEmail').value.trim().toLowerCase();
+  const password = signupForm.querySelector('#signupPassword').value;
+  const confirm = signupForm.querySelector('#signupConfirm').value;
+
+  let hasErr = false;
+  if (name.length < 3) { showError('signupName', 'At least 3 characters'); hasErr = true; }
+  if (!/^[a-zA-Z0-9_-]+$/.test(name)) { showError('signupName', 'Letters, numbers, hyphens only'); hasErr = true; }
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { showError('signupEmail', 'Valid email required'); hasErr = true; }
+  if (password.length < 6) { showError('signupPassword', 'At least 6 characters'); hasErr = true; }
+  if (password !== confirm) { showError('signupConfirm', 'Passwords do not match'); hasErr = true; }
+  if (hasErr) return;
+
+  setLoading(signupBtn, true);
+
+  try {
+    const users = getAllUsers();
+    const key = email;
+
+    if (users[key]) {
+      setLoading(signupBtn, false);
+      showError('signupEmail', 'Email already registered');
+      return;
+    }
+    if (Object.values(users).some(u => u.username.toLowerCase() === name.toLowerCase())) {
+      setLoading(signupBtn, false);
+      showError('signupName', 'Username already taken');
+      return;
+    }
+
+    const hash = await hashPassword(password);
+    const token = generateToken();
+    const user = {
+      username: name,
+      email: email,
+      hash: hash,
+      token: token,
+      createdAt: Date.now(),
+      completed: [],
+      lastLesson: 0,
+      codeCache: {}
+    };
+    users[key] = user;
+    saveAllUsers(users);
+    setSession(name, token);
+    toast('Account created! Welcome, ' + sanitize(name) + '!', 'success');
+    enterApp(user);
+  } catch (err) {
+    setLoading(signupBtn, false);
+    toast('An error occurred. Please try again.', 'error');
+    console.error(err);
+  }
+});
+
+/* ─── Demo / Guest ─── */
+demoBtn.addEventListener('click', () => {
+  const demoUser = {
+    username: 'Guest',
+    email: 'guest@demo.local',
+    hash: '',
+    token: generateToken(),
+    createdAt: Date.now(),
+    completed: [],
+    lastLesson: 0,
+    codeCache: {}
+  };
+  setSession(demoUser.username, demoUser.token);
+  toast('Continuing as guest. Sign up to save your progress!', 'info');
+  enterApp(demoUser);
+});
+
+/* ─── Logout ─── */
+logoutBtn.addEventListener('click', async () => {
+  const ok = await showConfirm('Sign Out', 'Are you sure you want to sign out?');
+  if (!ok) return;
+  const session = getSession();
+  if (session) {
+    saveCurrentCode();
+    clearSession();
+  }
+  userDropdown.classList.remove('open');
+  toast('Signed out.', 'info');
+  exitApp();
+});
+
+/* ─── Delete Account ─── */
+document.getElementById('deleteAccountBtn').addEventListener('click', async () => {
+  const ok = await showConfirm(
+    'Delete Account',
+    'This will permanently delete your account and all progress. This cannot be undone.'
+  );
+  if (!ok) return;
+  const session = getSession();
+  if (session) {
+    const users = getAllUsers();
+    const key = Object.keys(users).find(k => users[k].username === session.username);
+    if (key) {
+      delete users[key];
+      saveAllUsers(users);
+    }
+    clearSession();
+  }
+  userDropdown.classList.remove('open');
+  toast('Account deleted.', 'info');
+  exitApp();
+});
+
+/* ─── Reset Progress ─── */
+document.getElementById('resetProgressBtn').addEventListener('click', async () => {
+  const ok = await showConfirm('Reset Progress', 'This will clear all completed lessons and saved code.');
+  if (!ok) return;
+  const session = getSession();
+  if (session) {
+    const users = getAllUsers();
+    const key = Object.keys(users).find(k => users[k].username === session.username);
+    if (key) {
+      users[key].completed = [];
+      users[key].codeCache = {};
+      saveAllUsers(users);
+    }
+  }
+  completedLessons.clear();
+  updateSidebar();
+  updateProgress();
+  toast('Progress reset.', 'info');
+  userDropdown.classList.remove('open');
+});
+
+/* ─── Auth App Switch ─── */
+function enterApp(user) {
+  currentUser = user;
+  authScreen.classList.add('hidden');
+  mainApp.classList.remove('hidden');
+  userAvatar.textContent = user.username.charAt(0).toUpperCase();
+  dropdownName.textContent = sanitize(user.username);
+  dropdownEmail.textContent = sanitize(user.email);
+  completedLessons = new Set(user.completed || []);
+  loadLesson(user.lastLesson || 0);
+  updateSidebar();
+  updateProgress();
+}
+
+function exitApp() {
+  currentUser = null;
+  completedLessons = new Set();
+  authScreen.classList.remove('hidden');
+  mainApp.classList.add('hidden');
+}
+
+/* ─── User Menu Toggle ─── */
+userAvatar.addEventListener('click', () => {
+  userDropdown.classList.toggle('open');
+});
+document.addEventListener('click', (e) => {
+  if (!e.target.closest('.user-menu-wrap')) {
+    userDropdown.classList.remove('open');
+  }
+});
+
+/* ═══════════════════════════════════════════════════════════════
+   Lesson Data
+   ═══════════════════════════════════════════════════════════════ */
 
 const lessons = [
   {
@@ -1078,11 +1595,12 @@ for (const auto& s : shapes) {
   }
 ];
 
-// ─── Helpers ──────────────────────────────────────────────────
+/* ═══════════════════════════════════════════════════════════════
+   Helpers
+   ═══════════════════════════════════════════════════════════════ */
 
 function highlightCode(code) {
-  const escapes = {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'};
-  let s = code.replace(/[&<>"]/g, c => escapes[c]);
+  const s = code.replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'})[c]);
   const rules = [
     [/\/\/.*$/gm, '<span class="comment">$&</span>'],
     [/#\w+\b/g, '<span class="preproc">$&</span>'],
@@ -1093,8 +1611,9 @@ function highlightCode(code) {
     [/\b(\d+\.?\d*)\b/g, '<span class="number">$&</span>'],
     [/\b([a-zA-Z_]\w*)\s*\(/g, '<span class="function">$1</span>(']
   ];
-  for (const [re, repl] of rules) s = s.replace(re, repl);
-  return s;
+  let r = s;
+  for (const [re, repl] of rules) r = r.replace(re, repl);
+  return r;
 }
 
 function renderMarkdown(text) {
@@ -1133,17 +1652,17 @@ function renderMarkdown(text) {
   html = html.replace(/<\/blockquote><p>/g, '</blockquote>');
   html = html.replace(/<p><table>/g, '<table>');
   html = html.replace(/<\/table><p>/g, '</table>');
-  html = html.replace(/<div class="instruction-box"><p><\/p>/g, '<div class="instruction-box">');
-  html = html.replace(/<p>\s*<\/p>/g, '');
-
-  // Keep instruction-box divs intact
   html = html.replace(/<p><div class="instruction-box">/g, '<div class="instruction-box">');
   html = html.replace(/<\/div><\/p>/g, '</div>');
-
+  html = html.replace(/<p>\s*<\/p>/g, '');
   return html;
 }
 
-// ─── State ────────────────────────────────────────────────────
+/* ═══════════════════════════════════════════════════════════════
+   State
+   ═══════════════════════════════════════════════════════════════ */
+
+let currentUser = null;
 let currentLesson = 0;
 let completedLessons = new Set();
 
@@ -1162,11 +1681,10 @@ const nextBtn      = document.getElementById('nextBtn');
 const progressFill = document.getElementById('progressFill');
 const progressLabel= document.getElementById('progressLabel');
 
-// ─── Line numbers ─────────────────────────────────────────────
+/* ─── Line Numbers ─── */
 function updateLineNumbers() {
   const lines = codeEditor.value.split('\n');
-  const nums = lines.map((_, i) => i + 1).join('\n');
-  lineNumbers.textContent = nums;
+  lineNumbers.textContent = lines.map((_, i) => i + 1).join('\n');
 }
 
 codeEditor.addEventListener('input', updateLineNumbers);
@@ -1174,15 +1692,42 @@ codeEditor.addEventListener('scroll', () => {
   lineNumbers.scrollTop = codeEditor.scrollTop;
 });
 
-// ─── Terminal ─────────────────────────────────────────────────
+/* ─── Auto-save code ─── */
+let codeSaveTimer = null;
+codeEditor.addEventListener('input', () => {
+  clearTimeout(codeSaveTimer);
+  codeSaveTimer = setTimeout(saveCurrentCode, 800);
+});
+
+function saveCurrentCode() {
+  if (!currentUser) return;
+  const lesson = lessons[currentLesson];
+  if (!lesson) return;
+  const code = codeEditor.value;
+  if (!code) return;
+  const users = getAllUsers();
+  const key = Object.keys(users).find(k => users[k].username === currentUser.username);
+  if (!key) return;
+  if (!users[key].codeCache) users[key].codeCache = {};
+  users[key].codeCache[lesson.id] = code;
+  saveAllUsers(users);
+}
+
+function loadSavedCode(lessonId) {
+  if (!currentUser) return null;
+  const users = getAllUsers();
+  const key = Object.keys(users).find(k => users[k].username === currentUser.username);
+  if (!key) return null;
+  const cache = users[key].codeCache || {};
+  return cache[lessonId] || null;
+}
+
+/* ─── Terminal ─── */
 function writeTerminal(lines) {
   let html = '';
   for (const line of lines) {
-    if (typeof line === 'object') {
-      html += `<span class="${line.class}">${line.text}</span>`;
-    } else {
-      html += line;
-    }
+    if (typeof line === 'object') html += `<span class="${line.class}">${line.text}</span>`;
+    else html += line;
     html += '<br>';
   }
   terminalOut.innerHTML = html + '<span class="terminal-cursor"></span>';
@@ -1198,7 +1743,7 @@ function clearTerminal() {
 
 document.getElementById('clearTerminalBtn').addEventListener('click', clearTerminal);
 
-// ─── Sidebar ──────────────────────────────────────────────────
+/* ─── Sidebar ─── */
 function buildSidebar() {
   lessons.forEach((l, i) => {
     const li = document.createElement('li');
@@ -1221,37 +1766,51 @@ function updateSidebar() {
   });
 }
 
-// ─── Load lesson ──────────────────────────────────────────────
+function updateProgress() {
+  const pct = Math.round(((completedLessons.size) / lessons.length) * 100);
+  progressFill.style.width = pct + '%';
+  progressLabel.textContent = completedLessons.size + '/' + lessons.length;
+}
+
+/* ─── Load lesson ─── */
 function loadLesson(index) {
   currentLesson = index;
   const lesson = lessons[index];
 
   readerTitle.textContent = lesson.title;
-  readerMeta.textContent = `Lesson ${lesson.id} of ${lessons.length}`;
+  readerMeta.textContent = 'Lesson ' + lesson.id + ' of ' + lessons.length;
   readerBody.innerHTML = renderMarkdown(lesson.content);
 
-  codeEditor.value = lesson.starterCode;
+  // Restore saved code or use starter
+  const saved = loadSavedCode(lesson.id);
+  codeEditor.value = saved || lesson.starterCode;
   updateLineNumbers();
 
-  // Update progress
   const pct = Math.round(((index + 1) / lessons.length) * 100);
   progressFill.style.width = pct + '%';
-  progressLabel.textContent = `${index + 1}/${lessons.length}`;
+  progressLabel.textContent = (index + 1) + '/' + lessons.length;
 
   updateSidebar();
   clearTerminal();
-
   document.getElementById('readerPanel').scrollTop = 0;
-
   const sidebar = document.getElementById('sidebar');
   sidebar.classList.remove('open');
 
-  // Enable/disable nav buttons
   prevBtn.disabled = index === 0;
   nextBtn.disabled = index === lessons.length - 1;
+
+  // Save last lesson
+  if (currentUser) {
+    const users = getAllUsers();
+    const key = Object.keys(users).find(k => users[k].username === currentUser.username);
+    if (key) {
+      users[key].lastLesson = index;
+      saveAllUsers(users);
+    }
+  }
 }
 
-// ─── Run ──────────────────────────────────────────────────────
+/* ─── Run ─── */
 function runCode() {
   const code = codeEditor.value.trim();
   if (!code) {
@@ -1280,7 +1839,7 @@ function runCode() {
   ]);
 }
 
-// ─── Check answer ─────────────────────────────────────────────
+/* ─── Check answer ─── */
 function checkAnswer() {
   const lesson = lessons[currentLesson];
   const code = codeEditor.value.trim();
@@ -1298,23 +1857,14 @@ function checkAnswer() {
 
   const checks = [hasMain, hasNS];
 
-  if (lesson.id === 1) {
-    checks.push(hasIO);
-  } else if (lesson.id === 2) {
-    checks.push(hasIO);
-  } else if (lesson.id === 3) {
-    checks.push(hasIO && (/\bcin\b/.test(code) || /\bgetline\b/.test(code)));
-  } else if (lesson.id === 4) {
-    checks.push(/\bif\b/.test(code));
-  } else if (lesson.id === 5) {
-    checks.push(/\b(for|while)\b/.test(code));
-  } else if (lesson.id === 6) {
-    checks.push(/\bauto\b.*\(/.test(code));
-  } else if (lesson.id === 7) {
-    checks.push(/\b(array|vector)\b/.test(code));
-  } else if (lesson.id === 8 || lesson.id === 9 || lesson.id === 10) {
-    checks.push(/\bclass\b/.test(code));
-  }
+  if (lesson.id === 1) checks.push(hasIO);
+  else if (lesson.id === 2) checks.push(hasIO);
+  else if (lesson.id === 3) checks.push(hasIO && (/\bcin\b/.test(code) || /\bgetline\b/.test(code)));
+  else if (lesson.id === 4) checks.push(/\bif\b/.test(code));
+  else if (lesson.id === 5) checks.push(/\b(for|while)\b/.test(code));
+  else if (lesson.id === 6) checks.push(/\bauto\b.*\(/.test(code));
+  else if (lesson.id === 7) checks.push(/\b(array|vector)\b/.test(code));
+  else if (lesson.id >= 8) checks.push(/\bclass\b/.test(code));
 
   const passed = checks.every(Boolean);
   const total = checks.length;
@@ -1325,8 +1875,20 @@ function checkAnswer() {
       '<span class="prompt">$</span> check answer',
       '<span class="success-text">✓ All ' + total + ' checks passed! Great work!</span>'
     ]);
+    toast('Lesson ' + lesson.id + ' completed!', 'success');
     completedLessons.add(currentLesson);
     updateSidebar();
+    updateProgress();
+
+    // Persist completed
+    if (currentUser) {
+      const users = getAllUsers();
+      const key = Object.keys(users).find(k => users[k].username === currentUser.username);
+      if (key) {
+        users[key].completed = Array.from(completedLessons);
+        saveAllUsers(users);
+      }
+    }
   } else {
     const hints = [];
     if (!hasMain) hints.push('Missing main() function');
@@ -1340,25 +1902,49 @@ function checkAnswer() {
   }
 }
 
-// ─── Reset ────────────────────────────────────────────────────
+/* ─── Reset ─── */
 function resetCode() {
   const lesson = lessons[currentLesson];
   codeEditor.value = lesson.starterCode;
   updateLineNumbers();
   clearTerminal();
+  toast('Code reset to starter.', 'info');
 }
 
-// ─── Keyboard shortcuts ───────────────────────────────────────
+/* ─── Keyboard shortcuts ─── */
 document.addEventListener('keydown', (e) => {
   if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
     e.preventDefault();
     runCode();
   }
+  if (e.key === 'Escape') {
+    userDropdown.classList.remove('open');
+  }
 });
 
-// ─── Init ─────────────────────────────────────────────────────
+/* ═══════════════════════════════════════════════════════════════
+   Init
+   ═══════════════════════════════════════════════════════════════ */
+
 buildSidebar();
-loadLesson(0);
+
+// Check for existing session
+const session = getSession();
+if (session) {
+  const users = getAllUsers();
+  const key = Object.keys(users).find(k => users[k].username === session.username);
+  if (key && users[key].token === session.token) {
+    enterApp(users[key]);
+  } else {
+    clearSession();
+    authScreen.classList.remove('hidden');
+    mainApp.classList.add('hidden');
+  }
+} else {
+  authScreen.classList.remove('hidden');
+  mainApp.classList.add('hidden');
+}
+
 prevBtn.addEventListener('click', () => loadLesson(Math.max(0, currentLesson - 1)));
 nextBtn.addEventListener('click', () => loadLesson(Math.min(lessons.length - 1, currentLesson + 1)));
 runBtn.addEventListener('click', runCode);
